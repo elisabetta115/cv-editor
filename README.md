@@ -256,6 +256,7 @@ cvs/<name>/              one folder per person (not in git)
 PDF/<name>/<language>/   the PDFs built from the terminal (not in git)
 examples/                an example CV to import
 docs/                    the project's web page (GitHub Pages) and the screenshots
+tests/                   the tests (see Tests below)
 src/
 ├── editor.py            local web server for the editor (Python standard library only)
 ├── translator.py        automatic translation: local AI (Ollama) or Azure AI Translator (standard library only)
@@ -329,6 +330,23 @@ src/
   `OLLAMA_HOST` (where Ollama listens), `CV_OLLAMA_MODEL` (another model: check its licence),
   `AZURE_TRANSLATOR_KEY` and `AZURE_TRANSLATOR_REGION` (instead of the saved key), `AZURE_TRANSLATOR_ENDPOINT`
   (e.g. `https://api-eur.cognitive.microsofttranslator.com` to have the text processed in Europe).
+
+### Tests
+
+```bash
+python3 -m unittest                        # every test (a few seconds), from the project folder
+python3 -m unittest tests/test_render.py   # one file
+python3 tests/compare_pixels.py            # after changing a style: the printed CVs, pixel by pixel, against the last commit
+```
+
+The tests never touch your CVs: each one works in an empty temporary folder. They cover the HTML of every
+style (compared with the fingerprints in `tests/reference/render.json`), saving and reading CVs, `.zip` and
+`.json` import and export (damaged and hostile files too), links and text, translation (with a fake translator),
+the local server and its security checks, and the editor's page in headless Chrome (skipped without Chrome).
+When a change to the pages is intended, update the fingerprints with
+`CV_UPDATE_REFERENCES=1 python3 -m unittest tests/test_render.py` and check `git diff`.
+`compare_pixels.py` also needs `pdftoppm` (poppler-utils) and Pillow; it saves the differences as images.
+GitHub runs the tests at every push (`.github/workflows/tests.yml`).
 
 ## Install
 
