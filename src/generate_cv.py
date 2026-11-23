@@ -675,7 +675,7 @@ def render_page(cv, style, photo, frame=None, signature=None):
                 (side if in_side else main).append(section_html("extra", s.get("title", ""), body))
 
     frame = frame or {}
-    position = f' style="object-position: {frame['x']:g}% {frame['y']:g}%"' if "x" in frame else ""
+    position = f' style="object-position: {frame["x"]:g}% {frame["y"]:g}%"' if "x" in frame else ""
     img = f'<img src="{html.escape(photo)}" alt=""{position}>' if photo else ""
     shape = f' shape-{frame["shape"]}' if frame.get("shape") in SHAPES else ""
     headline = f'<p class="headline">{rich(p["headline"])}</p>' if p.get("headline") else ""

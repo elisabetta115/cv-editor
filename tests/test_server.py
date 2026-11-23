@@ -9,7 +9,7 @@ import zipfile
 from http.server import ThreadingHTTPServer
 from urllib.parse import quote
 
-from support import DataDirTestCase, cv, editor, example
+from support import DataDirTestCase, chrome, cv, editor, example
 
 
 class ServerTestCase(DataDirTestCase):
@@ -128,7 +128,7 @@ class EditorRequestsTest(ServerTestCase):
         self.assertEqual(self.api("/api/example"), example())
 
 
-@unittest.skipUnless(cv.find_chrome(), "Chrome or Chromium is not installed")
+@unittest.skipUnless(chrome(), "Chrome or Chromium is not installed")
 class PdfTest(ServerTestCase):
     def test_pdf_of_the_view(self):
         name = editor.import_cv({"data": example(), "mode": "copy"})["profiles"][0]

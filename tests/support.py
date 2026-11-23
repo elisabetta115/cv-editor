@@ -28,6 +28,14 @@ atexit.register(shutil.rmtree, _first, True)
 cv.set_data_dir(_first)              # never the real cvs/ folder
 
 
+def chrome():
+    """The path of Chrome or Chromium, None when it is not installed (the tests that need it are skipped)."""
+    try:
+        return cv.find_chrome()
+    except SystemExit:  # find_chrome() stops the program when there is none
+        return None
+
+
 def example():
     """The example CV file (.json), as the editor exports it."""
     return json.loads(EXAMPLE.read_text(encoding="utf-8"))

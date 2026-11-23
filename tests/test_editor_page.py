@@ -7,9 +7,9 @@ import threading
 import unittest
 from http.server import ThreadingHTTPServer
 
-from support import DataDirTestCase, cv, editor
+from support import DataDirTestCase, chrome, editor
 
-CHROME = cv.find_chrome()
+CHROME = chrome()
 
 
 @unittest.skipUnless(CHROME, "Chrome or Chromium is not installed")
