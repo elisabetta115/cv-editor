@@ -259,7 +259,11 @@ docs/                    the project's web page (GitHub Pages) and the screensho
 tests/                   the tests (see Tests below)
 src/
 ├── editor.py            the command that opens the editor (the code is in cv_editor/)
-├── editor.html          the editor's interface
+├── editor.html          the editor's page: its structure (the server puts in the secret token)
+├── web/                 the rest of the editor's page, no build step needed:
+│   ├── editor.css       how the editor looks
+│   └── js/              what it does: JavaScript modules, one per job (main.js starts the editor,
+│                        state.js holds what they share, find.js the search, cvs.js the CV menu…)
 ├── generate_cv.py       the command that builds every version of the CVs (the code is in cv_editor/)
 ├── cv_editor/           the code, one module per job (Python standard library only; Pillow optional):
 │   ├── server.py        the editor's local web server: every request is one line of ROUTES

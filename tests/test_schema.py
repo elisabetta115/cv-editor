@@ -64,7 +64,7 @@ class ContactKindsTest(unittest.TestCase):
 
     def test_the_page_has_no_copy_of_them(self):
         """The editor's page receives the kinds of contact with the CV, instead of keeping its own list."""
-        page = (support.SRC / "editor.html").read_text(encoding="utf-8")
+        page = "".join(f.read_text(encoding="utf-8") for f in [support.SRC / "editor.html", *(support.SRC / "web").rglob("*.js")])
         self.assertNotRegex(page, r'"Stack Overflow"|stackoverflow: "')
         self.assertIn("setContactKinds(r.contact_groups)", page)
 

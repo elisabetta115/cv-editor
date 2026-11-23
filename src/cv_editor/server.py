@@ -37,9 +37,13 @@ LOCK = threading.Lock()            # one file operation at a time
 MAX_BODY = 80_000_000              # bytes: the largest request (a .zip of every CV with its photos)
 
 
-# Folders the browser may read (nothing else)
+# Folders the browser may read (nothing else): the editor's own files, the CV stylesheets and fonts, the pages made
 def static_folders():
-    return {"/styles/": SRC / "styles", "/fonts/": SRC / "fonts", "/html/": workspace().html_dir}
+    return {"/web/": SRC / "web", "/styles/": SRC / "styles", "/fonts/": SRC / "fonts", "/html/": workspace().html_dir}
+
+
+# said exactly, whatever the computer's own list says (on some, .js is "text/plain": browsers refuse it as a module)
+CONTENT_TYPES = {".js": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8"}
 
 
 # ---------------------------------------------------------------------
@@ -221,7 +225,7 @@ class Handler(BaseHTTPRequestHandler):
             if path.startswith(prefix):
                 file = (folder / path[len(prefix):]).resolve()
                 if file.is_file() and file.is_relative_to(folder.resolve()):
-                    content_type = guess_type(file.name)[0] or "application/octet-stream"
+                    content_type = CONTENT_TYPES.get(file.suffix) or guess_type(file.name)[0] or "application/octet-stream"
                     return self._send(200, file.read_bytes(), content_type)
         self._send(404, b"", "text/plain")
 
