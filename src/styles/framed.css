@@ -1,0 +1,99 @@
+/* =====================  FRAMED STYLE  =====================
+   Fine stationery: every page framed by a thin double border, the name in spaced Cormorant
+   capitals over a star between rules, italic section titles with a short flourish, a matted photo.
+   With the sidebar: a column inside the frame, separated by a hairline.
+
+   @name    Framed
+   @group   classic
+   @color   burgundy
+   @tags    framed, border, stationery, elegant, serif, italic titles, ornament, refined, matted photo
+   @print   @page{@top-left{border-color:$dark}@bottom-left{border-color:$dark}}
+*/
+:root {
+  --ink: #241d1f;
+  --muted: #625659;
+  --rule: #d8cdd0;
+  --font-body: 'Lora', Georgia, serif;
+  --font-head: 'Cormorant Garamond', Garamond, serif;
+  --frame: var(--accent);
+  --side-w: 52mm;
+  --side-gap: 7mm;
+}
+/* The frame on every printed page: its top and bottom parts are page-margin boxes (their
+   colour comes from @print), its sides a fixed strip inside the page area. Same margins on
+   every page. Sizes in px so that Chrome snaps the boxes and the strip to the same pixels. */
+@page {
+  margin: 60px 0 60.52px;
+  @top-left { content: ""; box-sizing: border-box; width: 740.7px; height: 35px; margin: 26px 0 0 26px; border: 3px double; border-bottom: 0; }
+  @top-center { content: none; }
+  @top-right { content: none; }
+  @bottom-left {
+    content: counter(page) " / " counter(pages); box-sizing: border-box; width: 740.7px; height: 35px; margin: 0 0 26px 26px; padding: 0 9mm 1mm;
+    border: 3px double; border-top: 0; text-align: right; vertical-align: middle;
+    font-family: 'Cormorant Garamond', serif; font-size: 9.5pt; font-style: italic; color: #625659;
+  }
+  @bottom-center { content: none; }
+  @bottom-right { content: none; }
+}
+@page :first { margin-top: 60px; }
+body { line-height: 1.48; }
+.page.framed { padding: 4mm 19mm 0; }
+.page.framed::before { content: ""; position: absolute; inset: 26px; border: 3px double var(--frame); pointer-events: none; }
+@media print {
+  .page.framed::before { position: fixed; inset: -1mm 26px; border-top: 0; border-bottom: 0; }
+}
+@media screen {
+  .page.framed { padding-top: 20mm; padding-bottom: 20mm !important; }
+}
+
+/* ---------- Header: matted photo, spaced capitals, star between rules ---------- */
+.framed .cv-header { gap: 9mm; margin-bottom: 8mm; padding-bottom: 6mm; border-bottom: .25mm solid var(--rule); }
+.framed .header-photo { order: 0; width: 29mm; height: 36mm; padding: 1.6mm; border: .25mm solid var(--accent); border-radius: 0; outline: .25mm solid var(--accent); outline-offset: .9mm; margin: 1.2mm; }
+.framed .name { font-family: var(--font-head); font-weight: 600; font-size: 2.9rem; line-height: 1.05; letter-spacing: .2em; text-transform: uppercase; color: var(--accent); }
+.framed .name::after {
+  content: ""; display: block; width: 70mm; height: 5mm; margin-top: 2.6mm;
+  background:
+    linear-gradient(to bottom right, transparent 50%, var(--accent) 50%) 11.3mm 0.0mm / 0.7mm 2.5mm no-repeat,
+    linear-gradient(to bottom left, transparent 50%, var(--accent) 50%) 12mm 0.0mm / 0.7mm 2.5mm no-repeat,
+    linear-gradient(to top right, transparent 50%, var(--accent) 50%) 11.3mm 2.5mm / 0.7mm 2.5mm no-repeat,
+    linear-gradient(to top left, transparent 50%, var(--accent) 50%) 12mm 2.5mm / 0.7mm 2.5mm no-repeat,
+    linear-gradient(to bottom right, transparent 50%, var(--accent) 50%) 9.5mm 1.8mm / 2.5mm 0.7mm no-repeat,
+    linear-gradient(to bottom left, transparent 50%, var(--accent) 50%) 12mm 1.8mm / 2.5mm 0.7mm no-repeat,
+    linear-gradient(to top right, transparent 50%, var(--accent) 50%) 9.5mm 2.5mm / 2.5mm 0.7mm no-repeat,
+    linear-gradient(to top left, transparent 50%, var(--accent) 50%) 12mm 2.5mm / 2.5mm 0.7mm no-repeat,
+    linear-gradient(var(--accent), var(--accent)) 0 2.38mm / 8.6mm .25mm no-repeat,
+    linear-gradient(to right, var(--accent), transparent) 15.4mm 2.38mm / 54.6mm .25mm no-repeat;
+}
+.framed .headline { margin-top: 2.4mm; font-family: var(--font-head); font-size: 1.4rem; font-weight: 500; font-style: italic; letter-spacing: .02em; text-transform: none; color: var(--ink); }
+.framed .cv-header .contacts { gap: 1.2mm 5mm; margin-top: 3.4mm; font-size: .88rem; }
+.framed .cv-header .details { font-size: .88rem; }
+.framed .contacts .icon-wrap { color: var(--accent-2); }
+.framed .contacts .icon { width: 3.2mm; height: 3.2mm; stroke-width: 1.7; }
+
+/* ---------- Section titles: large italic with a short tapered flourish ---------- */
+.framed .cv-section + .cv-section { margin-top: 6mm; }
+.framed .cv-section > h2 { display: flex; align-items: center; gap: 3mm; margin-bottom: 2.6mm; padding: 0; border: 0; font-family: var(--font-head); font-size: 1.6rem; font-weight: 500; font-style: italic; line-height: 1.15; letter-spacing: .01em; text-transform: none; color: var(--accent); }
+.framed .cv-section > h2::after { content: ""; flex: none; width: 18mm; height: 1.3mm; margin-top: .6mm; background: var(--accent-2); clip-path: polygon(0 0, 8% 35%, 100% 50%, 8% 65%, 0 100%, 3% 50%); }
+.framed .sidebar .cv-section > h2 { font-size: 1.4rem; color: var(--accent); }
+.framed .sidebar .cv-section > h2::after { width: 12mm; }
+
+/* ---------- Entries ---------- */
+.framed .entry + .entry { margin-top: 3.8mm; }
+.framed .entry-title { font-size: 1rem; font-weight: 600; }
+.framed .dates { font-family: var(--font-head); font-size: 1.16rem; font-weight: 600; letter-spacing: .03em; color: var(--accent-2); }
+.framed .org { color: var(--accent-2); }
+.framed .org .location { color: var(--muted); }
+.framed .org .location:not(:first-child)::before { content: ", "; }
+.framed .bullets li::before, .framed ul.desc li::before { top: .66em; width: 1.1mm; height: 1.1mm; background: var(--accent-2); }
+.framed .extra span { font-weight: 600; }
+.framed .skill-group > h3 { font-family: var(--font-head); font-size: 1.05rem; font-weight: 600; letter-spacing: .1em; color: var(--accent-2); }
+.framed .main-column .skill-group > h3 { font-family: var(--font-head); font-size: 1.15rem; font-weight: 500; font-style: italic; letter-spacing: 0; text-transform: none; color: var(--accent); }
+.framed .tags li + li::before { color: var(--accent-2); }
+.framed .languages .level { font-style: italic; }
+.framed dl.rows dt { font-family: var(--font-head); font-size: 1.18rem; font-weight: 600; color: var(--accent-2); }
+
+/* ---------- Sidebar: inside the frame, after a hairline ---------- */
+.framed .sidebar { padding-right: 6mm; border-right: .25mm solid var(--rule); }
+.framed .sidebar .contacts li { gap: 2.2mm; font-size: .86rem; }
+.framed .sidebar .section-body > p { font-size: .95rem; }
+.framed .privacy { border-top-color: var(--rule); font-style: italic; }

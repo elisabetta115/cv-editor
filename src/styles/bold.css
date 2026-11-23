@@ -1,0 +1,48 @@
+/* =====================  BOLD STYLE  =====================
+   Full-width coloured header with a big name, section titles on coloured bars,
+   tags as filled chips. With the sidebar: a tinted panel.
+
+   @name    Bold
+   @group   creative
+   @color   plum
+   @tags    coloured header, big name, coloured bars, chips, strong, sans-serif
+*/
+:root {
+  --ink: #1a1d23;
+  --muted: #5b6370;
+  --rule: #e2e5ea;
+  --font-body: 'Lato', 'Helvetica Neue', Arial, sans-serif;
+  --font-head: 'Montserrat', sans-serif;
+  --side-w: 58mm;
+  --side-gap: 8mm;
+}
+@page { @bottom-right { font-family: 'Lato', sans-serif; } }
+.page.bold { padding: 0 15mm; }
+
+/* ---------- Header ---------- */
+.bold .cv-header { margin: 0 -15mm 7mm; padding: 13mm 15mm 9mm; background: var(--accent); color: #fff; }
+.bold .header-photo { width: 34mm; height: 34mm; border-radius: 3mm; border: 1mm solid rgba(255, 255, 255, .85); }
+.bold .name { font-weight: 800; font-size: 3.2rem; line-height: .98; letter-spacing: -.01em; text-transform: uppercase; color: #fff; }
+.bold .name span { display: block; }
+.bold .last-name { color: var(--soft); }
+.bold .headline { margin-top: 3mm; font-family: 'Montserrat', sans-serif; letter-spacing: .12em; color: rgba(255, 255, 255, .92); }
+.bold .cv-header .contacts .icon-wrap { color: var(--soft); }
+.bold .cv-header .details { color: rgba(255, 255, 255, .85); }
+.bold .cv-header .details strong { color: #fff; }
+
+/* ---------- Section titles on coloured bars ---------- */
+.bold .cv-section > h2 { margin-bottom: 3mm; padding: 1.2mm 3mm; border: 0; border-radius: 1mm; background: var(--accent); color: #fff; font-size: .86rem; letter-spacing: .14em; }
+.bold .sidebar .cv-section > h2 { color: #fff; }
+
+/* ---------- Entries, tags, lists ---------- */
+.bold .entry-title { font-family: 'Montserrat', sans-serif; font-size: 1rem; }
+.bold .dates { font-weight: 700; color: var(--accent-2); }
+.bold .org { font-style: normal; font-weight: 700; color: var(--muted); }
+.bold .tags { gap: 1.6mm; }
+.bold .tags li + li::before { content: none; }
+.bold .tags li { padding: .5mm 2.6mm; border-radius: 3mm; background: var(--accent); color: #fff; font-size: .86rem; font-weight: 700; }
+.bold .bullets li::before, .bold ul.desc li::before { border-radius: 0; background: var(--accent); }
+.bold .skill-group > h3 { color: var(--accent); }
+
+/* ---------- With the sidebar ---------- */
+.bold .sidebar { padding: 5mm; border-radius: 2mm; background: var(--tint); }

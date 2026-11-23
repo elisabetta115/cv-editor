@@ -1,0 +1,136 @@
+/* =====================  TERMINAL STYLE  =====================
+   A developer's terminal: the header is a dark rounded window with three coloured dots and a
+   prompt before the name, section titles written like markdown headings, dates as code comments,
+   skills as a list of strings, everything in a monospaced font.
+   With the sidebar: a light grey file-tree panel on the left, with folder-like titles.
+
+   @name    Terminal
+   @group   themed
+   @color   forest
+   @tags    developer, code, monospace, terminal, dark header, programmer, tech, file tree
+*/
+:root {
+  --base: 9.5pt;
+  --ink: #1f2428;
+  --muted: #69737d;
+  --rule: #dfe3e8;
+  --font-body: 'IBM Plex Mono', 'Courier New', monospace;
+  --term-bg: color-mix(in srgb, var(--p-dark, #24452c) 26%, #0e1116);   /* the window */
+  --term-bar: color-mix(in srgb, var(--p-dark, #24452c) 30%, #1d2229);  /* its title bar */
+  --term-ink: #e4e8ee;
+  --term-muted: #9aa4af;
+  --prompt: color-mix(in srgb, var(--p-light, #8cc59a) 88%, #fff);
+  --panel: #f2f4f6;                                                     /* the file tree */
+  --side-w: 66mm;
+  --side-gap: 7mm;
+}
+@page { @bottom-right { content: "[" counter(page) "/" counter(pages) "]"; font-family: 'IBM Plex Mono', monospace; color: #8a939c; } }
+body { line-height: 1.45; }
+.page.terminal { padding: 12mm 13mm 0 12mm; }
+.terminal strong { font-weight: 600; }
+
+/* ---------- Header: a terminal window ---------- */
+.terminal .cv-header {
+  position: relative; align-items: center; gap: 7mm; margin-bottom: 8mm; padding: 12.5mm 8mm 7mm 8mm;
+  border-radius: 3mm; background: var(--term-bg); color: var(--term-ink);
+}
+/* title bar with the three dots */
+.terminal .cv-header::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 6.2mm; border-radius: 3mm 3mm 0 0;
+  background:
+    radial-gradient(circle 1.25mm at 5.5mm 50%, #ff5f57 96%, transparent 100%),
+    radial-gradient(circle 1.25mm at 10mm 50%, #febc2e 96%, transparent 100%),
+    radial-gradient(circle 1.25mm at 14.5mm 50%, #28c840 96%, transparent 100%),
+    var(--term-bar);
+}
+.terminal .cv-header::after {
+  content: "~/cv"; position: absolute; left: 20mm; right: 20mm; top: 0; height: 6.2mm; line-height: 6.2mm;
+  text-align: center; font-size: .78rem; color: var(--term-muted);
+}
+.terminal .header-photo {
+  width: 30mm; height: 36mm; border-radius: 1.5mm; border: .35mm solid color-mix(in srgb, var(--prompt) 55%, transparent);
+}
+.terminal .name { font-weight: 600; font-size: 2.15rem; line-height: 1.2; letter-spacing: -.01em; color: #fff; }
+.terminal .name::before { content: "$ "; color: var(--prompt); }
+/* the cursor */
+.terminal .name::after { content: ""; display: inline-block; width: .55em; height: .95em; margin-left: .25em; vertical-align: -.12em; background: var(--prompt); }
+.terminal .headline { margin-top: 1.6mm; font-size: 1rem; font-weight: 400; font-style: italic; letter-spacing: 0; text-transform: none; color: var(--term-muted); }
+.terminal .headline::before { content: "# "; font-style: normal; }
+.terminal .cv-header .contacts { gap: 1.4mm 6mm; margin-top: 4.5mm; font-size: .9rem; color: var(--term-ink); }
+.terminal .cv-header .contacts .icon-wrap { color: var(--prompt); }
+.terminal .cv-header .details { margin-top: 2mm; font-size: .9rem; color: var(--term-ink); }
+.terminal .cv-header .details strong { font-weight: 400; color: var(--prompt); }
+
+/* ---------- Section titles: markdown headings ---------- */
+.terminal .cv-section { margin-top: 6.5mm; }
+.terminal .cv-section > h2 {
+  display: flex; align-items: baseline; gap: 2.2mm; margin-bottom: 2.6mm; padding: 0; border: 0;
+  font-size: 1.12rem; font-weight: 600; letter-spacing: 0; text-transform: lowercase; color: var(--accent);
+}
+.terminal .cv-section > h2::before { content: "##"; color: var(--accent-2); font-weight: 400; }
+.terminal .main-column .cv-section > h2::after { content: ""; flex: 1; align-self: center; border-top: .3mm dashed var(--rule); }
+/* the content indented under its heading, with an indent guide */
+.terminal .main-column .section-body { margin-left: 1.3mm; padding-left: 4.6mm; border-left: .3mm solid var(--rule); }
+.terminal .main-column .section-body > p { text-align: left; hyphens: manual; }
+
+/* ---------- Entries ---------- */
+.terminal .entry + .entry { margin-top: 3.8mm; }
+.terminal .entry-title { font-size: 1.02rem; font-weight: 600; }
+.terminal .dates { font-size: .9rem; font-style: italic; color: var(--muted); }
+.terminal .dates::before { content: "// "; font-style: normal; }
+.terminal .org { font-style: normal; color: var(--accent-2); }
+.terminal .org-name::before { content: "@"; }
+.terminal .org .location { color: var(--muted); }
+.terminal .org .location:not(:first-child)::before { content: " · "; }
+.terminal .entry .desc { color: #3a4148; }
+.terminal .extra span { font-weight: 600; }
+.terminal .extra em { color: var(--accent-2); }
+.terminal .bullets li, .terminal ul.desc li { padding-left: 4mm; }
+.terminal .bullets li::before, .terminal ul.desc li::before {
+  content: "-"; left: .4mm; top: 0; width: auto; height: auto; border-radius: 0; background: none; color: var(--accent-2); font-weight: 600;
+}
+
+/* ---------- Skills, tags, rows: like code ---------- */
+.terminal .tags { display: flex; flex-wrap: wrap; gap: .4mm 2.2mm; }
+.terminal .tags::before { content: "["; color: var(--muted); }
+.terminal .tags::after { content: "]"; color: var(--muted); }
+.terminal .tags li { white-space: nowrap; color: var(--accent-2); }
+.terminal .tags li::before, .terminal .tags li + li::before { content: '"'; margin: 0; color: inherit; }
+.terminal .tags li::after { content: '",'; color: inherit; }
+.terminal .tags li:last-child::after { content: '"'; }
+.terminal .languages .lang { font-weight: 600; }
+.terminal .languages .lang::after { content: ":"; color: var(--muted); font-weight: 400; }
+.terminal .languages .level::before { content: " "; }
+.terminal .languages .level { color: var(--accent-2); }
+.terminal .main-column .languages { gap: .5mm 7mm; }
+.terminal .skill-group > h3 { font-size: .92rem; font-weight: 600; letter-spacing: 0; text-transform: lowercase; color: var(--accent); }
+.terminal .skill-group > h3::after { content: ":"; color: var(--muted); }
+.terminal .main-column .skill-group { grid-template-columns: 40mm 1fr; }
+.terminal .main-column .skill-group > h3 { font-size: .95rem; color: var(--accent); }
+.terminal dl.rows dt { font-weight: 400; color: var(--accent-2); }
+
+/* ---------- Sidebar: a file-tree panel ---------- */
+.terminal .sidebar { padding: 5mm 4.2mm 5.5mm; border-radius: 2mm; background: var(--panel); border: .3mm solid #e3e7eb; }
+.terminal .sidebar .cv-section { margin-top: 5mm; break-inside: avoid; }
+.terminal .sidebar > .cv-section:first-child, .terminal .sidebar-photo + .cv-section { margin-top: 0; }
+.terminal .sidebar .cv-section > h2 { align-items: center; gap: 2.2mm; margin-bottom: 1.6mm; font-size: 1rem; }
+/* a folder that is open: a small chevron and a slash after the name */
+.terminal .sidebar .cv-section > h2::before {
+  content: ""; flex: none; width: 1.5mm; height: 1.5mm; margin: 0 .4mm 1mm; border: solid var(--accent-2); border-width: 0 .4mm .4mm 0; transform: rotate(45deg);
+}
+.terminal .sidebar .cv-section > h2::after { content: "/"; margin-left: -2mm; color: var(--muted); font-weight: 400; }
+.terminal .sidebar .section-body { margin-left: 1.1mm; padding: .4mm 0 .4mm 3.6mm; border-left: .3mm solid #cfd5db; }
+.terminal .sidebar .sec-details .details { padding-left: 3.6mm; margin-left: 1.1mm; border-left: .3mm solid #cfd5db; }
+.terminal .sidebar .contacts { font-size: .9rem; letter-spacing: -.02em; }
+/* contacts flush with the folder name, so that long addresses fit */
+.terminal .sidebar .sec-contacts .section-body { margin-left: 0; padding-left: 0; border-left: 0; }
+.terminal .sidebar .contacts li { gap: 2mm; }
+.terminal .sidebar .contacts li + li { margin-top: 1.5mm; }
+.terminal .sidebar .contacts .icon { width: 3.2mm; height: 3.2mm; }
+.terminal .sidebar .details strong { font-weight: 600; }
+.terminal .sidebar p, .terminal .sidebar .bullets li { color: #3a4148; }
+.terminal .sidebar .skill-group > h3 { margin-bottom: .8mm; }
+
+/* ---------- Privacy note ---------- */
+.terminal .privacy { font-style: italic; }
+.terminal .privacy::before { content: "// "; font-style: normal; }

@@ -1,0 +1,103 @@
+/* =====================  SPOTLIGHT STYLE  =====================
+   Photo-centric: a large photo panel bleeding off the top-left corner, next to a big Syne
+   name on a colour block, section titles with a short thick bar, two-tone tags. Without a
+   photo the name gets bigger.
+   With the sidebar: the photo tops a tinted column on the left, full width.
+
+   @name    Spotlight
+   @group   creative
+   @color   teal
+   @tags    spotlight, photo, big photo, photo panel, colour blocks, two-tone, graphic, sans-serif, creative, tinted sidebar
+*/
+:root {
+  --ink: #15191d;
+  --muted: #535c65;
+  --rule: #d6dbdf;
+  --dark: var(--p-dark, #134e4a);
+  --mid: var(--p-mid, #0f766e);
+  --light: var(--p-light, #2ec4b6);
+  --font-body: 'DM Sans', 'Helvetica Neue', Arial, sans-serif;
+  --font-head: 'Syne', sans-serif;
+  --side-w: 66mm;
+  --side-gap: 0mm;
+  --side-accent: var(--dark);
+}
+@page { @bottom-right { font-family: 'DM Sans', sans-serif; font-weight: 500; } }
+.page.spotlight { padding: 0 16mm; }
+
+/* ---------- The photo panel: the photo as it is, square corners ---------- */
+.spotlight .header-photo, .spotlight .sidebar-photo { overflow: hidden; border-radius: 0; background: var(--light); }
+
+/* ---------- Header: photo panel + name on a colour block ---------- */
+.spotlight .cv-header { position: relative; align-items: stretch; gap: 0; margin: 0 -16mm 8mm; }
+.spotlight .header-photo { order: 0; width: 66mm; height: 86mm; }
+.spotlight .cv-header .identity {
+  display: flex; flex-direction: column; justify-content: flex-end; padding: 14mm 16mm 7mm 10mm;
+  background: var(--tint); border-bottom: 3mm solid var(--light);
+}
+.spotlight .name { font-weight: 800; font-size: 3.5rem; line-height: .98; letter-spacing: -.02em; color: var(--dark); overflow-wrap: anywhere; }
+.spotlight .name span { display: block; }
+.spotlight .last-name { color: var(--mid); }
+.spotlight .headline {
+  align-self: flex-start; margin-top: 3.6mm; padding: 1mm 2.6mm; background: var(--dark);
+  font-family: var(--font-head); font-size: .86rem; font-weight: 700; letter-spacing: .1em; color: #fff;
+}
+.spotlight .cv-header .contacts { flex-direction: column; flex-wrap: nowrap; gap: 1.3mm; margin-top: 5mm; font-size: .9rem; }
+.spotlight .contacts .icon-wrap { width: 5.4mm; height: 5.4mm; background: var(--light); color: var(--dark); }
+.spotlight .contacts .icon { width: 3.1mm; height: 3.1mm; }
+.spotlight .cv-header .details { margin-top: 2.2mm; }
+/* without a photo: a full-width colour block, bigger name */
+.spotlight .cv-header:not(:has(.header-photo)) .identity { padding: 16mm 16mm 8mm; border-left: 0; }
+.spotlight .cv-header:not(:has(.header-photo)) .name { font-size: 4.6rem; }
+.spotlight .cv-header:not(:has(.header-photo)) .contacts { flex-direction: row; flex-wrap: wrap; gap: 1.6mm 6mm; }
+
+/* ---------- With the sidebar: photo at the top of the tinted column ---------- */
+.spotlight.has-sidebar { padding: 0 16mm 0 0; grid-template-rows: auto 1fr; }
+.spotlight.has-sidebar .header-photo { display: none; }
+.spotlight.has-sidebar > .cv-header { grid-column: 2; grid-row: 1; margin: 0 -16mm 8mm 0; }
+.spotlight.has-sidebar > .cv-header .identity { min-height: 52mm; padding: 14mm 16mm 6mm 10mm; }
+.spotlight.has-sidebar > .cv-header:not(:has(.header-photo)) .name { font-size: 4rem; }
+.spotlight.has-sidebar > .cv-header:has(.header-photo) .name { font-size: 3.6rem; }
+.spotlight.has-sidebar > .sidebar { grid-row: 1 / span 2; padding: 0 6mm 7mm 8mm; background: var(--tint); }
+.spotlight.has-sidebar .sidebar-photo { display: block; height: 86mm; margin: 0 -6mm 0 -8mm; }
+.spotlight.has-sidebar .sidebar:not(:has(.sidebar-photo)) { padding-top: 14mm; }
+.spotlight.has-sidebar > .main-column { padding-left: 10mm; }
+.spotlight.has-sidebar > .privacy { grid-column: 2; margin-left: 10mm; }
+
+/* ---------- Section titles: Syne with a short thick bar ---------- */
+.spotlight .cv-section { margin-top: 7mm; }
+.spotlight .cv-section > h2 {
+  break-inside: avoid;
+  display: flex; align-items: center; gap: 2.6mm; padding: 0; border: 0; margin-bottom: 3.2mm;
+  font-size: 1.12rem; font-weight: 700; letter-spacing: .06em; color: var(--dark);
+}
+.spotlight .cv-section > h2::before { content: ""; flex: none; width: 8mm; height: 2.6mm; background: var(--light); }
+.spotlight .sidebar .cv-section > h2 { font-size: 1rem; }
+.spotlight .sidebar .cv-section > h2::before { width: 5mm; background: var(--mid); }
+
+/* ---------- Entries ---------- */
+.spotlight .entry + .entry { margin-top: 4mm; }
+.spotlight .entry-title { font-size: 1.06rem; }
+.spotlight .dates { font-family: var(--font-head); font-size: .86rem; font-weight: 700; color: var(--mid); }
+.spotlight .sidebar .dates { color: var(--mid); }
+.spotlight .org { font-style: normal; font-weight: 500; color: var(--mid); }
+.spotlight .org .location { color: var(--muted); }
+.spotlight .org .location:not(:first-child)::before { content: " · "; }
+
+/* ---------- Lists, tags (two tones), skills ---------- */
+.spotlight .bullets li::before, .spotlight ul.desc li::before { top: .55em; width: 1.6mm; height: 1.6mm; border-radius: 0; background: var(--light); }
+.spotlight .tags { gap: 1.4mm; }
+.spotlight .tags li + li::before { content: none; }
+.spotlight .tags li { padding: .5mm 2.4mm; background: var(--dark); color: #fff; font-size: .88rem; font-weight: 500; }
+.spotlight .tags li:nth-child(even) { background: color-mix(in srgb, var(--light) 45%, #fff); color: var(--dark); }
+.spotlight .skill-group > h3 { font-family: var(--font-head); font-size: .8rem; letter-spacing: .08em; color: var(--mid); }
+.spotlight .main-column .skill-group > h3 { font-size: .95rem; letter-spacing: .02em; text-transform: none; color: var(--dark); }
+.spotlight .languages .level::before { content: none; }
+.spotlight .languages .level { margin-left: 1.6mm; padding: 0 1.6mm; background: var(--light); font-size: .8rem; font-weight: 700; color: var(--dark); }
+.spotlight .sidebar .languages li { display: flex; justify-content: space-between; align-items: center; }
+.spotlight .sidebar .languages li + li { margin-top: 1.3mm; }
+.spotlight dl.rows dt { font-family: var(--font-head); color: var(--mid); }
+.spotlight .sidebar .contacts .icon-wrap { width: 5.6mm; height: 5.6mm; }
+
+/* ---------- Privacy note ---------- */
+.spotlight .privacy { border-top: 1mm solid var(--light); }

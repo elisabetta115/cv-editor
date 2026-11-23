@@ -1,0 +1,95 @@
+/* =====================  MIDNIGHT STYLE  =====================
+   Elegant dark mode: every page in the palette's dark colour, white and light-tinted serif text,
+   titles in a display serif in the light colour, fine light rules and a round photo inside a
+   thin light ring. Calm and luxurious.
+   With the sidebar: a slightly darker panel.
+
+   @name    Midnight
+   @group   themed
+   @color   navy
+   @tags    dark, dark mode, serif, elegant, luxury, round photo, coloured page, calm, night
+   @print   @page{background:$dark}
+*/
+:root {
+  --base: 9.8pt;
+  --night: var(--p-dark, #1d3a5f);
+  --ink: color-mix(in srgb, #fff 90%, var(--night));
+  --muted: color-mix(in srgb, #fff 66%, var(--night));
+  --rule: color-mix(in srgb, var(--p-light, #6fa8dc) 40%, transparent);
+  --title: color-mix(in srgb, var(--p-light, #6fa8dc) 68%, #fff);       /* titles, organisations */
+  --accent: var(--title);
+  --accent-2: var(--title);
+  --soft: var(--title);
+  --panel: color-mix(in srgb, var(--night) 72%, #000);
+  --page-bg: var(--night);
+  --font-body: 'Lora', Georgia, serif;
+  --font-head: 'DM Serif Display', Georgia, serif;
+  --side-w: 61mm;
+  --side-gap: 9mm;
+  --side-ink: var(--ink);
+  --side-muted: var(--muted);
+  --side-accent: var(--title);
+  --side-rule: var(--rule);
+}
+@page { @bottom-right { font-family: 'Lora', serif; color: rgba(255, 255, 255, .6); } }
+body { line-height: 1.48; }
+.page.midnight { padding: 16mm 17mm 0; color: var(--ink); }
+.midnight strong { font-weight: 600; color: #fff; }
+
+/* ---------- Header ---------- */
+.midnight .cv-header { gap: 10mm; margin-bottom: 9mm; padding-bottom: 8mm; border-bottom: .25mm solid var(--rule); }
+.midnight .header-photo {
+  order: 0; width: 36mm; height: 36mm; margin: 1.8mm; border-radius: 50%;
+  box-shadow: 0 0 0 1.5mm var(--night), 0 0 0 1.8mm var(--title);
+}
+.midnight .name { font-family: var(--font-head); font-weight: 400; font-size: 3.4rem; line-height: 1.04; color: #fff; }
+.midnight .last-name { font-style: italic; color: var(--title); }
+.midnight .headline { margin-top: 2.4mm; font-size: 1.12rem; font-weight: 400; font-style: italic; letter-spacing: .02em; text-transform: none; color: var(--muted); }
+.midnight .cv-header .contacts { gap: 1.4mm 6mm; margin-top: 4.6mm; font-size: .92rem; }
+.midnight .contacts .icon-wrap { color: var(--title); }
+.midnight .contacts .icon { stroke-width: 1.6; }
+.midnight .cv-header .details { color: var(--muted); }
+.midnight .cv-header .details strong { color: var(--ink); }
+
+/* ---------- Section titles: display serif with a fine rule on the baseline ---------- */
+.midnight .cv-section { margin-top: 7mm; }
+.midnight .cv-section > h2 {
+  display: flex; align-items: baseline; gap: 4mm; margin-bottom: 3.2mm; padding: 0; border: 0;
+  font-size: 1.6rem; font-weight: 400; line-height: 1.15; letter-spacing: .005em; text-transform: none; color: var(--title);
+}
+.midnight .cv-section > h2::after { content: ""; flex: 1; border-bottom: .2mm solid var(--rule); }
+
+/* ---------- Entries ---------- */
+.midnight .entry + .entry { margin-top: 4mm; }
+.midnight .entry-title { font-size: 1.06rem; font-weight: 600; color: #fff; }
+.midnight .dates { font-size: .82rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.midnight .org { color: var(--title); }
+.midnight .org .location { color: var(--muted); }
+.midnight .org .location:not(:first-child)::before { content: " · "; }
+.midnight .entry .desc { color: color-mix(in srgb, #fff 80%, var(--night)); }
+.midnight .extra span { font-weight: 600; color: #fff; }
+.midnight .bullets li, .midnight ul.desc li { padding-left: 4.2mm; }
+.midnight .bullets li::before, .midnight ul.desc li::before { left: .5mm; top: .6em; width: 1.4mm; height: 1.4mm; background: none; border: .25mm solid var(--title); }
+
+/* ---------- Skills ---------- */
+.midnight .tags { gap: 1.6mm; }
+.midnight .tags li + li::before { content: none; }
+.midnight .tags li { padding: .1mm 2.6mm; border: .2mm solid var(--rule); border-radius: 3mm; font-size: .92rem; font-style: italic; }
+.midnight .skill-group > h3 { font-size: .76rem; font-weight: 600; letter-spacing: .14em; color: var(--title); }
+.midnight .main-column .skill-group > h3 { font-family: var(--font-head); font-weight: 400; font-size: 1.1rem; letter-spacing: .01em; color: var(--title); }
+.midnight .languages .lang { font-weight: 600; color: #fff; }
+.midnight .languages .level { font-style: italic; }
+.midnight dl.rows dt { font-family: var(--font-head); font-weight: 400; font-size: 1.05rem; color: var(--title); }
+
+/* ---------- Sidebar: a darker panel ---------- */
+.midnight .sidebar { padding: 7mm 5.5mm 7mm; border-radius: 1.5mm; background: var(--panel); }
+.midnight .sidebar .cv-section { break-inside: avoid; }
+.midnight .sidebar .cv-section > h2 { font-size: 1.38rem; }
+.midnight .sidebar .details strong { color: #fff; }
+.midnight .sidebar p, .midnight .sidebar .bullets li { color: color-mix(in srgb, #fff 80%, var(--night)); }
+.midnight .sidebar .languages li { display: flex; justify-content: space-between; }
+.midnight .sidebar .languages .level::before { content: none; }
+
+/* ---------- Privacy note ---------- */
+.midnight .privacy { border-top-color: var(--rule); color: var(--muted); }
+.midnight .privacy .signature img { filter: brightness(0) invert(1); }  /* the signature, white on the dark page */

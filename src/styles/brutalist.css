@@ -1,0 +1,104 @@
+/* =====================  BRUTALIST STYLE  =====================
+   Neo-brutalism: thick black borders around the header and every section, hard offset
+   shadows, black label titles sitting on the box edge, square corners, Space Grotesk.
+   With the sidebar: the same bordered boxes in a narrower column on the left.
+
+   @name    Brutalist
+   @group   creative
+   @color   graphite
+   @tags    brutalist, neo-brutalism, black borders, hard shadows, boxes, bold, grotesk, square, playful
+*/
+:root {
+  --ink: #000;
+  --muted: #3b4047;
+  --rule: #000;
+  --b: .9mm;                     /* the thick black border */
+  --sh: 2mm;                     /* hard shadow offset */
+  --pop: var(--p-light, #9aa5b1);
+  --font-body: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --side-w: 63mm;
+  --side-gap: 6mm;
+  --side-accent: #000;
+}
+@page { @bottom-right { font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #000; } }
+body { line-height: 1.4; }
+.page.brutalist { padding: 14mm 15mm 0 14mm; }
+/* Space Grotesk has no italic: emphasis is a highlighter mark instead of a fake slant */
+.brutalist em { font-style: normal; padding: 0 .6mm; background: color-mix(in srgb, var(--pop) 45%, #fff); }
+
+/* ---------- Header box ---------- */
+.brutalist .cv-header {
+  align-items: center; gap: 7mm; margin: 0 var(--sh) 11mm 0; padding: 7mm 7mm 6.5mm 7.5mm;
+  border: var(--b) solid #000; background: var(--pop); box-shadow: var(--sh) var(--sh) 0 #000;
+}
+.brutalist .header-photo { width: 34mm; height: 42mm; border-radius: 0; border: var(--b) solid #000; box-shadow: 1.6mm 1.6mm 0 #000; background: #fff; }
+.brutalist .name { font-weight: 700; font-size: 3.5rem; line-height: .93; letter-spacing: -.035em; color: #000; }
+.brutalist .name span { display: block; }
+.brutalist .headline {
+  display: inline-block; margin-top: 4mm; padding: .9mm 2.6mm; border: .6mm solid #000; background: #fff;
+  box-shadow: 1mm 1mm 0 #000; font-size: .84rem; font-weight: 700; letter-spacing: .12em; color: #000;
+}
+.brutalist .cv-header .contacts { gap: 1.8mm 5mm; margin-top: 4.5mm; font-size: .9rem; font-weight: 500; }
+.brutalist .contacts .icon-wrap { width: 5.2mm; height: 5.2mm; background: #000; color: #fff; }
+.brutalist .contacts .icon { width: 3mm; height: 3mm; }
+.brutalist .cv-header .details { margin-top: 2mm; color: #000; }
+.brutalist .cv-header .details strong { font-weight: 700; color: #000; }
+
+/* ---------- Every section is a bordered box, the title a black label in its top-left corner ---------- */
+/* The hard shadow is part of the border (thicker on the right and at the bottom, with the two
+   corners cut out): a real box-shadow at the foot of a printed page would spill onto the next one. */
+.brutalist .cv-section {
+  --pad: 5mm;
+  position: relative; margin-top: 7mm; padding: 3mm var(--pad) 4.6mm; background: #fff;
+  border: var(--b) solid #000; border-right-width: calc(var(--b) + var(--sh)); border-bottom-width: calc(var(--b) + var(--sh));
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
+}
+.brutalist .cv-section::before, .brutalist .cv-section::after { content: ""; position: absolute; width: var(--sh); height: var(--sh); background: #fff; }
+.brutalist .cv-section::before { top: calc(-1 * var(--b)); right: calc(-1 * (var(--b) + var(--sh))); }
+.brutalist .cv-section::after { bottom: calc(-1 * (var(--b) + var(--sh))); left: calc(-1 * var(--b)); }
+.brutalist .sidebar-photo + .cv-section { margin-top: 0; }
+/* the label is glued to the inside of the corner (not above the border: at the top of a
+   printed page that part would be cut off); the top padding is for the continuation of a
+   box on the next page */
+.brutalist .cv-section > h2 {
+  width: fit-content; margin: -3mm 0 3.4mm calc(-1 * var(--pad)); padding: 1.3mm 3.2mm 1.4mm var(--pad); border: 0; background: #000;
+  font-size: .92rem; line-height: 1.2; font-weight: 700; letter-spacing: .12em; color: #fff;
+}
+.brutalist .sidebar .cv-section > h2 { color: #fff; }
+.brutalist .cv-section.sec-details { padding-top: 4mm; }
+
+/* ---------- Entries ---------- */
+.brutalist .entry + .entry { margin-top: 3.4mm; padding-top: 3.2mm; border-top: .35mm solid #000; }
+.brutalist .entry-title { font-size: 1.08rem; font-weight: 700; letter-spacing: -.01em; }
+.brutalist .dates { padding: .1mm 1.6mm; background: var(--pop); border: .35mm solid #000; font-size: .82rem; font-weight: 700; color: #000; }
+.brutalist .sidebar .dates { display: inline-block; margin-top: .6mm; color: #000; }
+.brutalist .org { font-style: normal; font-weight: 500; color: #000; }
+.brutalist .org .location { font-weight: 400; color: var(--muted); }
+.brutalist .org .location:not(:first-child)::before { content: " / "; }
+.brutalist .entry .desc { margin-top: 1mm; }
+.brutalist .extra span { font-weight: 700; }
+.brutalist .title-link { text-decoration: underline; text-decoration-thickness: .4mm; text-underline-offset: .6mm; }
+
+/* ---------- Lists, tags, languages ---------- */
+.brutalist .bullets li::before, .brutalist ul.desc li::before { top: .5em; width: 1.5mm; height: 1.5mm; border-radius: 0; background: #000; }
+.brutalist .tags { gap: 2mm 2mm; }
+.brutalist .tags li + li::before { content: none; }
+.brutalist .tags li { padding: .3mm 2mm; border: .45mm solid #000; background: #fff; box-shadow: .9mm .9mm 0 #000; font-size: .88rem; font-weight: 500; }
+.brutalist .skill-group > h3 { font-size: .8rem; font-weight: 700; letter-spacing: .1em; color: #000; }
+.brutalist .main-column .skill-group > h3 { font-size: .95rem; letter-spacing: 0; }
+.brutalist .languages .level::before { content: none; }
+.brutalist .languages .level { margin-left: 1.6mm; padding: 0 1.4mm; border: .35mm solid #000; font-size: .8rem; font-weight: 700; color: #000; }
+.brutalist .sidebar .languages li { display: flex; justify-content: space-between; align-items: center; }
+.brutalist .sidebar .languages li + li { margin-top: 1.4mm; }
+.brutalist dl.rows dt { font-weight: 700; }
+
+/* ---------- Sidebar: the same boxes, narrower ---------- */
+.brutalist .sidebar .cv-section { --pad: 4mm; }
+.brutalist .sidebar .cv-section:not(:has(.entry)) { break-inside: avoid; }
+.brutalist .sidebar .contacts { font-size: .88rem; font-weight: 500; }
+.brutalist .sidebar .contacts li { gap: 2.2mm; }
+.brutalist .sidebar .contacts li + li { margin-top: 1.8mm; }
+.brutalist .sidebar .details, .brutalist .sidebar .details strong { color: #000; }
+
+/* ---------- Privacy note ---------- */
+.brutalist .privacy { border-top: var(--b) solid #000; color: var(--muted); }

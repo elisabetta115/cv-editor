@@ -1,0 +1,80 @@
+/* =====================  MAGAZINE STYLE  =====================
+   A fashion and culture magazine: a huge two-line name with the last name in colour, an
+   italic deck, a tall portrait, a drop cap on the profile and big numbers before every section.
+   With the sidebar: a tinted box-out on the left, running off the edge of the page.
+
+   @name    Magazine
+   @group   creative
+   @color   plum
+   @tags    magazine, editorial, fashion, drop cap, numbered sections, tall photo, display serif, creative
+*/
+:root {
+  --ink: #1c1820;
+  --muted: #5f5866;
+  --rule: #ddd6e2;
+  --font-body: 'Lato', 'Helvetica Neue', Arial, sans-serif;
+  --font-name: 'Abril Fatface', Georgia, serif;
+  --font-deck: 'Playfair Display', Georgia, serif;
+  --side-w: 58mm;
+  --side-gap: 10mm;
+}
+@page { @bottom-right { font-family: 'Lato', sans-serif; } }
+body { line-height: 1.45; }
+.page.magazine { padding: 14mm 15mm 0; }
+
+/* ---------- Header: stacked name, deck, tall portrait ---------- */
+.magazine .cv-header { align-items: flex-end; gap: 10mm; margin-bottom: 9mm; }
+.magazine .header-photo { width: 44mm; height: 60mm; border-radius: 0; align-self: flex-start; }
+.magazine .name { font-weight: 400; font-size: 5.7rem; line-height: .9; letter-spacing: -.005em; color: var(--ink); }
+.magazine .name span { display: block; }
+.magazine .last-name { color: var(--accent-2); }
+.magazine .headline { margin-top: 5mm; font-family: var(--font-deck); font-size: 1.45rem; font-weight: 400; font-style: italic; line-height: 1.25; letter-spacing: 0; text-transform: none; color: var(--ink); }
+.magazine .headline::before { content: ""; display: block; width: 14mm; height: .7mm; margin-bottom: 3mm; background: var(--accent-2); }
+.magazine .cv-header .contacts { gap: 1.4mm 5.5mm; margin-top: 5mm; font-size: .88rem; }
+.magazine .cv-header .details { font-size: .88rem; }
+.magazine .contacts .icon-wrap { color: var(--accent-2); }
+
+/* ---------- Section titles: a big number and letter-spaced capitals ---------- */
+.magazine .main-column { counter-reset: sec; }
+.magazine .cv-section + .cv-section { margin-top: 7mm; }
+.magazine .cv-section > h2 { display: flex; align-items: baseline; gap: 3mm; margin-bottom: 3mm; padding: 0; border: 0; font-size: .8rem; font-weight: 700; letter-spacing: .3em; color: var(--ink); }
+.magazine .main-column .cv-section > h2 { counter-increment: sec; }
+.magazine .main-column .cv-section > h2::before {
+  content: counter(sec, decimal-leading-zero); flex: none; font-family: var(--font-name); font-weight: 400;
+  font-size: 2.5rem; line-height: .8; letter-spacing: 0; color: var(--soft);
+}
+.magazine .main-column .cv-section > h2::after { content: ""; flex: 1; align-self: center; height: .25mm; margin-left: 2mm; background: var(--rule); }
+
+/* ---------- Profile: larger text with a three-line drop cap ---------- */
+.magazine .main-column .sec-profile .section-body { display: flow-root; }
+.magazine .main-column .sec-profile .section-body > p { font-size: 1.08rem; line-height: 1.5; text-align: left; }
+.magazine .main-column .sec-profile .section-body > p:first-child::first-letter {
+  float: left; margin: .06em .1em 0 0; font-family: var(--font-name); font-size: 4.6em; line-height: .78; color: var(--accent-2);
+}
+
+/* ---------- Entries ---------- */
+.magazine .entry + .entry { margin-top: 4mm; }
+.magazine .entry-title { font-size: 1.07rem; font-weight: 900; }
+.magazine .dates { font-size: .76rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-2); }
+.magazine .org { font-family: var(--font-deck); font-size: 1.02rem; font-style: italic; color: var(--accent); }
+.magazine .org .location { font-family: var(--font-body); font-size: .86rem; font-style: normal; color: var(--muted); }
+.magazine .org .location:not(:first-child)::before { content: " — "; }
+.magazine .bullets li::before, .magazine ul.desc li::before { top: .58em; width: 1.6mm; height: .35mm; border-radius: 0; background: var(--accent-2); }
+.magazine .extra span { font-weight: 900; }
+.magazine .skill-group > h3 { font-size: .74rem; font-weight: 900; letter-spacing: .2em; color: var(--accent-2); }
+.magazine .main-column .skill-group > h3 { font-family: var(--font-deck); font-size: 1.05rem; font-weight: 400; font-style: italic; letter-spacing: 0; color: var(--accent); }
+/* tags: italic words between slashes */
+.magazine .tags li { font-family: var(--font-deck); font-style: italic; font-size: 1.02rem; }
+.magazine .tags { display: block; }
+.magazine .tags li { display: inline; }
+/* the slash stays at the end of a line, never at the start of the next one */
+.magazine .tags li + li::before { content: "\00a0\00a0/\00a0\0020"; margin: 0; font-family: var(--font-body); font-style: normal; color: var(--accent-2); }
+.magazine .languages .lang { font-weight: 900; }
+.magazine dl.rows dt { font-family: var(--font-name); font-weight: 400; color: var(--accent-2); }
+
+/* ---------- Sidebar: tinted box-out running off the left edge ---------- */
+.magazine .sidebar { margin-left: -15mm; padding: 8mm 7mm 8mm 15mm; background: var(--tint); border-top: 1.4mm solid var(--accent-2); }
+.magazine .sidebar .cv-section > h2 { padding-bottom: 1.6mm; border-bottom: .25mm solid color-mix(in srgb, var(--accent-2) 35%, transparent); color: var(--accent); }
+.magazine .sidebar .contacts li { gap: 2.2mm; }
+.magazine .sidebar .tags li { font-size: .98rem; }
+.magazine .privacy { border-top-color: var(--rule); }

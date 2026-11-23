@@ -1,0 +1,140 @@
+/* =====================  BLUEPRINT STYLE  =====================
+   Engineering paper: a tinted sheet with a fine square grid on every page, the name in condensed
+   capitals over a dimension line, section titles as boxed technical labels with a ruler, dashed
+   lines and small monospaced annotations.
+   With the sidebar: a boxed panel with a dashed outline.
+
+   @name    Blueprint
+   @group   themed
+   @color   navy
+   @tags    engineering, technical, grid, graph paper, condensed, monospace, tinted page, architect, engineer
+   @print   @page{background:$bg;@top-left{background:linear-gradient(to right,${light}66 .3mm,transparent .3mm) 0 0/13mm 13mm,linear-gradient(${light}66 .3mm,transparent .3mm) 0 0/13mm 13mm,linear-gradient(to right,${light}33 .18mm,transparent .18mm) 0 0/3.25mm 3.25mm,linear-gradient(${light}33 .18mm,transparent .18mm) 0 0/3.25mm 3.25mm}@bottom-left{background:linear-gradient(to right,${light}66 .3mm,transparent .3mm) 0 3mm/13mm 13mm,linear-gradient(${light}66 .3mm,transparent .3mm) 0 3mm/13mm 13mm,linear-gradient(to right,${light}33 .18mm,transparent .18mm) 0 3mm/3.25mm 3.25mm,linear-gradient(${light}33 .18mm,transparent .18mm) 0 3mm/3.25mm 3.25mm}@bottom-right{background:linear-gradient(to right,${light}66 .3mm,transparent .3mm) 0 3mm/13mm 13mm,linear-gradient(${light}66 .3mm,transparent .3mm) 0 3mm/13mm 13mm,linear-gradient(to right,${light}33 .18mm,transparent .18mm) 0 3mm/3.25mm 3.25mm,linear-gradient(${light}33 .18mm,transparent .18mm) 0 3mm/3.25mm 3.25mm}}
+*/
+:root {
+  --ink: #1b2330;
+  --muted: #566273;
+  --rule: color-mix(in srgb, var(--p-mid, #2e5c8a) 35%, transparent);
+  --bg: var(--p-bg, #eef2f7);
+  --label-bg: color-mix(in srgb, var(--bg) 35%, #fff);
+  --font-body: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+  --font-head: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+  --g-major: color-mix(in srgb, var(--p-light, #6fa8dc) 40%, transparent);
+  --g-minor: color-mix(in srgb, var(--p-light, #6fa8dc) 20%, transparent);
+  /* the grid: 3.25 mm squares, a stronger line every 13 mm (the top margin of the printed pages,
+     so the grid lines up across every page) */
+  --grid:
+    linear-gradient(to right, var(--g-major) .3mm, transparent .3mm) 0 0 / 13mm 13mm,
+    linear-gradient(var(--g-major) .3mm, transparent .3mm) 0 0 / 13mm 13mm,
+    linear-gradient(to right, var(--g-minor) .18mm, transparent .18mm) 0 0 / 3.25mm 3.25mm,
+    linear-gradient(var(--g-minor) .18mm, transparent .18mm) 0 0 / 3.25mm 3.25mm;
+  --page-bg: var(--bg);
+  --side-w: 62mm;
+  --side-gap: 8mm;
+}
+/* the margins of the printed pages carry the grid too (colours in @print above) */
+@page {
+  @top-left { content: ""; width: 210mm; }
+  @bottom-left { content: ""; width: 156mm; }
+  @bottom-right { width: 41mm; margin-right: 0; padding-right: 13mm; text-align: right; font-family: 'IBM Plex Mono', monospace; color: #566273; }
+}
+.page.blueprint { padding: 13mm 13mm 0; background: var(--grid), var(--bg); }
+@media print {
+  .page.blueprint { background: none; }
+  .page.blueprint::before { content: ""; position: fixed; inset: 0; z-index: -1; background: var(--grid); }
+}
+.blueprint strong { font-weight: 600; }
+
+/* ---------- Header: name over a dimension line, ruler underneath ---------- */
+.blueprint .cv-header { position: relative; align-items: flex-end; gap: 9mm; margin-bottom: 8mm; padding-bottom: 7mm; }
+.blueprint .cv-header::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3.2mm;
+  background:
+    linear-gradient(var(--accent), var(--accent)) 0 100% / 100% .4mm no-repeat,
+    repeating-linear-gradient(to right, var(--accent) 0 .3mm, transparent .3mm 13mm) 0 100% / 100% 3.2mm no-repeat,
+    repeating-linear-gradient(to right, var(--accent-2) 0 .2mm, transparent .2mm 3.25mm) 0 100% / 100% 1.6mm no-repeat;
+}
+.blueprint .name {
+  width: fit-content; font-family: var(--font-head); font-weight: 700; font-size: 3.6rem; line-height: .95;
+  letter-spacing: .03em; text-transform: uppercase; color: var(--accent);
+}
+/* dimension line: extension ticks at both ends, arrowheads, a thin line */
+.blueprint .name::after {
+  content: ""; display: block; height: 2.6mm; margin-top: 1.6mm;
+  border-left: .3mm solid var(--accent-2); border-right: .3mm solid var(--accent-2);
+  background:
+    linear-gradient(to bottom right, transparent 50%, var(--accent-2) 50%) 0 .6mm / 2.2mm .7mm no-repeat,
+    linear-gradient(to top right, transparent 50%, var(--accent-2) 50%) 0 1.3mm / 2.2mm .7mm no-repeat,
+    linear-gradient(to bottom left, transparent 50%, var(--accent-2) 50%) 100% .6mm / 2.2mm .7mm no-repeat,
+    linear-gradient(to top left, transparent 50%, var(--accent-2) 50%) 100% 1.3mm / 2.2mm .7mm no-repeat,
+    linear-gradient(var(--accent-2), var(--accent-2)) 0 1.18mm / 100% .25mm no-repeat;
+}
+.blueprint .headline {
+  margin-top: 2.6mm; font-family: var(--font-mono); font-size: .9rem; font-weight: 400; letter-spacing: .1em; color: var(--accent-2);
+}
+.blueprint .cv-header .contacts { gap: 1.2mm 5.5mm; margin-top: 3.6mm; font-size: .92rem; }
+.blueprint .cv-header .details { font-size: .92rem; }
+/* photo in a frame with a dashed outline and centre marks */
+.blueprint .header-photo {
+  position: relative; overflow: visible; width: 31mm; height: 38mm; margin: 4mm 4mm 2mm 0; border-radius: 0;
+  border: .35mm solid var(--accent); outline: .25mm dashed var(--accent-2); outline-offset: 1.3mm; background: var(--label-bg);
+}
+.blueprint .header-photo::after {
+  content: ""; position: absolute; inset: -4.2mm; pointer-events: none;
+  background:
+    linear-gradient(var(--accent-2), var(--accent-2)) 50% 0 / .25mm 3.4mm no-repeat,
+    linear-gradient(var(--accent-2), var(--accent-2)) 50% 100% / .25mm 3.4mm no-repeat,
+    linear-gradient(var(--accent-2), var(--accent-2)) 0 50% / 3.4mm .25mm no-repeat,
+    linear-gradient(var(--accent-2), var(--accent-2)) 100% 50% / 3.4mm .25mm no-repeat;
+}
+
+/* ---------- Section titles: boxed labels followed by a ruler ---------- */
+.blueprint .cv-section { margin-top: 6.5mm; overflow: clip; }
+.blueprint .cv-section > h2 {
+  position: relative; width: fit-content; max-width: calc(100% - 8mm); margin-bottom: 3.2mm; padding: .8mm 2.8mm .6mm;
+  border: .35mm solid var(--accent); background: var(--label-bg);
+  font-size: 1.12rem; line-height: 1.2; letter-spacing: .16em;
+}
+.blueprint .cv-section > h2::after {
+  content: ""; position: absolute; left: 100%; top: 50%; width: 300mm; height: 2.2mm; margin: -1.1mm 0 0 .35mm;
+  background:
+    linear-gradient(var(--accent-2), var(--accent-2)) 0 50% / 100% .22mm no-repeat,
+    repeating-linear-gradient(to right, transparent 0 3.05mm, color-mix(in srgb, var(--accent-2) 60%, transparent) 3.05mm 3.25mm) 0 50% / 100% 1mm no-repeat,
+    repeating-linear-gradient(to right, transparent 0 12.75mm, var(--accent-2) 12.75mm 13mm) 0 50% / 100% 2.2mm no-repeat;
+}
+
+/* ---------- Entries ---------- */
+.blueprint .entry + .entry { margin-top: 3.8mm; }
+.blueprint .entry-head { gap: 2.5mm; }
+.blueprint .entry-title { font-size: 1.04rem; font-weight: 600; }
+/* a dashed leader between the title and the dates */
+.blueprint .entry-head::after { content: ""; order: 1; flex: 1; min-width: 5mm; align-self: center; border-top: .25mm dashed var(--rule); }
+.blueprint .entry-head .dates { order: 2; }
+.blueprint .dates { font-family: var(--font-mono); font-size: .84rem; letter-spacing: .02em; color: var(--accent-2); }
+.blueprint .org { font-family: var(--font-head); font-style: normal; font-weight: 600; font-size: 1.05rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent-2); }
+.blueprint .org .location { font-weight: 400; color: var(--muted); }
+.blueprint .org .location:not(:first-child)::before { content: " / "; }
+.blueprint .extra span { font-weight: 600; }
+.blueprint .bullets li, .blueprint ul.desc li { padding-left: 4.2mm; }
+.blueprint .bullets li::before, .blueprint ul.desc li::before {
+  left: .5mm; top: .5em; width: 1.5mm; height: 1.5mm; border-radius: 0; background: none; border: .3mm solid var(--accent-2);
+}
+
+/* ---------- Skills and lists ---------- */
+.blueprint .tags { gap: 1.4mm; }
+.blueprint .tags li + li::before { content: none; }
+.blueprint .tags li { padding: .2mm 2mm; border: .25mm dashed var(--accent-2); background: var(--label-bg); font-family: var(--font-mono); font-size: .86rem; color: var(--accent); }
+.blueprint .skill-group > h3 { font-family: var(--font-head); font-size: .98rem; font-weight: 700; letter-spacing: .12em; color: var(--accent-2); }
+.blueprint .main-column .skill-group > h3 { font-family: var(--font-head); font-size: 1.05rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.blueprint .languages .level { font-family: var(--font-mono); font-size: .88rem; }
+.blueprint dl.rows dt { font-family: var(--font-mono); font-weight: 400; color: var(--accent-2); }
+
+/* ---------- Sidebar: a panel with a dashed outline ---------- */
+.blueprint .sidebar { padding: 5mm 4.5mm 5.5mm; border: .35mm dashed var(--accent); background: color-mix(in srgb, var(--label-bg) 75%, transparent); }
+.blueprint .sidebar .cv-section { break-inside: avoid; }
+.blueprint .sidebar .cv-section > h2 { font-size: 1rem; }
+.blueprint .sidebar .contacts .icon-wrap { color: var(--accent-2); }
+.blueprint .sidebar .details strong { font-weight: 600; }
+
+/* ---------- Privacy note ---------- */
+.blueprint .privacy { border-top: .25mm dashed var(--rule); font-family: var(--font-mono); }

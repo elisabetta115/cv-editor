@@ -1,0 +1,105 @@
+/* =====================  HEXAGON STYLE  =====================
+   Hexagons with a tech feel: a hexagonal photo inside a hexagonal ring, a fading
+   honeycomb behind the header, hexagon badges before the section titles, hexagon
+   contact icons and bullets, pointy-ended chips, condensed capitals.
+   With the sidebar: a tinted column on the left topped by a honeycomb strip.
+
+   @name    Hexagon
+   @group   creative
+   @color   forest
+   @tags    hexagon, honeycomb, tech, engineering, developer, geometric, condensed, chips, tinted sidebar
+*/
+:root {
+  --ink: #171c19;
+  --muted: #56605a;
+  --rule: #d6ddd8;
+  --dark: var(--p-dark, #24452c);
+  --mid: var(--p-mid, #3d7a4e);
+  --light: var(--p-light, #8cc59a);
+  --hex: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  --honeycomb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='17.32' viewBox='0 0 30 17.32'%3E%3Cpath d='M0 8.66L5 0h10l5 8.66L15 17.32H5zM20 8.66h10' fill='none' stroke='%23000' stroke-width='.9'/%3E%3C/svg%3E");
+  --font-body: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --font-head: 'Barlow Condensed', 'Oswald', sans-serif;
+  --side-w: 60mm;
+  --side-gap: 8mm;
+  --side-accent: var(--dark);
+}
+@page { @bottom-right { font-family: 'Barlow Condensed', sans-serif; font-size: 9pt; font-weight: 600; color: var(--p-mid, #777); } }
+html { font-size: 9.6pt; }
+.page.hexagon { padding: 0 16mm; }
+
+/* ---------- Header: honeycomb fading in from the right ---------- */
+.hexagon .cv-header { position: relative; gap: 8mm; margin: 0 -16mm 7mm; padding: 14mm 16mm 7mm; }
+.hexagon .cv-header::before {
+  content: ""; position: absolute; inset: 0 0 0 30%; z-index: 0; pointer-events: none;
+  background: radial-gradient(farthest-corner at 100% 0, color-mix(in srgb, var(--mid) 60%, transparent), transparent 78%);
+  -webkit-mask: var(--honeycomb) 0 0 / 10.4mm 6mm repeat; mask: var(--honeycomb) 0 0 / 10.4mm 6mm repeat;
+}
+.hexagon .cv-header > * { position: relative; z-index: 1; }
+.hexagon .header-photo { order: 0; width: 41mm; height: 47.3mm; padding: 1.5mm; border-radius: 0; background: var(--mid); clip-path: var(--hex); }
+.hexagon .header-photo::before { content: ""; position: absolute; inset: 1.5mm; background: #fff; clip-path: var(--hex); }
+.hexagon .header-photo img { position: relative; clip-path: var(--hex); transform: scale(.93); }
+.hexagon .name { font-weight: 700; font-size: 4.5rem; line-height: .92; letter-spacing: .01em; text-transform: uppercase; color: var(--dark); }
+.hexagon .last-name { color: var(--mid); }
+.hexagon .headline {
+  display: flex; align-items: center; gap: 2mm; margin-top: 2.6mm; font-family: var(--font-head);
+  font-size: 1.15rem; font-weight: 600; letter-spacing: .22em; color: var(--ink);
+}
+.hexagon .headline::before { content: ""; flex: none; width: 2.6mm; height: 3mm; background: var(--light); clip-path: var(--hex); }
+.hexagon .cv-header .contacts { gap: 1.6mm 5mm; margin-top: 4mm; font-size: .92rem; }
+.hexagon .contacts .icon-wrap { width: 5.6mm; height: 6.4mm; background: var(--dark); color: #fff; clip-path: var(--hex); }
+.hexagon .contacts .icon { width: 2.9mm; height: 2.9mm; }
+.hexagon .cv-header .details { margin-top: 2mm; }
+
+/* ---------- Section titles with a hexagon badge ---------- */
+.hexagon .cv-section { margin-top: 7mm; }
+.hexagon .sidebar-photo + .cv-section { margin-top: 0; }
+.hexagon .cv-section > h2 {
+  break-inside: avoid;
+  position: relative; display: flex; align-items: center; gap: 2.6mm; margin-bottom: 3mm; padding: 0; border: 0;
+  font-size: 1.42rem; font-weight: 700; line-height: 1.1; letter-spacing: .08em; color: var(--dark);
+}
+.hexagon .cv-section > h2::before { content: ""; flex: none; width: 5.6mm; height: 6.4mm; background: var(--mid); clip-path: var(--hex); }
+.hexagon .cv-section > h2::after { content: ""; position: absolute; left: 1.55mm; top: 50%; width: 2.5mm; height: 2.9mm; margin-top: -1.45mm; background: var(--light); clip-path: var(--hex); }
+.hexagon .sidebar .cv-section > h2 { font-size: 1.3rem; }
+
+/* ---------- Entries ---------- */
+.hexagon .entry + .entry { margin-top: 3.8mm; }
+.hexagon .entry-title { font-size: 1.04rem; font-weight: 600; }
+.hexagon .dates { font-family: var(--font-head); font-size: 1.08rem; font-weight: 600; letter-spacing: .04em; color: var(--mid); }
+.hexagon .sidebar .dates { color: var(--mid); }
+.hexagon .org { font-style: normal; font-weight: 600; color: var(--mid); }
+.hexagon .org .location { font-weight: 400; color: var(--muted); }
+.hexagon .org .location:not(:first-child)::before { content: " · "; }
+.hexagon .extra span { font-weight: 600; }
+
+/* ---------- Lists, chips, skills ---------- */
+.hexagon .bullets li::before, .hexagon ul.desc li::before { top: .42em; width: 1.9mm; height: 2.2mm; border-radius: 0; background: var(--mid); clip-path: var(--hex); }
+.hexagon .tags { gap: 1.6mm 1.2mm; }
+.hexagon .tags li + li::before { content: none; }
+.hexagon .tags li {
+  padding: .5mm 3.2mm; background: color-mix(in srgb, var(--light) 40%, #fff); font-size: .88rem; font-weight: 600; color: var(--dark);
+  clip-path: polygon(2mm 0, calc(100% - 2mm) 0, 100% 50%, calc(100% - 2mm) 100%, 2mm 100%, 0 50%);
+}
+.hexagon .skill-group > h3 { font-family: var(--font-head); font-size: 1rem; font-weight: 600; letter-spacing: .1em; color: var(--mid); }
+.hexagon .main-column .skill-group > h3 { font-size: 1.12rem; letter-spacing: .06em; text-transform: uppercase; color: var(--dark); }
+.hexagon .languages .level::before { content: none; }
+.hexagon .languages .level {
+  margin-left: 1.4mm; padding: .1mm 2.6mm; background: var(--dark); font-size: .8rem; font-weight: 600; color: #fff;
+  clip-path: polygon(1.4mm 0, calc(100% - 1.4mm) 0, 100% 50%, calc(100% - 1.4mm) 100%, 1.4mm 100%, 0 50%);
+}
+.hexagon .sidebar .languages li { display: flex; justify-content: space-between; align-items: center; }
+.hexagon .sidebar .languages li + li { margin-top: 1.4mm; }
+.hexagon dl.rows dt { font-family: var(--font-head); font-size: 1.08rem; font-weight: 600; color: var(--mid); }
+
+/* ---------- Sidebar: tinted column, honeycomb strip on top ---------- */
+.hexagon .sidebar { position: relative; padding: 12mm 5mm 7mm; background: var(--tint); }
+.hexagon .sidebar::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 8mm; pointer-events: none;
+  background: linear-gradient(to bottom, var(--mid), color-mix(in srgb, var(--mid) 10%, transparent));
+  -webkit-mask: var(--honeycomb) 0 0 / 10.4mm 6mm repeat; mask: var(--honeycomb) 0 0 / 10.4mm 6mm repeat;
+}
+.hexagon .sidebar .contacts .icon-wrap { width: 5.6mm; height: 6.4mm; }
+
+/* ---------- Privacy note ---------- */
+.hexagon .privacy { border-top-color: var(--light); }

@@ -1,0 +1,92 @@
+/* =====================  CORPORATE STYLE  =====================
+   A two-tone band across the top: name and headline in white on a dark block, the
+   contacts stacked on a mid-colour block. Capital section titles underlined in the
+   accent colour, dates in small tinted badges.
+   With the sidebar: a tinted panel on the right, under the mid-colour block, with an accent border.
+
+   @name    Corporate
+   @group   modern
+   @color   navy
+   @side    right
+   @tags    corporate, business, two-tone header, colour band, square photo, right sidebar, date badges, sans-serif
+*/
+:root {
+  --ink: #1b2129;
+  --muted: #586373;
+  --rule: #d2d8df;
+  --font-body: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+  --split: 132mm;          /* where the dark block ends (about 62% of the page) */
+  --side-w: 64mm;          /* the sidebar starts exactly under the mid-colour block */
+  --side-gap: 8mm;
+  --badge: color-mix(in srgb, var(--soft) 22%, #fff);
+}
+@page { @bottom-right { font-family: 'IBM Plex Sans', sans-serif; } }
+body { line-height: 1.45; }
+.page.corporate { padding: 0 14mm 0 16mm; }
+
+/* ---------- Header: dark block | mid-colour block ---------- */
+.corporate .cv-header {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) 14mm 59mm; grid-template-rows: 1fr auto auto auto 1fr;
+  gap: 0; margin: 0 -14mm 8mm -16mm; padding: 11mm 12mm 11mm 16mm; min-height: 54mm;
+  background: linear-gradient(to right, var(--accent) var(--split), var(--accent-2) var(--split));
+  color: #fff;
+}
+.corporate .cv-header .identity { display: contents; }
+.corporate .header-photo {
+  grid-column: 1; grid-row: 1 / -1; align-self: center; width: 32mm; height: 32mm; margin-right: 7mm;
+  border-radius: 0; outline: .7mm solid rgba(255, 255, 255, .9); outline-offset: -.7mm;
+}
+.corporate .name { grid-column: 2; grid-row: 2; font-weight: 700; font-size: 2.75rem; line-height: 1.04; letter-spacing: -.01em; color: #fff; }
+.corporate .first-name { font-weight: 400; }
+.corporate .headline { grid-column: 2; grid-row: 3; margin-top: 2.6mm; font-size: .84rem; font-weight: 600; letter-spacing: .16em; color: rgba(255, 255, 255, .82); }
+.corporate .cv-header .details { grid-column: 2; grid-row: 4; margin-top: 3mm; font-size: .88rem; color: rgba(255, 255, 255, .78); }
+.corporate .cv-header .details strong { color: #fff; }
+.corporate .cv-header .contacts {
+  grid-column: 4; grid-row: 1 / -1; align-self: center;
+  display: flex; flex-direction: column; gap: 2.1mm; margin: 0; font-size: .9rem; line-height: 1.25;
+}
+.corporate .cv-header .contacts li { gap: 2.4mm; }
+.corporate .cv-header .contacts .icon-wrap { color: rgba(255, 255, 255, .85); }
+/* with the sidebar the contacts are in the sidebar: the headline moves to the mid-colour block */
+.corporate.has-sidebar .headline { grid-column: 4; grid-row: 1 / -1; align-self: center; margin: 0; font-size: .9rem; line-height: 1.5; color: #fff; }
+
+/* ---------- Section titles: thick underline under the text, hairline to the end ---------- */
+.corporate .cv-section { margin-top: 6.5mm; }
+.corporate .sidebar-photo + .cv-section { margin-top: 0; }
+.corporate .cv-section > h2 {
+  position: relative; width: fit-content; max-width: 100%; margin: 0 0 -.3mm; padding: 0 0 1.3mm;
+  border-bottom: 1mm solid var(--accent-2); font-size: .9rem; font-weight: 600; letter-spacing: .12em; color: var(--accent);
+}
+.corporate .cv-section > h2 + .section-body { padding-top: 3.2mm; border-top: .3mm solid var(--rule); }
+
+/* ---------- Entries ---------- */
+.corporate .entry + .entry { margin-top: 4mm; }
+.corporate .entry-head { align-items: flex-start; }
+.corporate .entry-title { font-size: 1.04rem; font-weight: 600; }
+.corporate .dates {
+  margin-top: .2mm; padding: .35mm 2mm; border-radius: .7mm; background: var(--badge);
+  font-size: .8rem; font-weight: 600; color: var(--accent);
+}
+.corporate .org { font-style: normal; font-weight: 600; color: var(--accent-2); }
+.corporate .org .location { font-weight: 400; color: var(--muted); }
+.corporate .org .location:not(:first-child)::before { content: " · "; }
+.corporate .bullets li::before, .corporate ul.desc li::before { top: .6em; width: 1.3mm; height: 1.3mm; border-radius: 0; background: var(--accent-2); }
+.corporate .tags { gap: 1.4mm; }
+.corporate .tags li + li::before { content: none; }
+.corporate .tags li { padding: .2mm 2mm; border: .3mm solid var(--rule); border-radius: .6mm; font-size: .88rem; }
+.corporate .skill-group > h3 { color: var(--accent-2); }
+.corporate .main-column .skill-group > h3 { font-weight: 600; }
+.corporate dl.rows dt { font-weight: 600; color: var(--accent); }
+.corporate .extra span, .corporate .languages .lang { font-weight: 600; }
+
+/* ---------- Sidebar: tinted panel on the right with an accent border ---------- */
+.corporate .sidebar { margin-top: -8mm; padding: 8mm 5mm 7mm 6mm; background: var(--tint); border-left: 1.2mm solid var(--accent); }
+.corporate .sidebar .cv-section > h2 + .section-body { border-top-color: color-mix(in srgb, var(--accent) 22%, transparent); }
+.corporate .sidebar .contacts .icon-wrap { color: var(--accent-2); }
+.corporate .sidebar .dates { display: inline-block; margin-top: .6mm; background: #fff; }
+.corporate .sidebar .tags li { background: #fff; border-color: transparent; }
+.corporate .sidebar .languages li { display: flex; justify-content: space-between; }
+.corporate .sidebar .languages .level::before { content: none; }
+.corporate .privacy { border-top-color: var(--rule); }
+/* the last table row must not glue the whole section to the next one */
+.corporate .main-column dl.rows dt { break-after: auto; }

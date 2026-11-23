@@ -1,0 +1,103 @@
+/* =====================  POSTER STYLE  =====================
+   A gig poster: a gigantic condensed name (first name in black, last name in colour),
+   the headline in a solid coloured strip, a large photo in the top-right corner, big
+   condensed section titles on a thick colour underline.
+   With the sidebar: a tinted column under a thick coloured bar.
+
+   @name    Poster
+   @group   creative
+   @color   burgundy
+   @tags    poster, gig poster, huge name, condensed, capitals, big photo, high contrast, bold, strip
+*/
+:root {
+  --ink: #0d0d0f;
+  --muted: #45484d;
+  --rule: #d8d8da;
+  --dark: var(--p-dark, #5e1a2a);
+  --mid: var(--p-mid, #962d43);
+  --light: var(--p-light, #e28a9b);
+  --font-body: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --font-head: 'Bebas Neue', 'Oswald', sans-serif;
+  --side-w: 58mm;
+  --side-gap: 9mm;
+  --side-accent: var(--ink);
+}
+@page { @bottom-right { font-family: 'Inter', sans-serif; font-weight: 600; color: #333; } }
+body { line-height: 1.42; }
+html { font-size: 9.6pt; }
+.page.poster { padding: 0 15mm; }
+
+/* ---------- Header: name, photo, strip ---------- */
+.poster .cv-header {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; column-gap: 7mm;
+  margin: 0 0 8mm; padding: 0;
+}
+.poster .cv-header .identity { display: contents; }
+.poster .header-photo {
+  order: 0; grid-column: 2; grid-row: 1; align-self: start; width: 54mm; height: 78mm;
+  margin: 0 -15mm 0 0; border-radius: 0; background: #222;
+}
+.poster .header-photo img { object-position: 50% 20%; }
+.poster .name {
+  grid-column: 1; grid-row: 1; padding: 12mm 0 1.4mm; font-family: var(--font-head); font-weight: 400;
+  font-size: 10.5rem; line-height: .82; letter-spacing: .005em; color: var(--ink); overflow-wrap: anywhere;
+}
+.poster .name span { display: block; }
+.poster .last-name { color: var(--mid); }
+/* without a photo the name is even bigger and takes the whole width */
+.poster .cv-header:not(:has(.header-photo)) .name { grid-column: 1 / -1; padding-top: 13mm; font-size: 12rem; }
+.poster .headline {
+  grid-column: 1 / -1; grid-row: 2; margin: 0 -15mm; padding: 2.2mm 15mm 1.6mm; background: var(--mid);
+  font-family: var(--font-head); font-size: 1.75rem; font-weight: 400; line-height: 1.1; letter-spacing: .16em; color: #fff;
+}
+.poster .cv-header:has(.header-photo) .headline { margin-top: 0; }
+/* no headline: the strip is still there, empty */
+.poster .identity:not(:has(.headline))::after { content: ""; grid-column: 1 / -1; grid-row: 2; height: 4mm; margin: 0 -15mm; background: var(--mid); }
+.poster .cv-header .contacts { grid-column: 1 / -1; gap: 1.4mm 6mm; margin-top: 4.2mm; font-size: .95rem; font-weight: 600; }
+.poster .contacts .icon-wrap { color: var(--mid); }
+.poster .contacts .icon { width: 3.6mm; height: 3.6mm; stroke-width: 2.4; }
+.poster .cv-header .details { grid-column: 1 / -1; margin-top: 1.6mm; color: var(--muted); }
+.poster .cv-header .details strong { color: var(--ink); }
+
+/* ---------- Section titles: big condensed capitals on a thick block ---------- */
+.poster .cv-section { margin-top: 6.5mm; }
+.poster .sidebar-photo + .cv-section, .poster .main-column > .cv-section:first-child { margin-top: 0; }
+.poster .cv-section > h2 {
+  break-inside: avoid;
+  width: fit-content; margin: 0 0 2.6mm -1mm; padding: 0 1.4mm; border: 0;
+  background: linear-gradient(to top, var(--light) 0 40%, transparent 40%);
+  font-family: var(--font-head); font-size: 1.95rem; font-weight: 400; line-height: 1; letter-spacing: .04em; color: var(--ink);
+}
+.poster .sidebar .cv-section > h2 { font-size: 1.6rem; color: var(--ink); }
+
+/* ---------- Entries ---------- */
+.poster .entry + .entry { margin-top: 3.6mm; }
+.poster .entry-title { font-size: 1.08rem; font-weight: 800; letter-spacing: -.01em; }
+.poster .dates { font-family: var(--font-head); font-size: 1.3rem; line-height: 1; letter-spacing: .04em; color: var(--mid); }
+.poster .sidebar .dates { color: var(--mid); }
+.poster .org { font-style: normal; font-weight: 600; color: var(--dark); }
+.poster .org .location { font-weight: 400; color: var(--muted); }
+.poster .org .location:not(:first-child)::before { content: " / "; }
+.poster .entry .desc { color: #26282c; }
+.poster .extra span { font-weight: 800; }
+
+/* ---------- Lists, tags, skills ---------- */
+.poster .bullets li::before, .poster ul.desc li::before { top: .6em; width: 2mm; height: .8mm; border-radius: 0; background: var(--mid); }
+.poster .tags { gap: 1.4mm; }
+.poster .tags li + li::before { content: none; }
+.poster .tags li { padding: .9mm 2.2mm .5mm; background: var(--ink); font-family: var(--font-head); font-size: 1.12rem; line-height: 1; letter-spacing: .06em; color: #fff; }
+.poster .skill-group > h3 { font-family: var(--font-head); font-size: 1.2rem; font-weight: 400; letter-spacing: .06em; color: var(--mid); }
+.poster .main-column .skill-group > h3 { font-size: 1.3rem; letter-spacing: .04em; color: var(--ink); }
+.poster .languages .lang { font-weight: 800; }
+.poster .languages .level::before { content: none; }
+.poster .languages .level { margin-left: 1.6mm; font-family: var(--font-head); font-size: 1.15rem; letter-spacing: .04em; color: var(--mid); }
+.poster .sidebar .languages li { display: flex; justify-content: space-between; align-items: baseline; }
+.poster dl.rows dt { font-family: var(--font-head); font-size: 1.15rem; font-weight: 400; letter-spacing: .04em; color: var(--mid); }
+
+/* ---------- Sidebar: tinted, thick bar on top ---------- */
+.poster .sidebar { padding: 5mm 5mm 6mm; border-top: 3mm solid var(--ink); background: var(--tint); }
+.poster .sidebar .contacts { font-weight: 600; }
+.poster .sidebar .details strong { font-weight: 800; }
+
+/* ---------- Privacy note ---------- */
+.poster .privacy { border-top: 1mm solid var(--ink); }

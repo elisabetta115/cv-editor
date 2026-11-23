@@ -1,0 +1,85 @@
+/* =====================  TYPEWRITER STYLE  =====================
+   A typed document on cream paper: Courier capitals underlined with "=", the headline in a
+   rubber stamp, "§" section titles over a dashed line, tags in [brackets], a tilted photo.
+   With the sidebar: a column separated by a dashed vertical line.
+
+   @name    Typewriter
+   @group   themed
+   @color   burgundy
+   @tags    typewriter, monospace, courier, cream paper, vintage, rubber stamp, tilted photo, writer
+*/
+:root {
+  --base: 9.6pt;
+  --ink: #26221e;
+  --muted: #5d554c;
+  --rule: #a99d8b;
+  --paper: #f7f2e7;
+  --page-bg: var(--paper);
+  --font-body: 'Courier Prime', 'Courier New', monospace;
+  --side-w: 60mm;
+  --side-gap: 7mm;
+  --side-accent: var(--ink);
+}
+@page { background: #f7f2e7; @bottom-right { content: "- " counter(page) " / " counter(pages) " -"; font-family: 'Courier Prime', monospace; color: #5d554c; } }
+body { line-height: 1.42; }
+.page.typewriter { padding: 15mm 15mm 0; }
+
+/* ---------- Header: typed name, stamp, tilted photo ---------- */
+.typewriter .cv-header { align-items: flex-start; gap: 8mm; margin-bottom: 8mm; }
+.typewriter .name { display: inline-block; max-width: 100%; font-weight: 700; font-size: 2.15rem; line-height: 1.15; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); }
+.typewriter .name::after {
+  content: "================================================================================";
+  display: block; width: 0; min-width: 100%; overflow: hidden; white-space: nowrap; margin-top: .5mm;
+  font-size: .6em; font-weight: 400; line-height: 1; letter-spacing: 0; color: var(--accent-2);
+}
+/* the headline, stamped with a slightly faded double border */
+.typewriter .headline {
+  display: table; margin: 5mm 0 2mm 2mm; padding: 1.2mm 3.4mm .9mm; border: 1mm double var(--accent-2); border-radius: .8mm;
+  font-size: 1rem; font-weight: 700; letter-spacing: .16em; color: var(--accent-2);
+  transform: rotate(-3deg); opacity: .8; mix-blend-mode: multiply;
+  -webkit-mask-image: repeating-linear-gradient(115deg, #000 0 1.1mm, rgba(0, 0, 0, .72) 1.1mm 1.5mm, #000 1.5mm 2.9mm);
+          mask-image: repeating-linear-gradient(115deg, #000 0 1.1mm, rgba(0, 0, 0, .72) 1.1mm 1.5mm, #000 1.5mm 2.9mm);
+}
+.typewriter .cv-header .contacts { gap: 1.2mm 5mm; margin-top: 4.5mm; font-size: .92rem; }
+.typewriter .cv-header .details { margin-top: 1.4mm; font-size: .92rem; color: var(--ink); }
+.typewriter .contacts .icon-wrap { color: var(--accent-2); }
+.typewriter .contacts .icon { width: 3.2mm; height: 3.2mm; stroke-width: 1.8; }
+.typewriter .header-photo {
+  width: 33mm; height: 41mm; margin: 2mm 2mm 0 0; border: 1.8mm solid #fff; border-radius: 0;
+  box-shadow: .4mm .8mm 2mm rgba(60, 40, 20, .28); transform: rotate(2.5deg);
+}
+
+/* ---------- Section titles: § and capitals over a dashed line ---------- */
+.typewriter .cv-section + .cv-section { margin-top: 6.5mm; }
+.typewriter .cv-section > h2 { margin-bottom: 3mm; padding-bottom: 1.2mm; border-bottom: .35mm dashed var(--ink); font-size: 1.05rem; font-weight: 700; letter-spacing: .14em; color: var(--ink); }
+.typewriter .cv-section > h2::before { content: "§"; margin-right: 2.4mm; letter-spacing: 0; color: var(--accent-2); }
+.typewriter .sidebar .cv-section > h2 { font-size: .98rem; border-color: var(--ink); }
+
+/* ---------- Entries: underlined organisations, "-" bullets, [tags] ---------- */
+.typewriter .entry + .entry { margin-top: 4mm; }
+.typewriter .entry-title { font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.typewriter .dates { font-size: .92rem; color: var(--ink); }
+.typewriter .org { font-style: normal; color: var(--ink); }
+.typewriter .org .org-name { text-decoration: underline; text-decoration-thickness: .2mm; text-underline-offset: .6mm; }
+.typewriter .org .location { color: var(--muted); }
+.typewriter .org .location:not(:first-child)::before { content: ", "; }
+.typewriter .bullets li, .typewriter ul.desc li { padding-left: 4.2mm; }
+.typewriter .bullets li::before, .typewriter ul.desc li::before { content: "-"; left: 0; top: 0; width: auto; height: auto; border-radius: 0; background: none; color: var(--accent-2); font-weight: 700; }
+.typewriter .tags { gap: 1.2mm 2.4mm; }
+.typewriter .tags li::before, .typewriter .tags li + li::before { content: "["; margin: 0; color: var(--accent-2); }
+.typewriter .tags li::after { content: "]"; color: var(--accent-2); }
+.typewriter .skill-group > h3 { font-size: .9rem; letter-spacing: .1em; color: var(--accent-2); }
+.typewriter .main-column .skill-group > h3 { font-size: .95rem; text-decoration: underline; text-underline-offset: .6mm; color: var(--ink); }
+.typewriter .languages .level::before { content: " .... "; color: var(--rule); }
+.typewriter .extra span { text-transform: uppercase; font-size: .9em; letter-spacing: .05em; }
+.typewriter dl.rows dt { font-weight: 700; }
+
+/* ---------- Sidebar: dashed vertical line ---------- */
+.typewriter .sidebar { padding-right: 6mm; border-right: .35mm dashed var(--rule); }
+.typewriter .sidebar .contacts li { gap: 2.2mm; font-size: .86rem; }
+/* monospace is wide: long addresses may wrap at spaces in the narrow column (e-mails never break) */
+.typewriter .sidebar .contacts .contact-text { white-space: normal; }
+.typewriter .sidebar .details { color: var(--ink); }
+/* typewriters do not justify */
+.typewriter .main-column .section-body > p { text-align: left; }
+.typewriter .privacy { border-top: .35mm dashed var(--rule); }

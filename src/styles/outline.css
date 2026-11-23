@@ -1,0 +1,94 @@
+/* =====================  OUTLINE STYLE  =====================
+   Outlined type: a huge name in hollow outlined capitals with the last name filled
+   solid, outlined section titles, every entry in a thin rounded frame, airy spacing,
+   hairline icons and tags. With the sidebar: a thin outlined box on the left.
+
+   @name    Outline
+   @group   creative
+   @color   azure
+   @tags    outline, outlined letters, hollow type, thin lines, rounded boxes, airy, light, sans-serif, modern
+*/
+:root {
+  --ink: #161b22;
+  --muted: #59636e;
+  --rule: #d5dbe1;
+  --dark: var(--p-dark, #0d497d);
+  --mid: var(--p-mid, #1677bd);
+  --light: var(--p-light, #3ec3e2);
+  --hair: .3mm;
+  --frame: color-mix(in srgb, var(--mid) 55%, #fff);
+  --font-body: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --font-head: 'Sora', sans-serif;
+  --side-w: 62mm;
+  --side-gap: 8mm;
+  --side-accent: var(--dark);
+}
+@page { @bottom-right { font-family: 'Sora', sans-serif; color: var(--p-mid, #777); } }
+html { font-size: 9.6pt; }
+body { line-height: 1.48; }
+.page.outline { padding: 16mm 16mm 0; }
+
+/* ---------- Header: hollow name ---------- */
+.outline .cv-header { align-items: center; gap: 9mm; margin-bottom: 10mm; }
+.outline .name { font-weight: 800; font-size: 5.4rem; line-height: .98; letter-spacing: -.01em; text-transform: uppercase; overflow-wrap: anywhere; }
+.outline .name span { display: block; }
+/* the outline is drawn under a white fill (twice as thick, half of it covered): the
+   overlapping contours inside the letters stay hidden and the edge prints crisply */
+.outline .first-name { color: #fff; -webkit-text-stroke: .7mm var(--dark); paint-order: stroke fill; }
+.outline .last-name { color: var(--dark); }
+.outline .headline {
+  display: inline-block; margin-top: 4mm; padding: .9mm 3.4mm; border: var(--hair) solid var(--mid); border-radius: 5mm;
+  font-family: var(--font-head); font-size: .88rem; font-weight: 600; letter-spacing: .14em; color: var(--mid);
+}
+.outline .header-photo {
+  width: 36mm; height: 44mm; margin: 2mm 2mm 2mm 0; border-radius: 4mm;
+  outline: var(--hair) solid var(--mid); outline-offset: 1.8mm;
+}
+.outline .cv-header .contacts { gap: 1.6mm 6mm; margin-top: 5mm; }
+.outline .contacts .icon-wrap { width: 5.8mm; height: 5.8mm; border: var(--hair) solid var(--mid); border-radius: 50%; color: var(--mid); }
+.outline .contacts .icon { width: 3mm; height: 3mm; stroke-width: 1.7; }
+.outline .cv-header .details { margin-top: 2.4mm; }
+
+/* ---------- Section titles: outlined capitals ---------- */
+.outline .cv-section { margin-top: 7.4mm; }
+.outline .sidebar-photo + .cv-section, .outline .main-column > .cv-section:first-child { margin-top: 0; }
+.outline .cv-section > h2 {
+  break-inside: avoid;
+  margin-bottom: 3.2mm; padding: 0; border: 0; font-size: 1.75rem; font-weight: 800; line-height: 1.1;
+  letter-spacing: .04em; color: #fff; -webkit-text-stroke: .5mm var(--mid); paint-order: stroke fill;
+}
+.outline .sidebar .cv-section > h2 { font-size: 1.35rem; color: #fff; -webkit-text-stroke: .42mm var(--mid); }
+
+/* ---------- Entries: each in a thin rounded frame ---------- */
+.outline .entry { padding: 2.6mm 4.2mm 2.8mm; border: var(--hair) solid var(--frame); border-radius: 3.2mm; }
+.outline .entry + .entry { margin-top: 2.6mm; }
+.outline .entry-title { font-family: var(--font-head); font-size: 1.04rem; font-weight: 600; color: var(--dark); }
+.outline .dates { font-family: var(--font-head); font-size: .84rem; font-weight: 600; color: var(--mid); }
+.outline .sidebar .dates { color: var(--mid); }
+.outline .org { font-style: normal; font-weight: 600; color: var(--ink); }
+.outline .org .location { font-weight: 400; color: var(--muted); }
+.outline .org .location:not(:first-child)::before { content: " · "; }
+.outline .entry .desc { margin-top: 1.2mm; color: #2a3038; }
+.outline .sidebar .entry { padding: 2.4mm 3mm; }
+
+/* ---------- Lists, tags, skills: hairlines ---------- */
+.outline .bullets li::before, .outline ul.desc li::before { top: .5em; width: 1.6mm; height: 1.6mm; background: none; border: var(--hair) solid var(--mid); }
+.outline .tags { gap: 1.6mm; }
+.outline .tags li + li::before { content: none; }
+.outline .tags li { padding: .4mm 2.4mm; border: var(--hair) solid var(--mid); border-radius: 1.4mm; font-size: .9rem; color: var(--dark); }
+.outline .skill-group > h3 { font-family: var(--font-head); font-size: .78rem; font-weight: 600; letter-spacing: .12em; color: var(--mid); }
+.outline .main-column .skill-group > h3 { font-size: .95rem; letter-spacing: 0; text-transform: none; color: var(--dark); }
+.outline .languages .level::before { content: none; }
+.outline .languages .level { margin-left: 1.6mm; padding: 0 1.8mm; border: var(--hair) solid var(--frame); border-radius: 3mm; font-size: .82rem; color: var(--mid); }
+.outline .sidebar .languages li { display: flex; justify-content: space-between; align-items: center; }
+.outline .sidebar .languages li + li { margin-top: 1.4mm; }
+.outline dl.rows dt { font-family: var(--font-head); font-weight: 600; color: var(--mid); }
+.outline .main-column .section-body > p { color: #2a3038; }
+
+/* ---------- Sidebar: a thin outlined box ---------- */
+.outline .sidebar { padding: 6mm 5mm 6.5mm; border: var(--hair) solid var(--mid); border-radius: 4.5mm; }
+.outline .sidebar .contacts li { gap: 2.2mm; }
+.outline .sidebar .contacts .icon-wrap { width: 5.4mm; height: 5.4mm; }
+
+/* ---------- Privacy note ---------- */
+.outline .privacy { border-top: var(--hair) solid var(--frame); }

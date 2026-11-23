@@ -1,0 +1,78 @@
+/* =====================  CARDS STYLE  =====================
+   A dashboard of white cards on a tinted page: the header is a wide card with a round
+   photo, every section is its own rounded card with a soft shadow, and each title has a
+   small coloured square.
+   With the sidebar: its sections are cards too, in a narrower column.
+
+   @name    Cards
+   @group   modern
+   @color   azure
+   @tags    cards, dashboard, tinted page, rounded, shadows, round photo, friendly, modern, sans-serif
+   @print   @page{background:$bg}
+*/
+:root {
+  --ink: #18202a;
+  --muted: #5a6676;
+  --rule: #e3e8ee;
+  --page-bg: var(--tint);
+  /* negative spread: an empty card fragment left at the bottom of a page casts no shadow line */
+  --card-shadow: 0 .7mm 2.2mm -.4mm color-mix(in srgb, var(--accent) 22%, transparent);
+  --font-body: 'DM Sans', 'Helvetica Neue', Arial, sans-serif;
+  --side-w: 60mm;
+  --side-gap: 5mm;
+}
+@page { background: #edf1f5; @bottom-right { font-family: 'DM Sans', sans-serif; } }
+body { line-height: 1.45; }
+.page.cards { padding: 10mm 11mm 0; }
+
+/* ---------- Cards ---------- */
+.cards .cv-header, .cards .cv-section {
+  background: #fff; border-radius: 3mm; box-shadow: var(--card-shadow);
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;   /* a card going on to the next page keeps its corners */
+}
+
+/* ---------- Header card ---------- */
+.cards .cv-header { gap: 7mm; margin-bottom: 5mm; padding: 7mm 8mm; }
+.cards .header-photo { order: 0; width: 34mm; height: 34mm; border-radius: 50%; box-shadow: 0 0 0 1mm var(--tint); }
+.cards .name { font-weight: 700; font-size: 2.7rem; line-height: 1.05; letter-spacing: -.02em; color: var(--accent); }
+.cards .headline { margin-top: 1.6mm; font-size: 1.1rem; font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--accent-2); }
+.cards .cv-header .contacts { gap: 1.6mm 5mm; margin-top: 4.4mm; font-size: .9rem; }
+.cards .contacts .icon-wrap { width: 5.4mm; height: 5.4mm; border-radius: 1.2mm; background: var(--tint); color: var(--accent-2); }
+.cards .contacts .icon { width: 3.1mm; height: 3.1mm; }
+.cards .cv-header .details { margin-top: 2.4mm; font-size: .9rem; }
+.cards .cv-header .details strong, .cards .sidebar .details strong { font-weight: 700; color: var(--ink); }
+
+/* ---------- Section cards ---------- */
+.cards .cv-section { margin-top: 4mm; padding: 4.6mm 6mm 5mm; }
+.cards .sidebar .cv-section { padding: 4.5mm 5mm 5mm; }
+.cards .sidebar-photo + .cv-section { margin-top: 0; }
+/* short text sections stay whole rather than leave one line in a card on the next page */
+.cards .sec-profile, .cards .sec-about_me, .cards .sec-interests { break-inside: avoid; }
+.cards .cv-section > h2 {
+  display: flex; align-items: center; gap: 2.4mm; margin-bottom: 3.2mm; padding: 0; border: 0;
+  font-size: 1.08rem; font-weight: 700; letter-spacing: -.005em; text-transform: none; color: var(--accent);
+}
+.cards .cv-section > h2::before { content: ""; flex: none; width: 2.4mm; height: 2.4mm; border-radius: .5mm; background: var(--soft); }
+.cards .sidebar .cv-section > h2 { font-size: 1rem; color: var(--accent); }
+/* the details (no title) join the contacts card above them */
+.cards .sidebar .sec-contacts:has(+ .sec-details) { border-bottom-left-radius: 0; border-bottom-right-radius: 0; padding-bottom: 2.4mm; }
+.cards .sidebar .sec-contacts + .sec-details { margin-top: 0; padding-top: 1.4mm; border-top-left-radius: 0; border-top-right-radius: 0; clip-path: inset(0 -4mm -4mm -4mm); }
+
+/* ---------- Entries ---------- */
+.cards .entry + .entry { margin-top: 4mm; padding-top: 4mm; border-top: .3mm solid var(--rule); }
+.cards .entry-title { font-size: 1.04rem; font-weight: 700; }
+.cards .dates { font-size: .86rem; font-weight: 500; color: var(--accent-2); }
+.cards .org { font-style: normal; font-weight: 500; color: var(--accent-2); }
+.cards .org .location { font-weight: 400; color: var(--muted); }
+.cards .org .location:not(:first-child)::before { content: " · "; }
+.cards .bullets li::before, .cards ul.desc li::before { border-radius: .3mm; background: var(--soft); }
+.cards .tags { gap: 1.4mm; }
+.cards .tags li + li::before { content: none; }
+.cards .tags li { padding: .4mm 2.4mm; border-radius: 1.4mm; background: var(--tint); font-size: .88rem; font-weight: 500; color: var(--accent); }
+.cards .skill-group > h3 { font-size: .78rem; color: var(--accent-2); }
+.cards .main-column .skill-group > h3 { font-size: .98rem; font-weight: 700; color: var(--ink); }
+.cards .sidebar .languages li { display: flex; justify-content: space-between; }
+.cards .sidebar .languages .level::before { content: none; }
+/* the last table row must not glue the whole section to the next one */
+.cards .main-column dl.rows dt { break-after: auto; }
+.cards .privacy { margin-top: 6mm; padding: 0 2mm; border: 0; }

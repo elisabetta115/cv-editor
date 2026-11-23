@@ -1,0 +1,46 @@
+/* =====================  CLASSIC STYLE  =====================
+   A traditional CV: all serif, centred header with a double rule, small-capital
+   section titles between thin rules, dashes for lists.
+
+   @name    Classic
+   @group   classic
+   @color   graphite
+   @tags    serif, traditional, centred, double rule, small capitals, sober, ats
+*/
+:root {
+  --ink: #1e1e1e;
+  --muted: #5e5e5e;
+  --rule: #bdbdbd;
+  --font-body: 'Source Serif 4', Georgia, serif;
+  --side-w: 54mm;
+}
+@page { @bottom-right { font-family: 'Source Serif 4', Georgia, serif; } }
+body { line-height: 1.45; }
+.page.classic { padding: 16mm 18mm 0; }
+
+/* ---------- Centred header ---------- */
+.classic .cv-header { flex-direction: column; gap: 4mm; margin-bottom: 6mm; padding-bottom: 5mm; border-bottom: 1.2mm double var(--accent); text-align: center; }
+.classic .header-photo { order: 0; width: 28mm; height: 34mm; border-radius: 0; }
+.classic .name { font-size: 2.5rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink); }
+.classic .headline { margin-top: 1.5mm; font-size: 1.05rem; font-weight: 400; font-style: italic; letter-spacing: 0; text-transform: none; color: var(--accent); }
+.classic .cv-header .contacts, .classic .cv-header .details { justify-content: center; }
+.classic .cv-header .contacts .icon-wrap { color: var(--muted); }
+.classic .cv-header .details { gap: 0; }
+.classic .cv-header .details li + li::before { content: "|"; margin: 0 2.4mm; color: var(--rule); }
+
+/* ---------- Section titles between rules ---------- */
+.classic .cv-section > h2 { display: flex; align-items: center; gap: 4mm; margin-bottom: 3mm; padding: 0; border: 0; font-family: 'Source Serif 4', Georgia, serif; font-size: 1rem; font-weight: 600; letter-spacing: .18em; }
+.classic .cv-section > h2::before, .classic .cv-section > h2::after { content: ""; flex: 1; border-top: .3mm solid var(--rule); }
+.classic .sidebar .cv-section > h2::before { display: none; }
+
+/* ---------- Entries and lists ---------- */
+.classic .entry-title { font-weight: 600; }
+.classic .dates { font-style: italic; }
+.classic .org { color: var(--ink); }
+.classic .bullets li::before, .classic ul.desc li::before { content: "–"; left: 0; top: 0; width: auto; height: auto; border-radius: 0; background: none; color: var(--muted); }
+.classic .main-column .skill-group > h3, .classic dl.rows dt { font-weight: 600; font-variant: small-caps; letter-spacing: .03em; }
+.classic .skill-group > h3 { color: var(--accent); }
+.classic .privacy { text-align: center; font-style: italic; }
+
+/* ---------- With the sidebar ---------- */
+.classic .sidebar { padding-right: 6mm; border-right: .3mm solid var(--rule); }

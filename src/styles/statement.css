@@ -1,0 +1,75 @@
+/* =====================  STATEMENT STYLE  =====================
+   Profile first, as a personal statement: a compact header, then the profile set large in
+   DM Serif Display after an oversized quotation mark; clean entries, titles with a coloured dot.
+   With the sidebar: a light tinted column on the left.
+
+   @name    Statement
+   @group   classic
+   @color   teal
+   @tags    personal statement, quote, profile first, serif display, clean, tinted sidebar, compact header, career change
+*/
+:root {
+  --ink: #1b2422;
+  --muted: #58625f;
+  --rule: #d6dedc;
+  --font-body: 'Work Sans', 'Helvetica Neue', Arial, sans-serif;
+  --font-name: 'DM Serif Display', Georgia, serif;
+  --side-w: 58mm;
+  --side-gap: 9mm;
+}
+@page { @bottom-right { font-family: 'Work Sans', sans-serif; } }
+body { line-height: 1.45; }
+.page.statement { padding: 14mm 16mm 0; }
+
+/* ---------- Compact header: name and headline on one line, contacts in a row ---------- */
+.statement .cv-header { gap: 6mm; margin-bottom: 9mm; padding-bottom: 5mm; border-bottom: .3mm solid var(--rule); }
+.statement .header-photo { order: 0; width: 23mm; height: 23mm; border-radius: 50% 50% 50% 0; }
+.statement .identity { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 5mm; }
+.statement .name { font-weight: 400; font-size: 2.55rem; line-height: 1.05; color: var(--ink); }
+.statement .last-name { color: var(--accent-2); }
+.statement .headline { margin: 0; font-size: .82rem; font-weight: 600; letter-spacing: .16em; color: var(--accent); }
+.statement .cv-header .contacts { flex: 0 0 100%; gap: 1mm 5.5mm; margin-top: 2.8mm; font-size: .88rem; }
+.statement .cv-header .details { flex: 0 0 100%; font-size: .88rem; }
+.statement .contacts .icon-wrap { color: var(--accent-2); }
+
+/* ---------- The statement: the profile in the main column ---------- */
+.statement .main-column .sec-profile { position: relative; padding: 0 0 7mm 17mm; border-bottom: .3mm solid var(--rule); }
+.statement .main-column .sec-profile + .cv-section { margin-top: 8mm; }
+.statement .main-column .sec-profile::before {
+  content: "\201C"; position: absolute; left: -1mm; top: -4mm;
+  font-family: var(--font-name); font-size: 7.5rem; line-height: 1; color: var(--accent-2);
+}
+.statement .main-column .sec-profile > h2 { margin-bottom: 1.8mm; font-size: .7rem; letter-spacing: .22em; color: var(--muted); }
+.statement .main-column .sec-profile > h2::before { display: none; }
+.statement .main-column .sec-profile .section-body > p {
+  font-family: var(--font-name); font-size: 1.5rem; line-height: 1.32; text-align: left; hyphens: manual; color: var(--ink);
+}
+.statement .main-column .sec-profile .section-body > p + p { margin-top: 3mm; }
+.statement .main-column .sec-profile strong { font-weight: 400; color: var(--accent-2); }
+
+/* ---------- Section titles: small capitals after a coloured dot ---------- */
+.statement .cv-section + .cv-section { margin-top: 7mm; }
+.statement .cv-section > h2 { display: flex; align-items: center; gap: 2.6mm; margin-bottom: 3mm; padding: 0; border: 0; font-size: .84rem; font-weight: 600; letter-spacing: .16em; color: var(--ink); }
+.statement .cv-section > h2::before { content: ""; flex: none; width: 2.3mm; height: 2.3mm; border-radius: 50%; background: var(--accent-2); }
+
+/* ---------- Entries ---------- */
+.statement .entry + .entry { margin-top: 4mm; }
+.statement .entry-title { font-size: 1.04rem; font-weight: 600; }
+.statement .dates { font-size: .86rem; color: var(--muted); }
+.statement .org { font-style: normal; color: var(--accent-2); }
+.statement .org .location { color: var(--muted); }
+.statement .org .location:not(:first-child)::before { content: " · "; }
+.statement .entry .desc { color: #2f3836; }
+.statement .bullets li::before, .statement ul.desc li::before { top: .6em; width: 1.3mm; height: 1.3mm; background: var(--accent-2); }
+.statement .extra span { font-weight: 600; }
+.statement .skill-group > h3 { font-size: .74rem; font-weight: 600; letter-spacing: .12em; color: var(--accent-2); }
+.statement .main-column .skill-group > h3 { font-size: .98rem; font-weight: 600; letter-spacing: 0; color: var(--ink); }
+.statement .languages .lang, .statement dl.rows dt { font-weight: 600; }
+.statement .main-column .section-body > p { text-align: left; }
+
+/* ---------- Sidebar: light tinted column ---------- */
+.statement .sidebar { padding: 6mm 5.5mm 7mm; background: var(--tint); }
+.statement .sidebar .contacts li { gap: 2.2mm; font-size: .88rem; }
+.statement .sidebar .cv-section > h2 { color: var(--accent); }
+.statement .sidebar .sec-profile .section-body > p { font-family: var(--font-name); font-size: 1.08rem; line-height: 1.35; }
+.statement .privacy { border-top-color: var(--rule); }

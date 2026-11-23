@@ -1,0 +1,127 @@
+/* =====================  INFOGRAPHIC STYLE  =====================
+   Visual and numeric: big numbered circles before the section titles, a photo inside a
+   donut-chart ring, contacts as round icon badges in a row, entries strung on a dotted
+   line with colourful dots and bold coloured date labels, solid level chips; every
+   palette colour in use. With the sidebar: a column on the left with round section markers.
+
+   @name    Infographic
+   @group   creative
+   @color   azure
+   @tags    infographic, numbers, numbered sections, circles, dots, colourful, data, visual, round photo, lively
+*/
+:root {
+  --ink: #17202a;
+  --muted: #56616d;
+  --rule: #d7dee5;
+  --dark: var(--p-dark, #0d497d);
+  --mid: var(--p-mid, #1677bd);
+  --light: var(--p-light, #3ec3e2);
+  --on-light: color-mix(in srgb, var(--dark) 55%, #000);
+  --dots: radial-gradient(circle, color-mix(in srgb, var(--mid) 45%, #fff) .38mm, transparent .45mm) 50% 0 / 1.2mm 1.8mm repeat-y;
+  --font-body: 'Rubik', 'Helvetica Neue', Arial, sans-serif;
+  --side-w: 58mm;
+  --side-gap: 9mm;
+  --side-accent: var(--dark);
+}
+@page { @bottom-right { font-family: 'Rubik', sans-serif; font-weight: 500; color: var(--p-mid, #777); } }
+html { font-size: 9.5pt; }
+body { line-height: 1.45; }
+.page.infographic { padding: 0 16mm; }
+
+/* ---------- Header: tinted band, donut-ring photo, badge row ---------- */
+.infographic .cv-header { gap: 9mm; margin: 0 -16mm 9mm; padding: 13mm 16mm 9mm; background: var(--tint); border-bottom: 1.6mm solid var(--light); }
+.infographic .header-photo {
+  order: 0; width: 42mm; height: 42mm; padding: 2mm; border-radius: 50%;
+  background: conic-gradient(var(--dark) 0 42%, var(--mid) 42% 74%, var(--light) 74% 100%);
+}
+.infographic .header-photo img { border-radius: 50%; border: 1.2mm solid var(--tint); }
+.infographic .name { font-weight: 700; font-size: 3.6rem; line-height: 1; letter-spacing: -.015em; color: var(--dark); }
+.infographic .last-name { color: var(--mid); }
+.infographic .headline {
+  display: inline-block; margin-top: 3mm; padding: .9mm 3.6mm; border-radius: 4mm; background: var(--dark);
+  font-size: .86rem; font-weight: 500; letter-spacing: .12em; color: #fff;
+}
+/* contacts: round icon badges in a row, text below */
+.infographic .cv-header .contacts { gap: 3mm 4mm; margin-top: 5mm; font-size: .8rem; line-height: 1.25; }
+.infographic .cv-header .contacts li { flex-direction: column; gap: 1.2mm; text-align: center; }
+.infographic .contacts .icon-wrap { width: 8.4mm; height: 8.4mm; border-radius: 50%; background: var(--dark); color: #fff; }
+.infographic .contacts .icon { width: 4.2mm; height: 4.2mm; }
+.infographic .contacts li:nth-child(3n+2) .icon-wrap { background: var(--mid); }
+.infographic .contacts li:nth-child(3n) .icon-wrap { background: var(--light); color: var(--on-light); }
+.infographic .cv-header .details { margin-top: 3mm; }
+
+/* ---------- Section titles: big numbered circles ---------- */
+.infographic .main-column { counter-reset: sec; }
+.infographic .cv-section { position: relative; margin-top: 7mm; }
+.infographic .sidebar-photo + .cv-section { margin-top: 0; }
+.infographic .cv-section > h2 {
+  display: flex; align-items: center; gap: 3.4mm; margin-bottom: 3mm; padding: 0; border: 0; break-inside: avoid;
+  font-size: 1.22rem; font-weight: 700; line-height: 1.15; letter-spacing: .02em; text-transform: none; color: var(--dark);
+}
+.infographic .main-column .cv-section > h2::before {
+  counter-increment: sec; content: counter(sec, decimal-leading-zero);
+  flex: none; width: 11mm; height: 11mm; border-radius: 50%; line-height: 11mm; text-align: center;
+  background: var(--mid); font-size: 1.02rem; font-weight: 700; letter-spacing: 0; color: #fff;
+}
+.infographic .main-column .cv-section:nth-of-type(3n+1) > h2::before { background: var(--dark); }
+.infographic .main-column .cv-section:nth-of-type(3n) > h2::before { background: var(--light); color: var(--on-light); }
+.infographic .main-column .section-body { padding-left: 14.4mm; }
+/* the dotted line hanging from the number down the section */
+.infographic .main-column .cv-section::before { content: ""; position: absolute; left: 4.9mm; top: 12.5mm; bottom: 0; width: 1.2mm; background: var(--dots); }
+
+/* ---------- Entries: colourful dots on the line, coloured date labels ---------- */
+.infographic .main-column .entry { position: relative; }
+.infographic .main-column .entry::before {
+  content: ""; position: absolute; left: -11.3mm; top: .25em; width: 3.8mm; height: 3.8mm; border-radius: 50%;
+  background: var(--mid); box-shadow: 0 0 0 .9mm #fff;
+}
+.infographic .entry:nth-child(3n+1)::before { background: var(--dark); }
+.infographic .entry:nth-child(3n)::before { background: var(--light); }
+.infographic .entry + .entry { margin-top: 4mm; }
+.infographic .entry-title { font-size: 1.04rem; font-weight: 700; }
+.infographic .dates { padding: .3mm 2.2mm; border-radius: 1mm; background: var(--mid); font-size: .8rem; font-weight: 700; color: #fff; }
+.infographic .entry:nth-child(3n+1) .dates { background: var(--dark); }
+.infographic .entry:nth-child(3n) .dates { background: var(--light); color: var(--on-light); }
+.infographic .sidebar .dates { display: inline-block; margin-top: .6mm; color: #fff; }
+.infographic .sidebar .entry:nth-child(3n) .dates { color: var(--on-light); }
+.infographic .org { font-style: normal; font-weight: 500; color: var(--mid); }
+.infographic .org .location { font-weight: 400; color: var(--muted); }
+.infographic .org .location:not(:first-child)::before { content: " · "; }
+.infographic .extra span { font-weight: 500; }
+
+/* ---------- Lists, tags, level chips ---------- */
+.infographic .bullets li::before, .infographic ul.desc li::before { top: .5em; width: 1.6mm; height: 1.6mm; background: var(--light); }
+.infographic .bullets li:nth-child(3n+2)::before { background: var(--mid); }
+.infographic .bullets li:nth-child(3n)::before { background: var(--dark); }
+.infographic .tags { gap: 1.6mm; }
+.infographic .tags li + li::before { content: none; }
+.infographic .tags li { display: flex; align-items: center; gap: 1.4mm; padding: .5mm 2.4mm .5mm 1.6mm; border-radius: 4mm; background: var(--tint); font-size: .88rem; font-weight: 500; color: var(--dark); }
+.infographic .tags li::before, .infographic .tags li + li::before { content: ""; flex: none; width: 2mm; height: 2mm; margin: 0; border-radius: 50%; background: var(--mid); }
+.infographic .tags li:nth-child(3n+1)::before { background: var(--dark); }
+.infographic .tags li:nth-child(3n)::before { background: var(--light); }
+.infographic .skill-group > h3 { font-size: .78rem; font-weight: 700; letter-spacing: .1em; color: var(--mid); }
+.infographic .main-column .skill-group > h3 { font-size: .95rem; font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--dark); }
+.infographic .languages .lang { font-weight: 500; }
+.infographic .languages .level::before { content: none; }
+.infographic .languages .level { margin-left: 1.4mm; padding: .2mm 2.2mm; border-radius: 3mm; background: var(--mid); font-size: .78rem; font-weight: 700; color: #fff; }
+.infographic .languages li:nth-child(3n+1) .level { background: var(--dark); }
+.infographic .languages li:nth-child(3n) .level { background: var(--light); color: var(--on-light); }
+.infographic .sidebar .languages li { display: flex; justify-content: space-between; align-items: center; }
+.infographic .sidebar .languages li + li { margin-top: 1.4mm; }
+.infographic dl.rows dt { font-weight: 700; color: var(--mid); }
+
+/* ---------- Sidebar: round markers, dotted divider ---------- */
+.infographic .sidebar { padding-right: 6mm; background: var(--dots); background-position: 100% 0; background-size: 1.2mm 1.8mm; }
+.infographic .sidebar .cv-section > h2 { font-size: 1.08rem; }
+.infographic .sidebar .cv-section > h2::before {
+  content: ""; flex: none; width: 6.4mm; height: 6.4mm; border-radius: 50%; box-sizing: border-box;
+  border: 1.8mm solid var(--mid); background: #fff;
+}
+.infographic .sidebar .cv-section:nth-of-type(3n+1) > h2::before { border-color: var(--dark); }
+.infographic .sidebar .cv-section:nth-of-type(3n) > h2::before { border-color: var(--light); }
+.infographic .sidebar .contacts li { gap: 2.4mm; }
+.infographic .sidebar .contacts .icon-wrap { width: 6.8mm; height: 6.8mm; }
+.infographic .sidebar .contacts .icon { width: 3.4mm; height: 3.4mm; }
+
+/* ---------- Privacy note ---------- */
+.infographic .privacy { border-top: 0; padding-top: 3mm; background: var(--dots); background-position: 0 0; background-size: 1.8mm 1.2mm; background-repeat: repeat-x; }

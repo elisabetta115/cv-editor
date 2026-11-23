@@ -1,0 +1,140 @@
+/* =====================  LEDGER STYLE  =====================
+   A spreadsheet ledger: every section is a table with a tinted header row, entries are
+   striped rows with ruled columns (dates in mono, role and organisation, location on the right).
+   With the sidebar: a narrow table on the left.
+
+   @name    Ledger
+   @group   modern
+   @color   forest
+   @tags    spreadsheet, table, ledger, grid, dense, structured, mono dates, finance, analyst
+*/
+:root {
+  --base: 9.4pt;
+  --ink: #1b2420;
+  --muted: #56615b;
+  --font-body: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+  --grid: color-mix(in srgb, var(--accent) 18%, #ccd2cf);   /* cell lines */
+  --zebra: color-mix(in srgb, var(--tint) 75%, #fff);       /* every other row */
+  --head-bg: var(--tint);
+  --date-w: 27mm;
+  --loc-w: 31mm;
+  --cell: 1.3mm 2.2mm;
+  --side-w: 58mm;
+  --side-gap: 7mm;
+}
+@page { @bottom-right { font-family: 'IBM Plex Mono', monospace; } }
+body { line-height: 1.38; }
+.page.ledger { padding: 13mm 14mm 0; }
+.ledger.has-sidebar { --side-w: 54mm; --date-w: 24mm; --loc-w: 21mm; }
+
+/* ---------- Header: name, headline in a formula bar, contacts as a 2-column table ---------- */
+.ledger .cv-header { align-items: stretch; gap: 6mm; margin-bottom: 7mm; }
+.ledger .identity { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-content: start; }
+.ledger .name, .ledger .headline { grid-column: 1 / -1; }
+.ledger .name { font-weight: 700; font-size: 2.6rem; line-height: 1.08; letter-spacing: -.01em; color: var(--accent); }
+.ledger .headline {
+  display: flex; align-items: center; margin: 2.4mm 0 3.4mm; border: .25mm solid var(--grid); background: #fff;
+  font-family: var(--font-mono); font-size: .9rem; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--ink);
+}
+.ledger .headline::before {
+  content: "fx"; flex: none; align-self: stretch; display: grid; place-items: center; width: 9mm; margin-right: 2.4mm;
+  border-right: .25mm solid var(--grid); background: var(--head-bg); font-style: italic; color: var(--accent-2);
+}
+.ledger .headline { padding-right: 2mm; line-height: 1.9; }
+.ledger .cv-header .contacts, .ledger .cv-header .details { display: contents; }
+.ledger .cv-header li { min-width: 0; padding: 1mm 2.2mm; border-bottom: .25mm solid var(--grid); font-size: .86rem; line-height: 1.3; }
+.ledger .cv-header li:nth-child(odd) { border-right: .25mm solid var(--grid); }
+.ledger .cv-header .contacts li:nth-child(-n+2) { border-top: .5mm solid var(--accent); }
+.ledger .cv-header:not(:has(.contacts)) .details li:nth-child(-n+2) { border-top: .5mm solid var(--accent); }
+/* the details carry on the stripe of the contacts table */
+.ledger .cv-header .details li { color: var(--muted); }
+.ledger .cv-header .details strong { color: var(--ink); }
+.ledger .contacts .icon-wrap { color: var(--accent-2); }
+.ledger .contacts .icon { width: 3.2mm; height: 3.2mm; }
+/* with the sidebar the photo is the first cell of the sidebar */
+.ledger.has-sidebar .header-photo { display: none; }
+.ledger.has-sidebar .sidebar-photo { display: block; height: 52mm; margin-bottom: 5mm; padding: 1mm; border: .25mm solid var(--grid); border-top: .5mm solid var(--accent); }
+.ledger .header-photo { width: 33mm; height: auto; min-height: 38mm; border: .25mm solid var(--grid); border-radius: 0; padding: 1mm; background: #fff; }
+
+/* ---------- Section = table: tinted header row between dark rules ---------- */
+.ledger .cv-section + .cv-section { margin-top: 5.5mm; }
+.ledger .cv-section > h2 {
+  margin: 0; padding: 1.1mm 2.2mm; background: var(--head-bg); border-top: .5mm solid var(--accent); border-bottom: .5mm solid var(--accent);
+  font-size: .8rem; font-weight: 700; letter-spacing: .12em; color: var(--accent);
+}
+.ledger .section-body > * + * { margin-top: 0; }
+.ledger .section-body > p { padding: var(--cell); border-bottom: .25mm solid var(--grid); }
+.ledger .section-body > p:nth-child(even) { background: var(--zebra); }
+.ledger .section-body p + p { margin-top: 0; }
+.ledger .main-column .section-body > p { text-align: left; }
+
+/* ---------- Entries: striped rows, dates | role and organisation | location ---------- */
+.ledger .entry + .entry { margin-top: 0; }
+.ledger .entry { border-bottom: .25mm solid var(--grid); }
+.ledger .entry:nth-child(even) { background-color: var(--zebra); }
+.ledger .main-column .entry {
+  display: grid; grid-template-columns: var(--date-w) minmax(0, 1fr) var(--loc-w); padding: 1.3mm 0;
+  background-image: linear-gradient(var(--grid), var(--grid)), linear-gradient(var(--grid), var(--grid));
+  background-size: .25mm 100%, .25mm 100%; background-repeat: no-repeat;
+  background-position: var(--date-w) 0, calc(100% - var(--loc-w)) 0;
+}
+.ledger .main-column .entry-head, .ledger .main-column .org { display: contents; }
+.ledger .main-column .dates { grid-column: 1; grid-row: 1 / span 6; padding: 0 2.2mm; }
+.ledger .main-column .entry-title { grid-column: 2; grid-row: 1; padding: 0 2.6mm; }
+.ledger .main-column .org-name { grid-column: 2; grid-row: 2; padding: 0 2.6mm; }
+.ledger .main-column .location { grid-column: 3; grid-row: 1 / span 2; padding: 0 2.2mm; text-align: right; }
+.ledger .main-column .org .location::before { content: none; }
+.ledger .main-column .entry > .desc, .ledger .main-column .entry > .extra { grid-column: 2; padding: 0 2.6mm; }
+.ledger .dates { font-family: var(--font-mono); font-size: .84rem; color: var(--accent-2); line-height: 1.55; white-space: normal; }
+.ledger .entry-title { font-size: 1rem; font-weight: 600; }
+.ledger .org { font-style: normal; color: var(--accent-2); }
+.ledger .org-name { font-weight: 600; font-size: .92rem; }
+.ledger .location { font-size: .88rem; color: var(--muted); }
+.ledger .entry .desc { margin-top: .6mm; }
+.ledger .bullets li::before, .ledger ul.desc li::before { top: .58em; width: 1.2mm; height: 1.2mm; border-radius: 0; background: var(--accent-2); }
+.ledger .extra span { font-weight: 600; }
+
+/* ---------- Lists, tags, skills and rows as table cells ---------- */
+.ledger .section-body > .bullets li { padding: .9mm 2.2mm .9mm 6mm; border-bottom: .25mm solid var(--grid); }
+.ledger .section-body > .bullets li::before { left: 2.4mm; }
+.ledger .section-body > .bullets li:nth-child(even) { background: var(--zebra); }
+.ledger .bullets li + li { margin-top: 0; }
+.ledger .section-body > .tags { padding: var(--cell); border-bottom: .25mm solid var(--grid); }
+/* tags as small cells */
+.ledger .tags { gap: 1.2mm; }
+.ledger .tags li { padding: .1mm 1.8mm; border: .25mm solid var(--grid); background: #fff; font-size: .9rem; }
+.ledger .tags li + li::before { content: none; }
+.ledger .skill-group + .skill-group { margin-top: 0; }
+.ledger .skill-group { border-bottom: .25mm solid var(--grid); }
+.ledger .skill-group:nth-child(even) { background: var(--zebra); }
+.ledger .skill-group > h3 { margin: 0; padding: 1.1mm 2.2mm 0; font-size: .74rem; font-weight: 700; letter-spacing: .08em; color: var(--accent-2); }
+.ledger .group-body { padding: .6mm 2.2mm 1.2mm; }
+.ledger .main-column .skill-group { grid-template-columns: var(--date-w) minmax(0, 1fr); column-gap: 0; padding: 1.2mm 0;
+  background-image: linear-gradient(var(--grid), var(--grid)); background-size: .25mm 100%; background-repeat: no-repeat; background-position: var(--date-w) 0; }
+.ledger .main-column .skill-group > h3 { padding: 0 2.2mm; font-size: .9rem; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--ink); }
+.ledger .main-column .group-body { padding: 0 2.6mm; }
+.ledger .main-column .languages { gap: 0 6mm; }
+.ledger .languages .level { font-family: var(--font-mono); font-size: .86rem; }
+.ledger dl.rows { grid-template-columns: var(--date-w) minmax(0, 1fr); gap: 0; }
+.ledger dl.rows dt, .ledger dl.rows dd { padding: var(--cell); border-bottom: .25mm solid var(--grid); }
+.ledger dl.rows dt { font-family: var(--font-mono); font-weight: 600; font-size: .86rem; color: var(--accent-2); }
+.ledger dl.rows dd { border-left: .25mm solid var(--grid); }
+
+/* ---------- Sidebar: a narrow table ---------- */
+.ledger .sidebar .section-body { font-size: .94rem; }
+.ledger .sidebar .contacts li, .ledger .sidebar .details li { padding: 1.1mm 2.2mm; border-bottom: .25mm solid var(--grid); }
+.ledger .sidebar .contacts li + li { margin-top: 0; }
+.ledger .sidebar .contacts li:nth-child(even), .ledger .sidebar .details li:nth-child(even) { background: var(--zebra); }
+.ledger .sidebar .contacts li { gap: 2.2mm; font-size: .86rem; }
+.ledger .sidebar .details li + li { margin-top: 0; }
+.ledger .sidebar > .sec-details { margin-top: 0; }
+.ledger .sidebar > .sec-details .details { border-top: 0; }
+.ledger .sidebar .languages li { display: flex; justify-content: space-between; gap: 2mm; padding: .5mm 0; }
+.ledger .sidebar .languages li + li { margin-top: 0; border-top: .25mm dotted var(--grid); }
+.ledger .sidebar .languages .level::before { content: none; }
+.ledger .sidebar .entry { padding: 1.2mm 2.2mm; }
+.ledger .sidebar .dates { display: block; }
+.ledger .sidebar dl.rows { display: grid; grid-template-columns: 14mm minmax(0, 1fr); }
+.ledger .sidebar dl.rows dd { margin: 0; color: var(--ink); }
+.ledger .privacy { border-top: .5mm solid var(--accent); }

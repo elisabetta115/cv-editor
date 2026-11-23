@@ -1,0 +1,48 @@
+/* =====================  ELEGANT STYLE  =====================
+   Coloured band at the top with name and photo, serif type, underlined section titles.
+   With the sidebar: a column separated by a thin rule.
+
+   @name    Elegant
+   @group   classic
+   @color   burgundy
+   @tags    serif, coloured band, underlined titles, refined, photo in the band, warm
+*/
+:root {
+  --ink: #22252a;
+  --muted: #686e76;
+  --rule: #e6e2de;
+  --font-body: 'Source Serif 4', Georgia, serif;
+  --side-w: 56mm;
+}
+@page { @bottom-right { font-family: 'Source Serif 4', Georgia, serif; } }
+body { line-height: 1.45; }
+.page.elegant { padding: 0 17mm; }
+
+/* ---------- Header: full-width coloured band ---------- */
+.elegant .cv-header { margin: 0 -17mm 8mm; padding: 12mm 17mm 10mm; background: var(--accent); color: #fff; }
+.elegant .header-photo { order: 0; width: 34mm; height: 34mm; border-radius: 50%; border: 1mm solid color-mix(in srgb, var(--soft) 55%, #fff); }
+.elegant .name { font-weight: 400; font-size: 2.9rem; letter-spacing: .01em; color: #fff; }
+.elegant .headline { margin-top: 2mm; font-family: 'Source Sans 3', sans-serif; font-size: .8rem; letter-spacing: .2em; color: color-mix(in srgb, var(--soft) 45%, #fff); }
+.elegant .cv-header .contacts, .elegant .cv-header .details { font-family: 'Source Sans 3', sans-serif; font-size: .9rem; }
+.elegant .cv-header .contacts { gap: 1.2mm 5.5mm; margin-top: 4.5mm; }
+.elegant .cv-header .contacts .icon-wrap { color: color-mix(in srgb, var(--soft) 60%, #fff); }
+.elegant .cv-header .details { gap: 0; color: rgba(255, 255, 255, .85); }
+.elegant .cv-header .details li + li::before { content: "·"; margin: 0 2.2mm; }
+.elegant .cv-header .details strong { color: #fff; }
+
+/* ---------- Sections ---------- */
+.elegant .cv-section { margin-top: 6.5mm; }
+.elegant .cv-section > h2 { padding-bottom: 1.2mm; border-bottom: .35mm solid var(--soft); font-family: 'Source Serif 4', Georgia, serif; font-size: 1rem; font-weight: 600; letter-spacing: .14em; }
+.elegant .entry + .entry { margin-top: 3.8mm; }
+.elegant .entry-title { font-size: 1.08rem; font-weight: 600; }
+.elegant .dates { font-style: italic; font-size: .92rem; }
+.elegant .org { font-family: 'Source Sans 3', sans-serif; font-size: .9rem; font-weight: 600; font-style: normal; letter-spacing: .03em; }
+.elegant .extra span { font-weight: 600; }
+.elegant .bullets li, .elegant ul.desc li { padding-left: 4mm; }
+.elegant .bullets li::before, .elegant ul.desc li::before { border-radius: 0; width: 1.3mm; height: 1.3mm; transform: rotate(45deg); }
+.elegant .main-column .skill-group > h3, .elegant dl.rows dt { font-weight: 600; color: var(--accent); }
+.elegant .skill-group > h3 { font-family: 'Source Sans 3', sans-serif; }
+
+/* ---------- With the sidebar ---------- */
+.elegant .sidebar { padding-right: 6mm; border-right: .3mm solid var(--rule); }
+.elegant .sidebar .contacts .icon-wrap { color: var(--accent-2); }

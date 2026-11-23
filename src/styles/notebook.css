@@ -1,0 +1,132 @@
+/* =====================  NOTEBOOK STYLE  =====================
+   A school notebook page: off-white paper with a red margin line on every page and faint ruled
+   lines that the text sits on, the name and section titles handwritten in the accent colour with
+   a pen underline, small dashes as bullets and skills circled in pen.
+   With the sidebar: a column on the left of the margin line, like notes in the margin.
+
+   @name    Notebook
+   @group   themed
+   @color   azure
+   @tags    notebook, handwritten, ruled paper, lined paper, school, student, teacher, friendly, playful
+   @print-sidebar @page{@top-left{width:74mm}@bottom-left{width:74mm}}
+*/
+:root {
+  --paper: #fdfcf7;
+  --ink: #23262b;
+  --muted: #5f6670;
+  --rule: color-mix(in srgb, var(--p-light, #3ec3e2) 40%, transparent);
+  --lines: color-mix(in srgb, var(--p-light, #3ec3e2) 42%, transparent);   /* ruled lines */
+  --margin-line: #ea8a95;                                                    /* the red margin */
+  --mx: 25mm;                                                                /* where the margin line is */
+  --L: 5.5mm;                                                                /* line spacing: every line of text sits on a rule */
+  --rules: repeating-linear-gradient(transparent 0 4.05mm, var(--lines) 4.05mm 4.3mm, transparent 4.3mm var(--L));
+  --page-bg: var(--paper);
+  --font-body: 'Nunito', 'Helvetica Neue', Arial, sans-serif;
+  --font-hand: 'Caveat', 'Comic Sans MS', cursive;
+  --side-w: 57mm;
+  --side-gap: 12mm;
+  /* pen strokes, drawn as masks so they take the palette colour */
+  --pen-wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 8'%3E%3Cpath d='M0 4 Q5 .4 10 4 T20 4' fill='none' stroke='black' stroke-width='1.7'/%3E%3C/svg%3E");
+  --pen-line: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 6' preserveAspectRatio='none'%3E%3Cpath d='M1.5 4.3 C20 2.9 42 3.8 64 3.1 S92 2.5 98.5 3.5' fill='none' stroke='black' stroke-width='1.9' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+/* paper colour and the margin line in the top and bottom margins of every printed page */
+@page {
+  background: #fdfcf7;
+  @top-left { content: ""; width: 25mm; border-right: .45mm solid #ea8a95; }
+  @bottom-left { content: ""; width: 25mm; border-right: .45mm solid #ea8a95; }
+  @bottom-right { font-family: 'Nunito', sans-serif; color: #7b8590; }
+}
+.page.notebook { padding: 15mm 15mm 0 calc(var(--mx) + 6.5mm); }
+.page.notebook.has-sidebar { --mx: 74mm; padding: 15mm 14mm 0 11mm; }
+/* the margin line: from top to bottom of the sheet on screen, on every page in print */
+.page.notebook::after { content: ""; position: absolute; top: 0; bottom: 0; left: var(--mx); width: .45mm; background: var(--margin-line); z-index: 1; pointer-events: none; }
+@media print { .page.notebook::after { position: fixed; } }
+
+/* The ruled lines belong to the columns, from edge to edge of the sheet, and start again at the
+   top of every page (clone), exactly where the text starts again. */
+.notebook .main-column, .notebook .sidebar {
+  align-self: stretch; background: var(--rules); -webkit-box-decoration-break: clone; box-decoration-break: clone;
+}
+.notebook.no-sidebar .main-column { margin: 0 -15mm 0 calc(-1 * (var(--mx) + 6.5mm)); padding: 0 15mm 0 calc(var(--mx) + 6.5mm); }
+.notebook.has-sidebar .sidebar { margin: 0 calc(var(--side-gap) / -2) 0 -11mm; padding: 0 calc(var(--side-gap) / 2) 0 11mm; }
+.notebook.has-sidebar .main-column { margin: 0 -14mm 0 calc(var(--side-gap) / -2); padding: 0 14mm 0 calc(var(--side-gap) / 2); }
+
+/* ---------- Vertical rhythm: every block is a whole number of lines ---------- */
+.notebook .main-column, .notebook .sidebar { line-height: var(--L); }
+.notebook .main-column *, .notebook .sidebar * { line-height: var(--L); }
+.notebook .cv-section { margin-top: var(--L); }
+.notebook .section-body > * + *, .notebook .section-body p + p { margin-top: 0; }
+.notebook .entry + .entry { margin-top: var(--L); }
+.notebook .entry .desc, .notebook .entry .extra { margin-top: 0; }
+.notebook .bullets li + li, .notebook ul.desc li + li, .notebook .languages li + li { margin-top: 0; }
+.notebook .skill-group + .skill-group { margin-top: 0; }
+.notebook .skill-group > h3 { margin: 0; }
+.notebook .sidebar .contacts li + li, .notebook .sidebar .details li + li { margin-top: 0; }
+.notebook .sidebar dl.rows dd { margin-bottom: 0; }
+.notebook dl.rows { gap: 0 5mm; }
+
+/* ---------- Header ---------- */
+.notebook .cv-header { align-items: center; gap: 9mm; margin-bottom: 9mm; }
+.notebook.has-sidebar .cv-header { display: grid; grid-template-columns: var(--side-w) minmax(0, 1fr); column-gap: var(--side-gap); }
+.notebook.has-sidebar .cv-header .identity { grid-column: 2; grid-row: 1; }
+.notebook.has-sidebar .header-photo { grid-column: 1; grid-row: 1; justify-self: center; }
+.notebook .header-photo {
+  width: 31mm; height: 37mm; padding: 1.4mm; overflow: hidden; background: #fff;
+  border: .4mm solid var(--accent-2); border-radius: 2mm 5mm 2.5mm 4mm / 4mm 2mm 4.5mm 2mm;
+}
+.notebook .header-photo img { border-radius: 1mm 4mm 1.5mm 3mm / 3mm 1mm 3.5mm 1mm; }
+.notebook .name { width: fit-content; font-family: var(--font-hand); font-weight: 700; font-size: 3.9rem; line-height: .95; color: var(--accent); }
+.notebook .name::after {
+  content: ""; display: block; height: 2.2mm; margin-top: .6mm; background: var(--accent-2);
+  -webkit-mask: var(--pen-wave) repeat-x 0 50% / 5mm 2.2mm; mask: var(--pen-wave) repeat-x 0 50% / 5mm 2.2mm;
+}
+.notebook .headline { margin-top: 2.6mm; font-size: .86rem; font-weight: 700; letter-spacing: .14em; color: var(--accent-2); }
+.notebook .cv-header .contacts { gap: 1.2mm 5.5mm; margin-top: 3.6mm; font-size: .92rem; }
+.notebook .cv-header .details { font-size: .92rem; }
+.notebook .cv-header .details strong { font-weight: 700; }
+
+/* ---------- Section titles: handwritten on two lines, the ruled line traced over in pen ---------- */
+.notebook .cv-section > h2 {
+  position: relative; top: 1.65mm; width: fit-content; height: calc(2 * var(--L)); margin: 0; padding: 0 1mm; border: 0;
+  font-family: var(--font-hand); font-size: 1.95rem; font-weight: 700; line-height: calc(2 * var(--L)); letter-spacing: 0; text-transform: none; color: var(--accent);
+}
+.notebook .cv-section > h2::after {
+  content: ""; position: absolute; left: -1mm; right: -1.5mm; top: 7.2mm; height: 1.7mm; background: var(--accent-2);
+  -webkit-mask: var(--pen-line) no-repeat 0 0 / 100% 100%; mask: var(--pen-line) no-repeat 0 0 / 100% 100%;
+}
+.notebook .sidebar .cv-section > h2 { font-size: 1.75rem; }
+.notebook .main-column .section-body > p { text-align: left; hyphens: manual; }
+
+/* ---------- Entries ---------- */
+.notebook .entry-head { align-items: flex-start; }
+.notebook .entry-title { font-size: 1.04rem; font-weight: 800; }
+.notebook .dates { position: relative; top: -.35mm; font-family: var(--font-hand); font-size: 1.35rem; font-weight: 700; color: var(--accent-2); }
+.notebook .org { font-style: italic; color: var(--accent-2); }
+.notebook .org .location { color: var(--muted); }
+.notebook .extra span { font-weight: 700; }
+.notebook .bullets li, .notebook ul.desc li { padding-left: 4.4mm; }
+.notebook .bullets li::before, .notebook ul.desc li::before {
+  content: ""; left: .3mm; top: 2.75mm; width: 2.2mm; height: .45mm; border-radius: .3mm; background: var(--accent-2); transform: rotate(-6deg);
+}
+
+/* ---------- Skills: words circled in pen ---------- */
+.notebook .tags { gap: 0 2mm; }
+.notebook .tags li { position: relative; padding: 0 2.2mm; font-size: .92rem; }
+.notebook .tags li::before, .notebook .tags li + li::before {
+  content: ""; position: absolute; inset: .45mm -.2mm .25mm; margin: 0; border: .35mm solid color-mix(in srgb, var(--accent-2) 80%, transparent);
+  border-radius: 2mm 5mm 2.5mm 4mm / 4mm 2mm 4.5mm 2mm;
+}
+.notebook .tags li:nth-child(even)::before { border-radius: 4mm 2mm 5mm 2.5mm / 2mm 4.5mm 2mm 4mm; }
+.notebook .skill-group > h3 { font-size: .8rem; font-weight: 800; color: var(--accent-2); }
+.notebook .main-column .skill-group > h3 { font-weight: 800; }
+.notebook .languages .lang { font-weight: 800; }
+.notebook dl.rows dt { position: relative; top: -.3mm; font-family: var(--font-hand); font-size: 1.3rem; font-weight: 700; color: var(--accent-2); }
+
+/* ---------- Sidebar: notes in the margin ---------- */
+.notebook .sidebar .cv-section { break-inside: avoid; }
+.notebook .sidebar .contacts .icon-wrap { color: var(--accent-2); }
+.notebook .sidebar .contacts li { gap: 2.2mm; }
+.notebook .sidebar .details strong { font-weight: 700; }
+
+/* ---------- Privacy note ---------- */
+.notebook .privacy { border-top: 0; }

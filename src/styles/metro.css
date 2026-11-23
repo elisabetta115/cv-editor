@@ -1,0 +1,99 @@
+/* =====================  METRO STYLE  =====================
+   Flat "Metro" tiles: the contacts as a row of solid square colour tiles, a square photo
+   tile, big light lowercase section titles, skills as flat square tiles. No rounded
+   corners, no shadows, no rules.
+   With the sidebar: a solid light-tint column on the left of every page, with the contact tiles stacked.
+
+   @name    Metro
+   @group   modern
+   @color   teal
+   @tags    tiles, flat, square, lowercase, light type, tinted sidebar, full-height sidebar, square photo, geometric
+   @print-sidebar @page{@top-left{background:$bg}@bottom-left{background:$bg}}
+*/
+:root {
+  --ink: #1e2427;
+  --muted: #5d676d;
+  --tile: color-mix(in srgb, var(--soft) 24%, #fff);
+  --font-body: 'Raleway', 'Helvetica Neue', Arial, sans-serif;
+  --side-w: 66mm;
+  --side-gap: 0mm;
+}
+/* The tinted column on every page: margin boxes (coloured only with the sidebar), the page
+   background and a fixed strip in print; the white header covers it on the first page. */
+@page {
+  @top-left { content: ""; width: 66mm; }
+  @bottom-left { content: ""; width: 66mm; }
+  @bottom-right { font-family: 'Raleway', sans-serif; font-variant-numeric: lining-nums; }
+}
+.page.metro { padding: 0; font-variant-numeric: lining-nums; }
+.page.metro.has-sidebar { background: linear-gradient(to right, var(--tint) 66mm, #fff 66mm); }
+@media print {
+  .page.metro.has-sidebar { min-height: 283mm; }
+  .page.metro.has-sidebar::before { content: ""; position: fixed; top: 0; bottom: 0; left: 0; width: 66mm; background: var(--tint); z-index: -1; }
+}
+
+/* ---------- Header: square photo tile, light name, contact tiles ---------- */
+.metro .cv-header { align-items: flex-start; gap: 7mm; margin: 0; padding: 14mm 15mm 9mm; background: #fff; }
+.metro .header-photo { order: 0; width: 36mm; height: 36mm; border-radius: 0; }
+.metro .name { font-weight: 300; font-size: 3.2rem; line-height: 1.02; letter-spacing: -.02em; color: var(--ink); }
+.metro .last-name { font-weight: 700; color: var(--accent); }
+.metro .headline { margin-top: 1.4mm; font-size: 1.2rem; font-weight: 400; letter-spacing: 0; text-transform: lowercase; color: var(--accent-2); }
+.metro .contacts .icon { stroke-width: 1.8; }
+.metro .contacts .icon-wrap { color: #fff; }
+.metro .contacts li { background: var(--accent); color: #fff; }
+.metro .contacts li:nth-child(even) { background: var(--accent-2); }
+.metro .cv-header .contacts { gap: 1mm; margin-top: 5mm; font-size: .88rem; }
+/* the tiles fill each row; a filler keeps the last row from stretching one tile across */
+.metro .cv-header .contacts::after { content: ""; flex: 6 1 0; }
+.metro .cv-header .contacts li {
+  flex: 1 1 auto; flex-direction: column; align-items: flex-start; justify-content: space-between; gap: 2.6mm;
+  min-height: 13.5mm; padding: 2mm 3mm 1.8mm 2.6mm; line-height: 1.2;
+}
+.metro .cv-header .contacts .icon { width: 3.8mm; height: 3.8mm; }
+.metro .cv-header .details { margin-top: 2.4mm; font-size: .9rem; }
+.metro .cv-header .details strong, .metro .sidebar .details strong { font-weight: 700; color: var(--ink); }
+
+/* ---------- Layout ---------- */
+.metro.has-sidebar > .cv-header { padding-bottom: 10mm; }
+.metro > .main-column { padding: 0 15mm; }
+.metro.has-sidebar > .main-column { padding: 2mm 14mm 0 10mm; }
+.metro.has-sidebar > .sidebar { padding: 3mm 7mm 6mm 8mm; }
+.metro > .privacy { margin: 8mm 15mm 0; border: 0; }
+.metro.has-sidebar > .privacy { margin-left: calc(66mm + 10mm); margin-right: 14mm; }
+
+/* ---------- Section titles: big, light, lowercase ---------- */
+.metro .cv-section { margin-top: 7mm; }
+.metro .sidebar-photo + .cv-section { margin-top: 0; }
+.metro .cv-section > h2 {
+  margin-bottom: 2.8mm; padding: 0; border: 0;
+  font-size: 2.05rem; font-weight: 300; line-height: 1.1; letter-spacing: -.015em; text-transform: lowercase; color: var(--accent);
+}
+.metro .sidebar .cv-section > h2 { margin-bottom: 2.4mm; font-size: 1.7rem; color: var(--accent); }
+
+/* ---------- Sidebar: contact tiles stacked ---------- */
+.metro .sidebar .contacts li { gap: 2.4mm; width: auto; padding: 1.9mm 2.6mm; font-size: .88rem; line-height: 1.2; }
+/* tiles keep the column width: a long address wraps, a very long e-mail breaks inside its tile */
+.metro .sidebar .contacts .contact-text { white-space: normal; min-width: 0; overflow-wrap: anywhere; }
+.metro .sidebar .contacts li + li { margin-top: .8mm; }
+.metro .sidebar .contacts .icon { width: 3.4mm; height: 3.4mm; }
+.metro .sidebar .details { color: var(--ink); }
+.metro .sidebar .languages li { display: flex; justify-content: space-between; }
+.metro .sidebar .languages .level::before { content: none; }
+.metro .sidebar .tags li { background: #fff; }
+
+/* ---------- Entries, tiles ---------- */
+.metro .entry + .entry { margin-top: 4mm; }
+.metro .entry-title { font-size: 1.04rem; font-weight: 700; }
+.metro .dates { font-size: .88rem; font-weight: 600; color: var(--accent-2); font-variant-numeric: lining-nums tabular-nums; }
+.metro .org { font-style: normal; font-weight: 600; color: var(--accent-2); }
+.metro .org .location { font-weight: 400; color: var(--muted); }
+.metro .org .location:not(:first-child)::before { content: " · "; }
+.metro .bullets li::before, .metro ul.desc li::before { top: .58em; width: 1.4mm; height: 1.4mm; border-radius: 0; background: var(--accent-2); }
+.metro .tags { gap: 1mm; }
+.metro .tags li + li::before { content: none; }
+.metro .tags li { padding: .9mm 2.6mm; background: var(--tile); font-size: .88rem; font-weight: 600; color: var(--accent); }
+.metro .skill-group > h3 { font-size: .8rem; font-weight: 700; color: var(--accent-2); }
+.metro .main-column .skill-group > h3 { font-size: .98rem; font-weight: 700; color: var(--accent-2); }
+.metro .languages .lang, .metro dl.rows dt { font-weight: 700; }
+/* the last table row must not glue the whole section to the next one */
+.metro .main-column dl.rows dt { break-after: auto; }

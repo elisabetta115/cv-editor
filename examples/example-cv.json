@@ -1,0 +1,163 @@
+{
+  "format": "cv-editor",
+  "version": 1,
+  "name": "Alex Morgan",
+  "exported": "2026-11-09T12:00:00+00:00",
+  "settings": {
+    "styles": {
+      "formal": {
+        "pdf": true,
+        "color": "navy"
+      },
+      "creative": {
+        "pdf": false,
+        "color": "azure"
+      },
+      "modern": {
+        "pdf": true,
+        "color": "teal"
+      },
+      "minimal": {
+        "pdf": false,
+        "color": "graphite"
+      },
+      "elegant": {
+        "pdf": false,
+        "color": "burgundy"
+      }
+    }
+  },
+  "languages": {
+    "en": {
+      "labels": {
+        "profile": "Profile",
+        "about_me": "About me",
+        "contacts": "Contacts",
+        "experience": "Experience",
+        "education": "Education",
+        "skills": "Skills",
+        "languages": "Languages",
+        "digital_skills": "Digital skills",
+        "soft_skills": "Soft skills",
+        "interests": "Interests",
+        "grade": "Final score",
+        "thesis": "Thesis"
+      },
+      "person": {
+        "first_name": "Alex",
+        "last_name": "Morgan",
+        "headline": "Product Designer",
+        "profile": "Product designer with six years of experience in **user research** and interface design for web and mobile apps. I enjoy turning complex problems into simple, accessible products.",
+        "about_me": "Curious, organised and happiest when working closely with engineers and users."
+      },
+      "details": [
+        {
+          "label": "Nationality",
+          "value": "Example"
+        }
+      ],
+      "contacts": [
+        {
+          "type": "email",
+          "text": "alex.morgan@example.com"
+        },
+        {
+          "type": "phone",
+          "text": "+00 123 456 789"
+        },
+        {
+          "type": "address",
+          "text": "Example Street 1, Sample City"
+        },
+        {
+          "type": "linkedin",
+          "text": "Alex Morgan",
+          "link": "https://www.linkedin.com/in/example"
+        },
+        {
+          "type": "web",
+          "text": "alexmorgan.example",
+          "link": "https://example.com"
+        }
+      ],
+      "experience": [
+        {
+          "role": "Senior Product Designer",
+          "organization": "Example Studio",
+          "location": "Sample City",
+          "dates": "2023 – today",
+          "description": [
+            "Led the redesign of the [mobile app](https://example.com/app) used by 2 million people.",
+            "Set up a design system shared by four product teams."
+          ]
+        },
+        {
+          "role": "Product Designer",
+          "organization": "Demo Company",
+          "dates": "2020 – 2023",
+          "description": "Designed onboarding and payment flows, testing every change with real users."
+        }
+      ],
+      "education": [
+        {
+          "title": "MA in Interaction Design",
+          "organization": "University of Example",
+          "dates": "2018 – 2020",
+          "grade": "Distinction",
+          "thesis": "Designing for trust in shared services",
+          "link": "https://example.com/master"
+        },
+        {
+          "title": "BA in Visual Communication",
+          "organization": "Sample Institute of Art",
+          "dates": "2015 – 2018"
+        }
+      ],
+      "languages": [
+        {
+          "language": "English",
+          "level": "Native"
+        },
+        {
+          "language": "Spanish",
+          "level": "B2"
+        }
+      ],
+      "skills": {
+        "digital": [
+          "Figma",
+          "Prototyping",
+          "HTML",
+          "CSS",
+          "User testing"
+        ],
+        "soft": [
+          "Clear communication",
+          "Workshop facilitation",
+          "Attention to detail",
+          "Teamwork"
+        ]
+      },
+      "sections": [
+        {
+          "title": "Projects",
+          "after": "education",
+          "entries": [
+            {
+              "title": "Open-source icon set",
+              "dates": "2024",
+              "link": "https://example.com/icons",
+              "description": "300 icons released under a free licence and used in several open-source apps."
+            }
+          ]
+        }
+      ],
+      "interests": {
+        "text": "Photography, hiking and community gardening.\n\nI volunteer as a mentor for young designers."
+      },
+      "privacy": {
+        "text": ""
+      }
+    }
+  }
+}

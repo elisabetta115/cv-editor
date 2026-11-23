@@ -1,0 +1,52 @@
+/* =====================  COMPACT STYLE  =====================
+   Smaller type and tight spacing to fit a lot on few pages: each entry starts
+   with one line "Role — Organisation ... dates".
+
+   @name    Compact
+   @group   modern
+   @color   forest
+   @tags    dense, small type, one page, fits a lot, tight, ats
+*/
+:root {
+  --base: 9pt;
+  --ink: #1f2328;
+  --muted: #5f6873;
+  --rule: #d9dee3;
+  --font-name: 'Montserrat', sans-serif;
+  --side-w: 52mm;
+  --side-gap: 7mm;
+}
+@page { @bottom-right { font-family: 'Source Sans 3', sans-serif; } }
+body { line-height: 1.32; }
+.page.compact { padding: 11mm 13mm 0; }
+
+/* ---------- Header ---------- */
+.compact .cv-header { gap: 5mm; margin-bottom: 4mm; padding-bottom: 3.5mm; border-bottom: .5mm solid var(--accent); }
+.compact .header-photo { order: 0; width: 22mm; height: 27mm; }
+.compact .name { font-weight: 700; font-size: 2.2rem; }
+.compact .headline { margin-top: 1mm; font-size: .82rem; }
+.compact .cv-header .contacts { gap: .8mm 4mm; margin-top: 2mm; font-size: .9rem; }
+.compact .contacts .icon { width: 3mm; height: 3mm; }
+.compact .cv-header .details { margin-top: .8mm; font-size: .9rem; }
+
+/* ---------- Sections ---------- */
+.compact .cv-section { margin-top: 4mm; }
+.compact .cv-section > h2 { margin-bottom: 2mm; padding-bottom: .8mm; border-bottom-color: var(--soft); font-size: .82rem; letter-spacing: .12em; }
+.compact .section-body > * + * { margin-top: 1.4mm; }
+
+/* ---------- Entries on one line: Role — Organisation ... dates ---------- */
+.compact .main-column .entry { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; column-gap: 2mm; align-items: baseline; }
+.compact .main-column .entry + .entry { margin-top: 2.2mm; }
+.compact .main-column .entry-head { display: contents; }
+.compact .main-column .entry-title { grid-column: 1; grid-row: 1; font-size: 1rem; }
+.compact .main-column .org { grid-column: 2; grid-row: 1; font-style: normal; }
+.compact .main-column .org::before { content: "— "; color: var(--muted); }
+.compact .main-column .dates { grid-column: 3; grid-row: 1; }
+.compact .main-column .entry > .desc, .compact .main-column .entry > .extra { grid-column: 1 / -1; }
+.compact .entry .desc { margin-top: .4mm; }
+.compact .main-column .skill-group { grid-template-columns: 30mm 1fr; }
+.compact .main-column .bullets.cols { columns: 3; column-gap: 6mm; }
+.compact .privacy { margin-top: 5mm; }
+
+/* ---------- With the sidebar ---------- */
+.compact .sidebar { padding-right: 4mm; border-right: .3mm solid var(--rule); }

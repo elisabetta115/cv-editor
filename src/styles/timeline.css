@@ -1,0 +1,58 @@
+/* =====================  TIMELINE STYLE  =====================
+   One column; experience and education along a vertical line, with the dates on
+   the left of the line. With the sidebar: a tinted panel.
+
+   @name    Timeline
+   @group   modern
+   @color   terracotta
+   @tags    vertical line, dots, dates, chronological, round photo
+*/
+:root {
+  --ink: #22252b;
+  --muted: #646b75;
+  --rule: #e2e4e8;
+  --font-body: 'Lato', 'Helvetica Neue', Arial, sans-serif;
+  --font-head: 'Montserrat', sans-serif;
+  --side-w: 54mm;
+  --tl-date: 24mm;   /* width of the dates column */
+  --tl-gap: 8mm;     /* space between the dates and the text; the line sits in the middle */
+}
+@page { @bottom-right { font-family: 'Lato', sans-serif; } }
+.page.timeline { padding: 15mm 16mm 0; }
+
+/* ---------- Header ---------- */
+.timeline .cv-header { gap: 7mm; margin-bottom: 8mm; }
+.timeline .header-photo { order: 0; width: 34mm; height: 34mm; border-radius: 50%; border: 1mm solid var(--soft); }
+.timeline .name { font-weight: 800; font-size: 2.8rem; }
+.timeline .cv-header .contacts .icon-wrap { color: var(--accent); }
+
+/* ---------- Section titles ---------- */
+.timeline .cv-section { margin-top: 7mm; }
+.timeline .cv-section > h2 { display: flex; align-items: center; gap: 3mm; padding: 0; border: 0; font-size: .95rem; letter-spacing: .12em; margin-bottom: 3.5mm; }
+.timeline .cv-section > h2::after { content: ""; flex: 1; height: .3mm; background: var(--rule); }
+
+/* ---------- Entries along the line ---------- */
+.timeline .main-column .entries { position: relative; }
+.timeline .main-column .entries::before {
+  content: ""; position: absolute; top: 1.5mm; bottom: 1mm; width: .5mm; background: var(--rule);
+  left: calc(var(--tl-date) + var(--tl-gap) / 2 - .25mm);
+}
+.timeline .main-column .entry { position: relative; display: grid; grid-template-columns: var(--tl-date) 1fr; column-gap: var(--tl-gap); }
+.timeline .main-column .entry::before {
+  content: ""; position: absolute; top: .4em; width: 3.2mm; height: 3.2mm; border-radius: 50%;
+  background: #fff; border: .7mm solid var(--soft); box-sizing: border-box;
+  left: calc(var(--tl-date) + var(--tl-gap) / 2 - 1.6mm);
+}
+.timeline .main-column .entry-head { display: contents; }
+.timeline .main-column .dates { grid-column: 1; grid-row: 1 / span 3; justify-self: end; text-align: right; white-space: normal; font-size: .82rem; font-weight: 700; color: var(--accent-2); padding-top: .15em; }
+.timeline .main-column .entry > :not(.entry-head), .timeline .main-column .entry-title { grid-column: 2; }
+.timeline .org { font-style: normal; color: var(--muted); }
+/* the other content lines up with the text of the entries */
+.timeline.no-sidebar .main-column .section-body > :not(.entries) { margin-left: calc(var(--tl-date) + var(--tl-gap)); }
+.timeline .tags { gap: 1.4mm; }
+.timeline .tags li + li::before { content: none; }
+.timeline .tags li { padding: .3mm 2.4mm; border-radius: 3mm; border: .3mm solid var(--soft); color: var(--accent); font-size: .88rem; }
+
+/* ---------- With the sidebar ---------- */
+.timeline.has-sidebar { --tl-date: 19mm; --tl-gap: 7mm; }
+.timeline .sidebar { padding: 5mm; border-radius: 2mm; background: var(--tint); }

@@ -1,0 +1,89 @@
+/* =====================  BADGE STYLE  =====================
+   A colour band across the top with a big round photo, ringed in white, sitting on its
+   lower edge; name, headline and contacts centred under it; centred section titles with a
+   small circle above. Without a photo the name sits in white on the band.
+   With the sidebar: a tinted rounded panel on the left, under the band.
+
+   @name    Badge
+   @group   modern
+   @color   plum
+   @tags    centred, round photo, colour band, badge, friendly, one column, circles, tinted sidebar, sans-serif
+*/
+:root {
+  --base: 9.5pt;
+  --ink: #221f29;
+  --muted: #625e6c;
+  --rule: #e2dfe8;
+  --font-body: 'Poppins', 'Helvetica Neue', Arial, sans-serif;
+  --band: 38mm;
+  --side-w: 58mm;
+  --side-gap: 9mm;
+}
+@page { @bottom-right { font-family: 'Poppins', sans-serif; } }
+body { line-height: 1.5; }
+.page.badge { padding: 0 16mm; }
+
+/* ---------- Header: band, photo on its edge, everything centred ---------- */
+.badge .cv-header {
+  flex-direction: column; align-items: center; gap: 4mm; margin: 0 -16mm 8mm; padding: calc(var(--band) - 20mm) 16mm 0;
+  background: linear-gradient(to bottom, var(--accent) var(--band), transparent var(--band)); text-align: center;
+}
+.badge .header-photo {
+  order: 0; width: 40mm; height: 40mm; border-radius: 50%; border: 1.6mm solid #fff;
+  box-shadow: 0 0 0 .35mm color-mix(in srgb, var(--accent) 25%, transparent), 0 1.2mm 3mm color-mix(in srgb, var(--accent) 22%, transparent);
+}
+.badge .cv-header .identity { flex: none; align-self: stretch; }
+.badge .name { font-weight: 600; font-size: 2.65rem; line-height: 1.1; letter-spacing: -.01em; color: var(--ink); }
+.badge .last-name { color: var(--accent); }
+.badge .headline { margin-top: 1.4mm; font-size: .92rem; font-weight: 400; letter-spacing: .24em; color: var(--accent-2); }
+.badge .cv-header .contacts, .badge .cv-header .details { justify-content: center; }
+.badge .cv-header .contacts { gap: 1.2mm 5.5mm; margin-top: 4mm; font-size: .92rem; }
+.badge .cv-header .details { margin-top: 1.4mm; }
+.badge .contacts .icon-wrap { color: var(--accent-2); }
+.badge .cv-header .details strong, .badge .sidebar .details strong { font-weight: 600; color: var(--ink); }
+
+/* without a photo: name and headline in white on the band */
+.badge .cv-header:not(:has(.header-photo)) { padding-top: 0; background: none; }
+.badge .cv-header:not(:has(.header-photo)) .name { margin: 0 -16mm; padding: 13mm 16mm 2mm; background: var(--accent); color: #fff; }
+.badge .cv-header:not(:has(.header-photo)) .last-name { color: color-mix(in srgb, var(--soft) 55%, #fff); }
+.badge .cv-header:not(:has(.header-photo)) .headline { margin: 0 -16mm; padding: 0 16mm 11mm; background: var(--accent); color: rgba(255, 255, 255, .85); }
+.badge .cv-header:not(:has(.header-photo)) .name:not(:has(+ .headline)) { padding-bottom: 11mm; }
+.badge .cv-header:not(:has(.header-photo)) .contacts { margin-top: 6mm; }
+
+/* ---------- Section titles: centred, a small circle above ---------- */
+.badge .cv-section { margin-top: 7.5mm; }
+.badge .sidebar-photo + .cv-section { margin-top: 0; }
+.badge .cv-section > h2 {
+  margin-bottom: 3.4mm; padding: 0; border: 0; text-align: center; break-inside: avoid;
+  font-size: .95rem; font-weight: 600; letter-spacing: .22em; color: var(--accent);
+}
+.badge .cv-section > h2::before { content: ""; display: block; width: 3mm; height: 3mm; margin: 0 auto 1.6mm; border-radius: 50%; border: .7mm solid var(--soft); }
+.badge .sidebar .cv-section { margin-top: 6mm; }
+.badge .sidebar > .cv-section:first-child, .badge .sidebar-photo + .cv-section { margin-top: 0; }
+.badge .sidebar .cv-section > h2 { margin-bottom: 2.6mm; font-size: .86rem; letter-spacing: .18em; }
+
+/* ---------- Entries ---------- */
+.badge .entry + .entry { margin-top: 4mm; }
+.badge .entry-title { font-size: 1.04rem; font-weight: 600; }
+.badge .dates { font-size: .86rem; color: var(--accent-2); }
+.badge .org { font-style: normal; color: var(--accent-2); }
+.badge .org .location { color: var(--muted); }
+.badge .org .location:not(:first-child)::before { content: " · "; }
+.badge .extra span, .badge .languages .lang, .badge dl.rows dt { font-weight: 600; }
+.badge .main-column .section-body > p { text-align: left; hyphens: manual; }
+.badge .sec-profile .section-body > p, .badge .sec-about_me .section-body > p { text-align: center; }
+.badge .bullets li::before, .badge ul.desc li::before { top: .66em; background: var(--soft); }
+.badge .tags { gap: 1.4mm; }
+.badge .tags li + li::before { content: none; }
+.badge .tags li { padding: .2mm 2.6mm; border-radius: 3mm; border: .3mm solid var(--soft); font-size: .88rem; color: var(--accent); }
+.badge .main-column .section-body > .tags { justify-content: center; }
+.badge .skill-group > h3 { font-size: .76rem; font-weight: 600; color: var(--accent-2); }
+.badge .main-column .skill-group > h3 { font-size: .95rem; font-weight: 600; color: var(--ink); }
+.badge .main-column dl.rows dt { break-after: auto; }
+
+/* ---------- Sidebar: tinted rounded panel under the band ---------- */
+.badge .sidebar { padding: 6mm 5mm 6.5mm; border-radius: 4mm; background: var(--tint); -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.badge .sidebar .tags li { background: #fff; border-color: transparent; }
+.badge .sidebar .languages li { display: flex; justify-content: space-between; }
+.badge .sidebar .languages .level::before { content: none; }
+.badge .privacy { border-top-color: var(--rule); text-align: center; }

@@ -1,0 +1,126 @@
+/* =====================  ART DECO STYLE  =====================
+   The 1920s: a symmetric header under a sunburst fan, the name in thin geometric capitals,
+   stepped double lines with a diamond, section titles centred between double lines and diamonds.
+   With the sidebar: a tinted panel framed by a double line.
+
+   @name    Art Deco
+   @group   themed
+   @color   terracotta
+   @tags    art deco, 1920s, gatsby, sunburst, geometric, ornaments, centred, elegant, octagon photo
+*/
+:root {
+  --ink: #221b17;
+  --muted: #5f554e;
+  --rule: #d9cfc7;
+  --font-body: 'Lato', 'Helvetica Neue', Arial, sans-serif;
+  --font-head: 'Josefin Sans', 'Futura', sans-serif;
+  --font-name: 'Poiret One', 'Josefin Sans', sans-serif;
+  /* the light colour, a touch deeper so the "metallic" lines show on white */
+  --metal: color-mix(in srgb, var(--soft) 80%, var(--accent-2));
+  --side-w: 58mm;
+  --side-gap: 9mm;
+}
+@page { @bottom-right { font-family: 'Josefin Sans', sans-serif; letter-spacing: .15em; } }
+body { line-height: 1.45; }
+.page.artdeco { padding: 11mm 16mm 0; }
+
+/* ---------- Symmetric header: sunburst, name, stepped lines, headline ---------- */
+.artdeco .cv-header { flex-direction: column; align-items: center; gap: 0; margin-bottom: 8mm; text-align: center; }
+/* the sunburst: dark fan with light rays, a ring and a rising sun */
+.artdeco .cv-header::before {
+  content: ""; width: 66mm; height: 33mm; border-radius: 33mm 33mm 0 0;
+  background:
+    radial-gradient(circle at 50% 100%, var(--metal) 0 7mm, var(--accent) 7mm 8mm, transparent 8mm),
+    radial-gradient(circle at 50% 100%, transparent 0 25.5mm, var(--metal) 25.5mm 26mm, transparent 26mm),
+    repeating-conic-gradient(from -90deg at 50% 100%, var(--accent) 0deg 4.6deg, var(--metal) 4.6deg 5.6deg);
+  box-shadow: 0 0 0 .8mm #fff, 0 0 0 1.1mm var(--accent);
+}
+/* with a photo: an octagonal portrait in a light frame, rising from the fan */
+.artdeco .header-photo {
+  order: 0; width: 27mm; height: 33mm; margin-top: -33mm; padding: 1mm; border-radius: 0; background: var(--metal);
+  clip-path: polygon(22% 0, 78% 0, 100% 18%, 100% 82%, 78% 100%, 22% 100%, 0 82%, 0 18%);
+}
+.artdeco .header-photo img { clip-path: polygon(22% 0, 78% 0, 100% 18%, 100% 82%, 78% 100%, 22% 100%, 0 82%, 0 18%); }
+.artdeco .cv-header:has(.header-photo)::before { width: 86mm; height: 43mm; border-radius: 43mm 43mm 0 0;
+  background:
+    radial-gradient(circle at 50% 100%, transparent 0 34mm, var(--metal) 34mm 34.5mm, transparent 34.5mm),
+    repeating-conic-gradient(from -90deg at 50% 100%, var(--accent) 0deg 4.6deg, var(--metal) 4.6deg 5.6deg); }
+.artdeco .header-photo { position: relative; top: 0; }
+.artdeco .identity { order: 1; width: 100%; }
+.artdeco .name { margin-top: 5mm; font-weight: 400; font-size: 3rem; line-height: 1.1; letter-spacing: .2em; text-transform: uppercase; color: var(--accent); }
+.artdeco .name::after {
+  /* stepped double lines with a central diamond, drawn with gradients (140 x 6.5 mm) */
+  content: ""; display: block; width: 140mm; height: 6.5mm; margin: 3mm auto 0;
+  background:
+    linear-gradient(to bottom right, transparent 50%, var(--accent) 50%) 68.5mm 1.75mm / 1.5mm 1.5mm no-repeat,
+    linear-gradient(to bottom left, transparent 50%, var(--accent) 50%) 70mm 1.75mm / 1.5mm 1.5mm no-repeat,
+    linear-gradient(to top right, transparent 50%, var(--accent) 50%) 68.5mm 3.25mm / 1.5mm 1.5mm no-repeat,
+    linear-gradient(to top left, transparent 50%, var(--accent) 50%) 70mm 3.25mm / 1.5mm 1.5mm no-repeat,
+    linear-gradient(to bottom right, transparent 50%, var(--page-bg) 50%) 67.5mm 0.75mm / 2.5mm 2.5mm no-repeat,
+    linear-gradient(to bottom left, transparent 50%, var(--page-bg) 50%) 70mm 0.75mm / 2.5mm 2.5mm no-repeat,
+    linear-gradient(to top right, transparent 50%, var(--page-bg) 50%) 67.5mm 3.25mm / 2.5mm 2.5mm no-repeat,
+    linear-gradient(to top left, transparent 50%, var(--page-bg) 50%) 70mm 3.25mm / 2.5mm 2.5mm no-repeat,
+    linear-gradient(to bottom right, transparent 50%, var(--accent) 50%) 66.75mm 0.0mm / 3.25mm 3.25mm no-repeat,
+    linear-gradient(to bottom left, transparent 50%, var(--accent) 50%) 70mm 0.0mm / 3.25mm 3.25mm no-repeat,
+    linear-gradient(to top right, transparent 50%, var(--accent) 50%) 66.75mm 3.25mm / 3.25mm 3.25mm no-repeat,
+    linear-gradient(to top left, transparent 50%, var(--accent) 50%) 70mm 3.25mm / 3.25mm 3.25mm no-repeat,
+    linear-gradient(var(--accent), var(--accent)) 74.5mm 2.1mm / 21.65mm 0.3mm no-repeat,
+    linear-gradient(var(--accent), var(--accent)) 95.85mm 2.1mm / 0.3mm 1.3mm no-repeat,
+    linear-gradient(var(--accent), var(--accent)) 95.85mm 3.1mm / 44.15mm 0.3mm no-repeat,
+    linear-gradient(var(--accent), var(--accent)) 74.5mm 3.1mm / 20.65mm 0.3mm no-repeat,
+    linear-gradient(var(--accent), var(--accent)) 94.85mm 3.1mm / 0.3mm 1.3mm no-repeat,
+    linear-gradient(var(--accent), var(--accent)) 94.85mm 4.1mm / 45.15mm 0.3mm no-repeat,
+    linear-gradient(var(--accent), var(--accent)) 43.85mm 2.1mm / 21.65mm 0.3mm no-repeat,
+    linear-gradient(var(--accent), var(--accent)) 43.85mm 2.1mm / 0.3mm 1.3mm no-repeat,
+    linear-gradient(var(--accent), var(--accent)) 0mm 3.1mm / 44.15mm 0.3mm no-repeat,
+    linear-gradient(var(--accent), var(--accent)) 44.85mm 3.1mm / 20.65mm 0.3mm no-repeat,
+    linear-gradient(var(--accent), var(--accent)) 44.85mm 3.1mm / 0.3mm 1.3mm no-repeat,
+    linear-gradient(var(--accent), var(--accent)) 0mm 4.1mm / 45.15mm 0.3mm no-repeat;
+}
+.artdeco .headline { margin-top: 3mm; font-family: var(--font-head); font-size: .92rem; font-weight: 600; letter-spacing: .38em; color: var(--accent-2); }
+.artdeco .cv-header .contacts { justify-content: center; gap: 1.2mm 6mm; margin-top: 4mm; font-size: .9rem; }
+.artdeco .cv-header .details { justify-content: center; margin-top: 1.5mm; font-size: .9rem; }
+.artdeco .contacts .icon-wrap { color: var(--accent-2); }
+
+/* ---------- Section titles: centred between double lines ending in diamonds ---------- */
+.artdeco .cv-section + .cv-section { margin-top: 7mm; }
+.artdeco .cv-section > h2 { display: flex; align-items: center; gap: 3mm; margin-bottom: 3.5mm; padding: 0; border: 0; font-family: var(--font-head); font-size: .95rem; font-weight: 600; letter-spacing: .3em; text-align: center; color: var(--accent); }
+.artdeco .cv-section > h2::before, .artdeco .cv-section > h2::after { content: ""; flex: 1; min-width: 7mm; height: 2.6mm; }
+/* a dark and a light line, ending in a diamond next to the title */
+.artdeco .cv-section > h2::before { background:
+    linear-gradient(to bottom right, transparent 50%, var(--accent) 50%) right 1.3mm top 0 / 1.3mm 1.3mm no-repeat,
+    linear-gradient(to bottom left, transparent 50%, var(--accent) 50%) right 0 top 0 / 1.3mm 1.3mm no-repeat,
+    linear-gradient(to top right, transparent 50%, var(--accent) 50%) right 1.3mm bottom 0 / 1.3mm 1.3mm no-repeat,
+    linear-gradient(to top left, transparent 50%, var(--accent) 50%) right 0 bottom 0 / 1.3mm 1.3mm no-repeat,
+    linear-gradient(var(--accent), var(--accent)) left 0 top .55mm / calc(100% - 3.6mm) .3mm no-repeat,
+    linear-gradient(var(--metal), var(--metal)) left 0 top 1.75mm / calc(100% - 3.6mm) .3mm no-repeat; }
+.artdeco .cv-section > h2::after { background:
+    linear-gradient(to bottom right, transparent 50%, var(--accent) 50%) left 0 top 0 / 1.3mm 1.3mm no-repeat,
+    linear-gradient(to bottom left, transparent 50%, var(--accent) 50%) left 1.3mm top 0 / 1.3mm 1.3mm no-repeat,
+    linear-gradient(to top right, transparent 50%, var(--accent) 50%) left 0 bottom 0 / 1.3mm 1.3mm no-repeat,
+    linear-gradient(to top left, transparent 50%, var(--accent) 50%) left 1.3mm bottom 0 / 1.3mm 1.3mm no-repeat,
+    linear-gradient(var(--accent), var(--accent)) right 0 top .55mm / calc(100% - 3.6mm) .3mm no-repeat,
+    linear-gradient(var(--metal), var(--metal)) right 0 top 1.75mm / calc(100% - 3.6mm) .3mm no-repeat; }
+.artdeco .sidebar .cv-section > h2 { font-size: .86rem; letter-spacing: .24em; gap: 2.2mm; color: var(--accent); }
+
+/* ---------- Entries: left-aligned for reading ---------- */
+.artdeco .entry + .entry { margin-top: 4mm; }
+.artdeco .entry-title { font-family: var(--font-head); font-size: 1.05rem; font-weight: 600; letter-spacing: .02em; line-height: 1.3; color: var(--ink); }
+.artdeco .dates { font-family: var(--font-head); font-size: .84rem; font-weight: 600; letter-spacing: .12em; color: var(--accent-2); }
+.artdeco .org { color: var(--accent-2); }
+.artdeco .org .location { color: var(--muted); }
+.artdeco .org .location:not(:first-child)::before { content: "  ·  "; white-space: pre; }
+.artdeco .bullets li, .artdeco ul.desc li { padding-left: 4.4mm; }
+.artdeco .bullets li::before, .artdeco ul.desc li::before { left: .5mm; top: .5em; width: 1.6mm; height: 1.6mm; border-radius: 0; background: var(--accent-2); transform: rotate(45deg) scale(.8); }
+.artdeco .extra span { font-weight: 700; }
+.artdeco .skill-group > h3 { font-family: var(--font-head); font-size: .8rem; font-weight: 600; letter-spacing: .2em; color: var(--accent-2); }
+.artdeco .main-column .skill-group > h3 { font-size: .9rem; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.artdeco .tags { align-items: center; }
+.artdeco .tags li + li::before { content: ""; display: inline-block; width: 1.2mm; height: 1.2mm; margin: 0 2.4mm .3mm; background: var(--accent-2); transform: rotate(45deg); vertical-align: middle; }
+.artdeco dl.rows dt { font-family: var(--font-head); font-weight: 600; color: var(--accent); }
+
+/* ---------- Sidebar: tinted panel with a double-line frame ---------- */
+.artdeco .sidebar { padding: 7mm 5.5mm; background: var(--tint); border: 1.1mm double var(--accent); outline: .3mm solid var(--metal); outline-offset: -2.4mm; }
+.artdeco .sidebar .contacts li { gap: 2.2mm; }
+.artdeco .sidebar .cv-section + .cv-section { margin-top: 6mm; }
+.artdeco .privacy { border-top-color: var(--metal); text-align: center; }

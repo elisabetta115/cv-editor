@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.DS_Store
+*.toml.tmp
+# personal data: CVs and their PDFs stay on this computer only (back them up with "Export": .zip or .json)
+cvs/
+PDF/
+# generated pages used to print the PDFs
+src/html/
+# your own photos and PDFs kept in the project folder: never in git
+/*.pdf
+/*.jpg
+/*.JPG
+/*.jpeg
+/*.png

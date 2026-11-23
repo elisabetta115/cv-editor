@@ -1,0 +1,87 @@
+/* =====================  ACADEMIC STYLE  =====================
+   A LaTeX-style academic CV in Garamond: centred small-capital name, contacts on one line
+   between thin bars, small-capital section titles over a hairline, indented descriptions.
+   With the sidebar: a plain narrow column beside a hairline.
+
+   @name    Academic
+   @group   classic
+   @color   navy
+   @tags    academic, latex, research, garamond, serif, small capitals, scholarly, sober, ats
+*/
+:root {
+  --base: 11pt;
+  --ink: #1a1a1a;
+  --muted: #4d4d4d;
+  --rule: #c9c9c9;
+  --font-body: 'EB Garamond', Garamond, 'Times New Roman', serif;
+  --side-w: 50mm;
+  --side-gap: 8mm;
+  --indent: 6mm;
+}
+@page { @bottom-right { font-family: 'EB Garamond', Garamond, serif; font-size: 9pt; color: #4d4d4d; } }
+body { line-height: 1.36; font-variant-numeric: oldstyle-nums proportional-nums; }
+.page.academic { padding: 15mm 17mm 0; }
+
+/* ---------- Centred header, small photo in the top right corner ---------- */
+.academic .cv-header { display: block; margin-bottom: 7mm; text-align: center; }
+/* the photo floats right, an empty float of the same width on the left keeps the name centred */
+.academic .header-photo { float: right; width: 23mm; height: 23mm; margin-left: 3mm; padding: .7mm; border: .25mm solid var(--accent); border-radius: 0; }
+.academic .cv-header:has(.header-photo)::before { content: ""; float: left; width: 26mm; height: 23mm; }
+.academic .cv-header .contacts, .academic .cv-header .details { clear: both; }
+.academic .name { font-weight: 400; font-size: 2.35rem; line-height: 1.1; font-variant: small-caps; letter-spacing: .1em; color: var(--accent); }
+.academic .headline { margin-top: 1mm; font-size: 1.1rem; font-weight: 400; font-style: italic; letter-spacing: 0; text-transform: none; color: var(--ink); }
+.academic .cv-header .contacts { justify-content: center; gap: 0; margin-top: 3mm; font-size: .92rem; }
+.academic .cv-header .contacts .icon-wrap { display: none; }
+.academic .cv-header .contacts li + li::before { content: ""; align-self: center; width: .2mm; height: .95em; margin: 0 2.6mm; background: var(--ink); }
+.academic .cv-header .details { justify-content: center; gap: 0; margin-top: .6mm; font-size: .92rem; font-style: italic; color: var(--ink); }
+.academic .cv-header .details strong { font-weight: 400; color: var(--ink); }
+.academic .cv-header .details li + li::before { content: ""; display: inline-block; width: .2mm; height: .95em; margin: 0 2.6mm; vertical-align: -.12em; background: var(--ink); }
+
+/* ---------- Section titles: small capitals on a hairline ---------- */
+.academic .cv-section + .cv-section { margin-top: 5mm; }
+.academic .cv-section > h2 { margin-bottom: 2.4mm; padding-bottom: .5mm; border-bottom: .25mm solid var(--accent); font-size: 1.2rem; font-weight: 400; font-variant: small-caps; letter-spacing: .07em; text-transform: none; color: var(--ink); }
+.academic .sidebar .cv-section > h2 { font-size: 1.1rem; border-color: var(--accent); color: var(--ink); }
+
+/* ---------- Entries: bold title, italic institution, dates flush right ---------- */
+.academic .entry + .entry { margin-top: 2.8mm; }
+.academic .entry-title { font-size: 1rem; font-weight: 600; line-height: 1.3; }
+.academic .dates { font-size: 1rem; color: var(--ink); font-variant-numeric: oldstyle-nums proportional-nums; }
+.academic .org { color: var(--ink); }
+.academic .entry .desc, .academic .entry .extra { margin-left: var(--indent); }
+.academic .entry .desc { margin-top: .6mm; }
+.academic .main-column .entry p.desc { text-align: justify; hyphens: auto; }
+.academic .extra span { font-weight: 400; font-style: italic; }
+.academic .bullets li, .academic ul.desc li { padding-left: 4mm; }
+.academic .bullets li::before, .academic ul.desc li::before { content: "•"; left: .5mm; top: 0; width: auto; height: auto; border-radius: 0; background: none; color: var(--ink); }
+.academic .sidebar .entry .desc, .academic .sidebar .entry .extra { margin-left: 0; }
+.academic .sidebar .dates { color: var(--muted); font-style: italic; }
+
+/* ---------- Lists, skills, bibliography ---------- */
+.academic .tags { display: block; }
+.academic .tags li { display: inline; }
+.academic .tags li + li::before { content: ", "; margin: 0; color: var(--ink); }
+.academic .tags li:last-child::after { content: "."; }
+.academic .languages .lang { font-weight: 600; }
+.academic .languages .level { color: var(--ink); font-style: italic; }
+.academic .languages .level::before { content: " — "; font-style: normal; }
+.academic .skill-group > h3 { font-size: 1rem; font-weight: 400; font-style: italic; letter-spacing: 0; text-transform: none; color: var(--ink); }
+.academic .main-column .skill-group { grid-template-columns: 32mm 1fr; }
+.academic .main-column .skill-group > h3 { font-size: 1rem; font-weight: 400; font-style: italic; }
+/* rows as a bibliography: hanging indent with the label in brackets */
+.academic dl.rows { display: block; }
+.academic dl.rows dt { float: left; width: 14mm; font-weight: 400; }
+.academic dl.rows dt::before { content: "["; }
+.academic dl.rows dt::after { content: "]"; }
+.academic dl.rows dd { margin: 0 0 1.2mm 14mm; }
+.academic .sidebar dl.rows dt { float: none; width: auto; font-weight: 600; }
+.academic .sidebar dl.rows dd { margin-left: 0; color: var(--ink); }
+.academic .main-column .section-body > p { hyphens: auto; }
+
+/* ---------- Sidebar: plain column beside a hairline ---------- */
+.academic .sidebar { padding-right: 6mm; border-right: .25mm solid var(--rule); }
+.academic .sidebar .contacts li { gap: 2mm; font-size: .9rem; }
+.academic .sidebar .contacts .icon-wrap { color: var(--ink); }
+.academic .sidebar .contacts .icon { width: 3mm; height: 3mm; stroke-width: 1.6; }
+.academic .sidebar .details, .academic .sidebar .details strong { color: var(--ink); }
+.academic .sidebar .details strong { font-weight: 600; }
+.academic .privacy { border-top-color: var(--rule); font-style: italic; text-align: center; }

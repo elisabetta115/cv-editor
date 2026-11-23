@@ -1,0 +1,56 @@
+/* =====================  MINIMAL STYLE  =====================
+   Centred header, plenty of white space, dates in a narrow column on the left.
+   With the sidebar: a quiet column separated by a thin rule.
+
+   @name    Minimal
+   @group   modern
+   @color   graphite
+   @tags    centred, white space, light, thin, airy, dates on the left, sans-serif
+*/
+:root {
+  --ink: #222831;
+  --muted: #69717c;
+  --rule: #e3e6ea;
+  --font-body: 'Lato', 'Helvetica Neue', Arial, sans-serif;
+  --side-w: 52mm;
+  --side-gap: 10mm;
+  --date-w: 30mm;
+}
+@page { @bottom-right { font-family: 'Lato', sans-serif; } }
+body { line-height: 1.5; }
+.page.minimal { padding: 16mm 20mm 0; }
+
+/* ---------- Centred header (photo above the name) ---------- */
+.minimal .cv-header { flex-direction: column; gap: 6mm; margin-bottom: 7mm; padding-bottom: 7mm; border-bottom: .3mm solid var(--rule); text-align: center; }
+.minimal .header-photo { order: 0; width: 30mm; height: 30mm; border-radius: 50%; }
+.minimal .header-photo img { object-position: 50% 15%; }
+.minimal .name { font-weight: 300; font-size: 2.7rem; line-height: 1.1; letter-spacing: .12em; text-transform: uppercase; }
+.minimal .headline { margin-top: 2.5mm; font-size: .8rem; font-weight: 700; letter-spacing: .28em; }
+.minimal .cv-header .contacts { justify-content: center; gap: 1.2mm 6mm; margin-top: 5mm; font-size: .9rem; }
+.minimal .cv-header .details { justify-content: center; gap: 0; font-size: .9rem; }
+.minimal .cv-header .details li + li::before { content: "·"; margin: 0 2.2mm; }
+.minimal .cv-header .details strong { font-weight: 700; }
+
+/* ---------- Sections: title with a thin rule ---------- */
+.minimal .cv-section { margin-top: 7mm; }
+.minimal .cv-section > h2 { display: flex; align-items: center; gap: 4mm; margin-bottom: 3.5mm; padding: 0; border: 0; font-size: .78rem; letter-spacing: .3em; }
+.minimal .cv-section > h2::after { content: ""; flex: 1; border-top: .3mm solid var(--rule); }
+
+/* ---------- Entries: dates on the left, text on the right ---------- */
+.minimal .main-column .entry { display: grid; grid-template-columns: var(--date-w) 1fr; column-gap: 7mm; }
+.minimal .main-column .entry + .entry { margin-top: 4mm; }
+.minimal .main-column .entry-head { display: contents; }
+.minimal .main-column .dates { grid-column: 1; grid-row: 1; padding-top: .15em; white-space: normal; font-size: .86rem; }
+.minimal .main-column .entry > :not(.entry-head), .minimal .main-column .entry-title { grid-column: 2; }
+.minimal .org { font-style: normal; }
+.minimal .bullets li, .minimal ul.desc li { padding-left: 4mm; }
+.minimal .bullets li::before, .minimal ul.desc li::before { content: "–"; left: 0; top: 0; width: auto; height: auto; border-radius: 0; background: none; color: var(--soft); }
+.minimal .main-column .skill-group { grid-template-columns: var(--date-w) 1fr; column-gap: 7mm; }
+.minimal .main-column .skill-group > h3 { font-weight: 700; }
+.minimal .main-column dl.rows { grid-template-columns: var(--date-w) 1fr; column-gap: 7mm; }
+
+/* ---------- With the sidebar ---------- */
+.minimal.has-sidebar { --date-w: 24mm; }
+.minimal .sidebar { padding-right: 6mm; border-right: .3mm solid var(--rule); }
+.minimal .sidebar .cv-section > h2::after { display: none; }
+.minimal .privacy { border-top-color: var(--rule); }

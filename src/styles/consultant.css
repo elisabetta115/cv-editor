@@ -1,0 +1,83 @@
+/* =====================  CONSULTANT STYLE  =====================
+   A business-card header (name on the left, contacts stacked on the right of a thin divider)
+   and organisation-first entries: the firm in bold small capitals, the role in italic below.
+   With the sidebar: a white column on the right with a coloured rule on its left.
+
+   @name    Consultant
+   @group   classic
+   @color   navy
+   @side    right
+   @tags    consultant, business card, corporate, organisation first, baskerville, serif, right sidebar, finance, law
+*/
+:root {
+  --base: 9.5pt;
+  --ink: #1a1f27;
+  --muted: #5b6370;
+  --rule: #d3d8df;
+  --font-body: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --font-name: 'Libre Baskerville', Baskerville, Georgia, serif;
+  --side-w: 56mm;
+  --side-gap: 8mm;
+}
+@page { @bottom-right { font-family: 'Inter', sans-serif; } }
+body { line-height: 1.45; }
+.page.consultant { padding: 15mm 16mm 0; }
+
+/* ---------- Business-card header ---------- */
+.consultant .cv-header { gap: 7mm; margin-bottom: 9mm; padding-bottom: 6mm; border-bottom: .25mm solid var(--rule); }
+.consultant .header-photo { order: 0; width: 25mm; height: 31mm; border-radius: .6mm; }
+.consultant .identity { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto auto; align-items: center; }
+.consultant .name { grid-column: 1; grid-row: 1; align-self: end; padding-right: 7mm; font-weight: 400; font-size: 2.55rem; line-height: 1.12; letter-spacing: -.005em; color: var(--accent); }
+.consultant .headline { grid-column: 1; grid-row: 2; align-self: start; margin-top: 2.2mm; padding-right: 7mm; font-size: .82rem; font-weight: 600; letter-spacing: .14em; color: var(--ink); }
+/* contacts and details stacked on the right, after a thin vertical divider */
+.consultant .cv-header .contacts, .consultant .cv-header .details {
+  grid-column: 2; display: flex; flex-direction: column; align-items: flex-end; gap: 1.1mm; margin: 0;
+  padding-left: 7mm; border-left: .35mm solid var(--accent-2); text-align: right; font-size: .88rem;
+}
+.consultant .cv-header .contacts { grid-row: 1; padding-bottom: 1mm; }
+.consultant .cv-header .details { grid-row: 2; align-self: stretch; padding-top: .4mm; color: var(--muted); }
+.consultant .cv-header .contacts:only-of-type { grid-row: 1 / span 2; }
+.consultant .cv-header .contacts li { flex-direction: row-reverse; gap: 2mm; }
+.consultant .contacts .icon-wrap { color: var(--accent-2); }
+.consultant .cv-header .details strong { color: var(--ink); }
+/* without contacts in the header (they are in the sidebar): the headline goes to the right */
+.consultant .cv-header:not(:has(.contacts)) .identity { align-items: center; }
+.consultant .cv-header:not(:has(.contacts)) .name { grid-row: 1 / span 2; align-self: center; }
+.consultant .cv-header:not(:has(.contacts)) .headline { grid-column: 2; grid-row: 1 / span 2; align-self: center; margin: 0; padding: 2mm 0 2mm 7mm; border-left: .35mm solid var(--accent-2); text-align: right; }
+
+/* ---------- Section titles: hairline starting with a thick accent segment ---------- */
+.consultant .cv-section + .cv-section { margin-top: 6.5mm; }
+.consultant .cv-section > h2 {
+  margin-bottom: 3.2mm; padding-bottom: 1.8mm; border: 0; font-size: .78rem; font-weight: 600; letter-spacing: .16em; color: var(--ink);
+  background: linear-gradient(var(--accent-2), var(--accent-2)) left bottom / 11mm .9mm no-repeat, linear-gradient(var(--rule), var(--rule)) left bottom / 100% .25mm no-repeat;
+}
+
+/* ---------- Entries: organisation first, then the role, dates on the right ---------- */
+.consultant .entry + .entry { margin-top: 4.2mm; }
+.consultant .entry { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 5mm; }
+.consultant .entry-head { display: contents; }
+.consultant .entry > .org { grid-row: 1; grid-column: 1; font-family: var(--font-name); font-style: normal; color: var(--ink); }
+.consultant .org .org-name { font-weight: 700; font-size: .98rem; font-variant: small-caps; letter-spacing: .04em; color: var(--accent); }
+.consultant .org .location { font-size: .86rem; color: var(--muted); font-family: var(--font-body); }
+.consultant .org .location:not(:first-child)::before { content: "  |  "; white-space: pre; color: var(--rule); }
+.consultant .entry .dates { grid-row: 1; grid-column: 2; align-self: baseline; font-size: .86rem; font-weight: 600; color: var(--accent-2); }
+.consultant .entry-title { grid-row: 2; grid-column: 1 / -1; margin-top: .4mm; font-family: var(--font-name); font-size: .95rem; font-weight: 400; font-style: italic; color: var(--ink); }
+.consultant .entry > .desc, .consultant .entry > .extra { grid-column: 1 / -1; }
+.consultant .entry .desc { margin-top: 1.2mm; }
+/* entries without an organisation (e.g. projects): the title leads */
+.consultant .entry:not(:has(.org)) .entry-title { grid-row: 1; grid-column: 1; margin: 0; font-style: normal; font-weight: 700; color: var(--accent); }
+.consultant .bullets li::before, .consultant ul.desc li::before { top: .62em; width: 1.2mm; height: 1.2mm; border-radius: 0; background: var(--accent-2); }
+.consultant .extra span { font-weight: 600; }
+.consultant .skill-group > h3 { font-size: .74rem; font-weight: 600; letter-spacing: .12em; color: var(--accent-2); }
+.consultant .main-column .skill-group > h3 { font-family: var(--font-name); font-size: .95rem; font-weight: 700; font-variant: small-caps; letter-spacing: .03em; text-transform: none; color: var(--accent); }
+.consultant .languages .lang, .consultant dl.rows dt { font-weight: 600; }
+.consultant .main-column .section-body > p { text-align: left; }
+
+/* ---------- Sidebar: white, with a coloured rule on its left ---------- */
+.consultant .sidebar { padding: 1mm 0 2mm 6mm; border-left: .8mm solid var(--accent); }
+.consultant .sidebar .contacts li { gap: 2.2mm; font-size: .88rem; }
+.consultant .sidebar .entry { display: block; }
+.consultant .sidebar .entry .dates { margin-top: .3mm; }
+.consultant .sidebar .org .location { display: block; }
+.consultant .sidebar .org .location::before { content: none; }
+.consultant .privacy { border-top-color: var(--rule); }

@@ -1,0 +1,110 @@
+/* =====================  VERTICAL STYLE  =====================
+   The name runs vertically up a coloured band along the left edge of the first page,
+   in huge condensed capitals, with the photo at the top of the band; headline, contacts
+   and content sit to its right, section titles in capitals with a long accent rule.
+   From page 2 the content uses the full width.
+   With the sidebar: a narrow tinted column next to the band (the band and the column
+   stay empty on the next pages).
+
+   @name    Vertical
+   @group   creative
+   @color   terracotta
+   @tags    vertical name, vertical band, condensed, capitals, bold, editorial, coloured band, creative
+*/
+:root {
+  --ink: #1f1a17;
+  --muted: #625a55;
+  --rule: #e0d8d2;
+  --dark: var(--p-dark, #6b2e14);
+  --mid: var(--p-mid, #a8461d);
+  --light: var(--p-light, #f0a47c);
+  --band: 30mm;
+  --font-body: 'Lato', 'Helvetica Neue', Arial, sans-serif;
+  --font-head: 'Oswald', 'Barlow Condensed', sans-serif;
+  --side-w: 50mm;
+  --side-gap: 7mm;
+  --side-accent: var(--dark);
+}
+@page { @bottom-right { font-family: 'Oswald', sans-serif; font-size: 8pt; color: var(--p-mid, #777); } }
+.page.vertical { padding: 0 16mm; }
+.vertical .cv-header, .vertical .cv-header .identity { display: contents; }
+
+/* ---------- The band with the vertical name (first page only) ---------- */
+.vertical .name {
+  /* rotated half a turn: the top padding is at the bottom of the band, and the name reads upwards */
+  box-sizing: border-box; height: 282.6mm; min-width: var(--band); padding: 12mm 3.5mm 46mm;
+  background: var(--dark); color: #fff;
+  writing-mode: vertical-rl; transform: rotate(180deg); text-align: start;
+  font-family: var(--font-head); font-weight: 600; font-size: 6.6rem; line-height: .94; letter-spacing: .02em; text-transform: uppercase;
+}
+.vertical .cv-header:not(:has(.header-photo)) .name { padding-bottom: 14mm; }
+.vertical .last-name { color: var(--light); }
+.vertical .header-photo {
+  position: absolute; z-index: 2; top: 0; left: 0; width: var(--band); height: 38mm; border-radius: 0;
+  border-bottom: 1.6mm solid var(--light);
+}
+.vertical .header-photo img { object-position: 50% 15%; }
+
+/* without the sidebar the band is a float: page 1 flows beside it, page 2 uses the full width */
+.vertical.no-sidebar .name { float: left; margin: 0 8mm 0 -16mm; }
+.vertical.no-sidebar .main-column .cv-section > *, .vertical.no-sidebar .entry, .vertical.no-sidebar .bullets,
+.vertical.no-sidebar .privacy, .vertical.no-sidebar .headline { display: flow-root; }
+.vertical.no-sidebar .main-column .cv-section > h2 { display: flex; }
+
+/* ---------- Headline and contacts, right of the band ---------- */
+.vertical .headline {
+  margin: 0; padding: 16mm 0 0; font-family: var(--font-head); font-size: 2.1rem; font-weight: 500; line-height: 1.1;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--dark);
+}
+.vertical .headline::after { content: ""; display: block; width: 22mm; height: 1.4mm; margin-top: 3.4mm; background: var(--light); }
+.vertical .cv-header .contacts { gap: 1.6mm 6mm; margin-top: 4.6mm; font-size: .92rem; }
+.vertical .identity:not(:has(.headline)) > :is(.contacts, .details):first-of-type { margin-top: 0; padding-top: 16mm; }
+.vertical .contacts .icon-wrap { color: var(--mid); }
+.vertical .cv-header .details { margin-top: 2mm; }
+.vertical.no-sidebar .main-column { padding-top: 9mm; }
+
+/* ---------- With the sidebar: band | sidebar | main ---------- */
+.page.vertical.has-sidebar { padding: 0 16mm 0 0; grid-template-columns: auto var(--side-w) minmax(0, 1fr); grid-template-rows: auto 1fr; }
+.vertical.has-sidebar .name { grid-column: 1; grid-row: 1 / span 2; align-self: start; }
+.vertical.has-sidebar .headline { grid-column: 2 / -1; grid-row: 1; padding-bottom: 9mm; }
+.vertical.has-sidebar > .sidebar { grid-column: 2; grid-row: 2; padding: 5mm 4.5mm 6mm; background: var(--tint); }
+.vertical.has-sidebar > .main-column { grid-column: 3; grid-row: 2; }
+.vertical.has-sidebar > .privacy { grid-column: 2 / -1; }
+.vertical.has-sidebar:not(:has(.headline)) .main-column, .vertical.has-sidebar:not(:has(.headline)) .sidebar { margin-top: 16mm; }
+
+/* ---------- Section titles: capitals and a long accent rule ---------- */
+.vertical .cv-section { margin-top: 7mm; }
+.vertical .sidebar-photo + .cv-section { margin-top: 0; }
+.vertical .cv-section > h2 {
+  break-inside: avoid;
+  display: flex; align-items: center; gap: 3mm; margin-bottom: 3mm; padding: 0; border: 0;
+  font-size: 1.3rem; font-weight: 500; line-height: 1.2; letter-spacing: .1em; color: var(--dark);
+}
+.vertical .cv-section > h2::after { content: ""; flex: 1; height: .7mm; background: var(--mid); }
+.vertical .sidebar .cv-section > h2 { font-size: 1.12rem; }
+
+/* ---------- Entries ---------- */
+.vertical .entry + .entry { margin-top: 4mm; }
+.vertical .entry-title { font-size: 1.06rem; }
+.vertical .dates { font-family: var(--font-head); font-size: .98rem; letter-spacing: .04em; color: var(--mid); }
+.vertical .sidebar .dates { color: var(--mid); }
+.vertical .org { font-style: normal; font-weight: 700; color: var(--mid); }
+.vertical .org .location { font-weight: 400; font-style: italic; color: var(--muted); }
+.vertical .org .location:not(:first-child)::before { content: ", "; font-style: normal; }
+
+/* ---------- Lists, tags, skills ---------- */
+.vertical .bullets li::before, .vertical ul.desc li::before { top: .66em; width: 2mm; height: .6mm; border-radius: 0; background: var(--mid); }
+.vertical .tags { gap: 1.4mm; }
+.vertical .tags li + li::before { content: none; }
+.vertical .tags li { padding: .3mm 2.4mm; border-left: .9mm solid var(--mid); background: color-mix(in srgb, var(--light) 22%, #fff); font-size: .9rem; }
+.vertical .skill-group > h3 { font-family: var(--font-head); font-size: .9rem; font-weight: 500; letter-spacing: .1em; color: var(--mid); }
+.vertical .main-column .skill-group > h3 { font-size: 1rem; letter-spacing: .06em; text-transform: uppercase; color: var(--dark); }
+.vertical .languages .level { color: var(--mid); }
+.vertical .sidebar .languages li { display: flex; justify-content: space-between; }
+.vertical .sidebar .languages .level::before { content: none; }
+.vertical dl.rows dt { font-family: var(--font-head); font-weight: 500; color: var(--mid); }
+.vertical .sidebar .contacts { font-size: .88rem; }
+.vertical .sidebar .contacts li { gap: 2mm; }
+
+/* ---------- Privacy note ---------- */
+.vertical .privacy { border-top-color: var(--light); }

@@ -1,0 +1,86 @@
+/* =====================  BANNER STYLE  =====================
+   A full-width tinted band under the name holds the contacts and details side by side,
+   and the CV runs below in one wide column. Section titles in the accent colour with a
+   short bar on their left, photo on the right with rounded corners.
+   With the sidebar: there is no side column, its sections become the columns of the band.
+
+   @name    Banner
+   @group   modern
+   @color   azure
+   @tags    band, full width, columns, one column, wide, tinted band, rounded photo, sans-serif, clean
+*/
+:root {
+  --ink: #1c232b;
+  --muted: #5b6672;
+  --rule: #d8dee5;
+  --band-line: color-mix(in srgb, var(--accent) 16%, transparent);
+  --band-bg: color-mix(in srgb, var(--soft) 14%, var(--tint));
+  --band-edge: .8mm solid var(--accent-2);
+  --font-body: 'Work Sans', 'Helvetica Neue', Arial, sans-serif;
+}
+@page { @bottom-right { font-family: 'Work Sans', sans-serif; } }
+body { line-height: 1.45; }
+.page.banner { padding: 0 16mm; }
+.page.banner.has-sidebar { display: block; }
+/* Work Sans has no bold: semi-bold everywhere */
+.banner strong, .banner b, .banner .entry-title, .banner .extra span, .banner dl.rows dt,
+.banner .languages .lang, .banner .skill-group > h3 { font-weight: 600; }
+
+/* ---------- Header: name on the left, photo on the right ---------- */
+.banner .cv-header { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 8mm; align-items: center; margin-bottom: 0; padding: 14mm 0 8mm; }
+.banner .cv-header .identity { display: contents; }
+.banner .header-photo { grid-column: 2; grid-row: 1 / span 2; width: 30mm; height: 30mm; border-radius: 3.5mm; }
+.banner .name { grid-column: 1; grid-row: 1; align-self: end; font-weight: 600; font-size: 2.9rem; line-height: 1.04; letter-spacing: -.015em; color: var(--accent); }
+.banner .headline { grid-column: 1; grid-row: 2; align-self: start; margin-top: 2mm; font-size: 1.1rem; font-weight: 400; letter-spacing: .01em; text-transform: none; color: var(--accent-2); }
+
+/* without the sidebar: contacts and details on the band, under the name */
+.banner .cv-header .contacts, .banner .cv-header .details { grid-column: 1 / -1; margin: 0 -16mm; padding: 0 16mm; background: var(--band-bg); }
+.banner .cv-header .contacts { margin-top: 8mm; padding-top: 5mm; padding-bottom: 1.6mm; gap: 2mm 9mm; font-size: .93rem; }
+.banner .cv-header .contacts:last-child { padding-bottom: 5mm; border-bottom: var(--band-edge); }
+.banner .cv-header .details { margin-top: 0; padding-top: .4mm; padding-bottom: 5mm; border-bottom: var(--band-edge); gap: .6mm 8mm; color: var(--muted); }
+.banner .cv-header .details:not(.contacts + .details) { margin-top: 8mm; padding-top: 5mm; }
+.banner .contacts .icon-wrap { color: var(--accent-2); }
+.banner.no-sidebar .cv-header:has(.contacts, .details) { padding-bottom: 0; }
+.banner.no-sidebar > .main-column { margin-top: 8mm; }
+
+/* with the sidebar: its sections side by side on the band (the section after the details shares their column) */
+.banner .sidebar {
+  display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; grid-template-rows: auto 1fr; column-gap: 6mm;
+  margin: 0 -16mm 8mm; padding: 6mm 16mm 6.5mm; background: var(--band-bg); border-bottom: var(--band-edge);
+}
+.banner .sidebar > .cv-section { grid-row: 1 / span 2; margin: 0; padding-left: 6mm; border-left: .3mm solid var(--band-line); }
+.banner .sidebar > .cv-section:first-child, .banner .sidebar-photo + .cv-section { padding-left: 0; border-left: 0; }
+.banner .sidebar > .sec-details { grid-row: 1; padding-bottom: 4mm; }
+.banner .sidebar > .sec-details + .cv-section { grid-row: 2; }
+.banner .sidebar .contacts li + li { margin-top: 1.6mm; }
+.banner .sidebar .details li + li { margin-top: .6mm; }
+.banner .sidebar .languages li { display: flex; justify-content: space-between; gap: 3mm; }
+.banner .sidebar .languages .level::before { content: none; }
+
+/* ---------- Section titles: accent colour, short bar on the left ---------- */
+.banner .cv-section { margin-top: 7mm; }
+.banner .cv-section > h2 {
+  position: relative; margin-bottom: 3mm; padding: 0 0 0 3.6mm; border: 0; break-inside: avoid;
+  font-size: 1.12rem; font-weight: 600; line-height: 1.2; letter-spacing: .005em; text-transform: none; color: var(--accent);
+}
+/* the bar is drawn, not a border: a title pushed to the next page leaves no trace of it behind */
+.banner .cv-section > h2::before { content: ""; position: absolute; left: 0; top: .1em; bottom: .1em; width: 1mm; background: var(--soft); }
+.banner .sidebar .cv-section > h2 { margin-bottom: 2.4mm; font-size: 1rem; color: var(--accent); }
+
+/* ---------- Entries ---------- */
+.banner .entry + .entry { margin-top: 4mm; }
+.banner .entry-title { font-size: 1.04rem; }
+.banner .dates { font-size: .88rem; color: var(--accent-2); }
+.banner .org { font-style: normal; color: var(--accent-2); }
+.banner .org .location { color: var(--muted); }
+.banner .org .location:not(:first-child)::before { content: " · "; }
+.banner .bullets li::before, .banner ul.desc li::before { border-radius: .3mm; background: var(--soft); }
+.banner .tags { gap: 1.4mm; }
+.banner .tags li + li::before { content: none; }
+.banner .tags li { padding: .3mm 2.2mm; border-radius: 1mm; background: var(--tint); font-size: .88rem; color: var(--accent); }
+.banner .sidebar .tags li { background: #fff; }
+.banner .skill-group > h3 { font-size: .8rem; color: var(--accent-2); }
+.banner .main-column .skill-group > h3 { font-size: .98rem; color: var(--ink); }
+.banner .privacy { border-top-color: var(--rule); }
+/* the last table row must not glue the whole section to the next one */
+.banner .main-column dl.rows dt { break-after: auto; }

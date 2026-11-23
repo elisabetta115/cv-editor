@@ -1,0 +1,41 @@
+/* =====================  FORMAL STYLE  =====================
+   Serif name, photo on the right, section titles in a narrow column on the left.
+   With the sidebar: a light tinted column on the left.
+
+   @name    Formal
+   @group   classic
+   @color   navy
+   @tags    serif, traditional, professional, titles on the left, photo on the right, tinted sidebar
+*/
+:root {
+  --ink: #1b1f24;
+  --muted: #5a6470;
+  --rule: #cfd6de;
+  --font-name: 'Source Serif 4', Georgia, serif;
+  --side-w: 56mm;
+  --side-gap: 8mm;
+}
+@page { @bottom-right { font-family: 'Source Sans 3', sans-serif; } }
+
+.formal .cv-header { justify-content: space-between; align-items: flex-start; margin-bottom: 0; padding-bottom: 5mm; border-bottom: .7mm solid var(--accent); }
+.formal .name { font-size: 3.1rem; line-height: 1.02; letter-spacing: -.005em; }
+.formal .headline { font-size: .9rem; }
+.formal .cv-header .contacts { gap: 1.4mm 5.5mm; margin-top: 4.5mm; font-size: .93rem; }
+.formal .cv-header .details { gap: 0; margin-top: 1.8mm; font-size: .93rem; }
+.formal .cv-header .details li + li::before { content: "·"; margin: 0 2.2mm; color: var(--rule); }
+
+/* sections: title on the left, content on the right */
+.formal .main-column .cv-section { display: grid; grid-template-columns: 31mm 1fr; column-gap: 6mm; margin-top: 5mm; padding-top: 5mm; border-top: .25mm solid var(--rule); }
+.formal .main-column > .cv-section:first-child { border-top: 0; }
+.formal .main-column .cv-section > h2 { margin: 0; padding: .5mm 0 0; border: 0; font-size: .84rem; }
+.formal .entry + .entry { margin-top: 4mm; }
+.formal .entry-title { font-size: 1.07rem; }
+.formal .dates { font-size: .9rem; }
+.formal .bullets li::before, .formal ul.desc li::before { background: var(--accent-2); }
+.formal .privacy { margin-top: 7mm; padding-top: 2.6mm; border-top-width: .25mm; font-size: .68rem; }
+
+/* with the sidebar */
+.formal.has-sidebar .main-column .cv-section { display: block; }
+.formal.has-sidebar .main-column .cv-section > h2 { margin-bottom: 3mm; }
+.formal .sidebar { margin-top: 5mm; padding: 5mm 5mm 6mm; border-radius: 1.5mm; background: var(--tint); }
+.formal .sidebar .cv-section > h2 { font-size: .8rem; }

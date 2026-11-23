@@ -1,0 +1,78 @@
+/* =====================  STRIPE STYLE  =====================
+   A bold colour stripe down the left edge of every page, a huge condensed name in
+   capitals, condensed capital section titles and dates in the accent colour.
+   With the sidebar: a white column on the right, behind a hairline.
+
+   @name    Stripe
+   @group   modern
+   @color   plum
+   @side    right
+   @tags    colour stripe, condensed, capitals, big name, bold, strong, right sidebar, sans-serif
+   @print   @page{@top-left{background:$mid}@bottom-left{background:$mid}}
+*/
+:root {
+  --ink: #1d1b22;
+  --muted: #5f5d68;
+  --rule: #d9d7de;
+  --stripe: 7mm;
+  --stripe-color: var(--accent-2);
+  --font-body: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  --font-head: 'Oswald', 'Arial Narrow', sans-serif;
+  --side-w: 54mm;
+  --side-gap: 9mm;
+}
+/* The stripe on every page: two page-margin boxes (coloured through @print), the page
+   background on screen and a fixed strip in print. */
+@page {
+  @top-left { content: ""; width: 7mm; }
+  @bottom-left { content: ""; width: 7mm; }
+  @bottom-right { font-family: 'Oswald', sans-serif; letter-spacing: .06em; }
+}
+.page.stripe { padding: 13mm 14mm 0 calc(var(--stripe) + 14mm); background: linear-gradient(to right, var(--stripe-color) var(--stripe), #fff var(--stripe)); }
+@media print {
+  .page.stripe { min-height: 283mm; }
+  .page.stripe::before { content: ""; position: fixed; top: 0; bottom: 0; left: 0; width: var(--stripe); background: var(--stripe-color); z-index: -1; }
+}
+
+/* ---------- Header: huge condensed name ---------- */
+.stripe .cv-header { align-items: flex-end; gap: 8mm; margin-bottom: 8mm; }
+.stripe .header-photo { width: 30mm; height: 37mm; border-radius: 0; }
+.stripe .name { font-weight: 600; font-size: 4.1rem; line-height: .95; letter-spacing: .005em; text-transform: uppercase; color: var(--accent); }
+.stripe .last-name { color: var(--accent-2); }
+.stripe .headline { margin-top: 2.4mm; font-family: var(--font-head); font-size: 1.25rem; font-weight: 400; letter-spacing: .16em; color: var(--ink); }
+.stripe .cv-header .contacts { gap: 1.2mm 5.5mm; margin-top: 4.5mm; font-size: .93rem; }
+.stripe .contacts .icon-wrap { color: var(--accent-2); }
+.stripe .cv-header .details strong { font-weight: 700; }
+
+/* ---------- Section titles: condensed capitals ---------- */
+.stripe .cv-section { margin-top: 7mm; }
+.stripe .sidebar-photo + .cv-section { margin-top: 0; }
+.stripe .cv-section > h2 { margin-bottom: 2.6mm; padding: 0; border: 0; font-size: 1.42rem; font-weight: 500; line-height: 1.15; letter-spacing: .05em; color: var(--accent); }
+.stripe .sidebar .cv-section > h2 { font-size: 1.18rem; }
+/* a short bar from the stripe to each title of the main column */
+.stripe .main-column .cv-section > h2 { position: relative; }
+.stripe .main-column .cv-section > h2::before { content: ""; position: absolute; left: -14mm; top: .5em; width: 10mm; height: 1.3mm; background: var(--stripe-color); }
+
+/* ---------- Entries: dates in condensed type ---------- */
+.stripe .entry + .entry { margin-top: 4mm; }
+.stripe .entry-title { font-size: 1.06rem; }
+.stripe .dates { font-family: var(--font-head); font-size: .98rem; letter-spacing: .04em; color: var(--accent-2); }
+.stripe .org { font-style: normal; font-weight: 600; color: var(--muted); }
+.stripe .org .location { font-weight: 400; }
+.stripe .org .location:not(:first-child)::before { content: " · "; }
+.stripe .bullets li::before, .stripe ul.desc li::before { top: .55em; width: 1.6mm; height: 1.6mm; border-radius: 0; background: var(--accent-2); }
+.stripe .tags { gap: 1.4mm; }
+.stripe .tags li + li::before { content: none; }
+.stripe .tags li { padding: .2mm 2.2mm; background: var(--tint); font-size: .9rem; }
+.stripe .skill-group > h3 { font-family: var(--font-head); font-size: .92rem; font-weight: 500; letter-spacing: .08em; color: var(--accent-2); }
+.stripe .main-column .skill-group > h3 { font-size: 1.02rem; font-weight: 500; letter-spacing: .05em; text-transform: uppercase; color: var(--ink); }
+.stripe dl.rows dt { font-family: var(--font-head); font-weight: 500; letter-spacing: .04em; color: var(--accent-2); }
+
+/* ---------- Sidebar: white, behind a hairline ---------- */
+.stripe .sidebar { padding-left: 6mm; border-left: .3mm solid var(--rule); }
+.stripe .sidebar .dates { margin-top: .2mm; }
+.stripe .sidebar .languages li { display: flex; justify-content: space-between; }
+.stripe .sidebar .languages .level::before { content: none; }
+.stripe .privacy { border-top-color: var(--rule); }
+/* the last table row must not glue the whole section to the next one */
+.stripe .main-column dl.rows dt { break-after: auto; }

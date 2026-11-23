@@ -1,0 +1,104 @@
+/* =====================  BAUHAUS STYLE  =====================
+   A geometric Bauhaus composition: a big circle, a square and a triangle in the header,
+   round photo, name in bold geometric capitals, section titles marked by a circle, a square
+   or a triangle in turn, thick rules. With the sidebar: a column behind a thick left rule.
+
+   @name    Bauhaus
+   @group   creative
+   @color   navy
+   @tags    bauhaus, geometric, shapes, circle, triangle, capitals, round photo, thick rules, art
+*/
+:root {
+  --ink: #16191d;
+  --muted: #555d67;
+  --rule: #d4d8dd;
+  --dark: var(--p-dark, #1d3a5f);
+  --mid: var(--p-mid, #2e5c8a);
+  --light: var(--p-light, #6fa8dc);
+  --thick: 1.2mm;
+  --font-body: 'Lato', 'Helvetica Neue', Arial, sans-serif;
+  --font-head: 'Josefin Sans', 'Futura', sans-serif;
+  --side-w: 58mm;
+  --side-gap: 9mm;
+  --side-accent: var(--ink);
+}
+@page { @bottom-right { font-family: 'Josefin Sans', sans-serif; font-weight: 600; color: var(--p-dark, #555); } }
+.page.bauhaus { padding: 0 16mm; }
+
+/* ---------- Header: the composition ---------- */
+.bauhaus .cv-header {
+  position: relative; overflow: hidden; display: block; min-height: 68mm; margin: 0 -16mm 8mm;
+  padding: 17mm 16mm 8mm; border-bottom: var(--thick) solid var(--ink);
+}
+.bauhaus .cv-header::before, .bauhaus .cv-header::after, .bauhaus .identity::after { content: ""; position: absolute; pointer-events: none; }
+/* big circle */
+.bauhaus .cv-header::before { width: 78mm; height: 78mm; top: -14mm; right: -6mm; border-radius: 50%; background: var(--mid); }
+/* triangle standing on the rule */
+.bauhaus .cv-header::after { width: 36mm; height: 31mm; right: 78mm; bottom: 0; background: var(--light); clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+/* square */
+.bauhaus .identity::after { width: 23mm; height: 23mm; right: 62mm; bottom: 0; background: var(--dark); }
+.bauhaus .identity { position: static; max-width: calc(100% - 100mm); }
+.bauhaus .header-photo {
+  position: absolute; z-index: 1; top: 9mm; right: 16mm; width: 46mm; height: 46mm;
+  border-radius: 50%; border: 1.6mm solid #fff;
+}
+.bauhaus .header-photo img { object-position: 50% 15%; }
+.bauhaus .name { position: relative; z-index: 1; font-weight: 700; font-size: 3.3rem; line-height: .98; letter-spacing: .03em; text-transform: uppercase; color: var(--ink); }
+.bauhaus .name span { display: block; }
+.bauhaus .last-name { color: var(--dark); }
+.bauhaus .headline {
+  display: inline-block; margin-top: 4mm; padding-top: 2.2mm; border-top: var(--thick) solid var(--ink);
+  font-family: var(--font-head); font-size: .95rem; font-weight: 600; letter-spacing: .16em; color: var(--mid);
+}
+.bauhaus .cv-header .contacts { display: block; margin-top: 5mm; font-size: .9rem; }
+.bauhaus .cv-header .contacts li + li { margin-top: 1.2mm; }
+.bauhaus .contacts .icon-wrap { width: 5mm; height: 5mm; border-radius: 50%; background: var(--dark); color: #fff; }
+.bauhaus .contacts .icon { width: 2.8mm; height: 2.8mm; }
+.bauhaus .contacts li:nth-child(3n+2) .icon-wrap { border-radius: 0; background: var(--mid); }
+.bauhaus .contacts li:nth-child(3n) .icon-wrap { background: var(--light); color: var(--ink); }
+.bauhaus .cv-header .details { margin-top: 2.4mm; }
+
+/* ---------- Section titles: circle, square, triangle in turn ---------- */
+.bauhaus .cv-section { margin-top: 7mm; }
+.bauhaus .sidebar-photo + .cv-section, .bauhaus .main-column > .cv-section:first-child { margin-top: 0; }
+.bauhaus .cv-section > h2 {
+  break-inside: avoid;
+  display: flex; align-items: center; gap: 3mm; margin-bottom: 3.4mm; padding-bottom: 1.4mm;
+  border-bottom: var(--thick) solid var(--ink); font-size: 1.12rem; font-weight: 700; letter-spacing: .12em; color: var(--ink);
+}
+.bauhaus .cv-section > h2::before { content: ""; flex: none; width: 4.6mm; height: 4.6mm; margin-top: -.6mm; border-radius: 50%; background: var(--mid); }
+.bauhaus .cv-section:nth-of-type(3n+2) > h2::before { border-radius: 0; background: var(--dark); }
+.bauhaus .cv-section:nth-of-type(3n) > h2::before { width: 5.2mm; border-radius: 0; background: var(--light); clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.bauhaus .sidebar .cv-section > h2 { font-size: 1rem; border-bottom-width: .8mm; color: var(--ink); }
+
+/* ---------- Entries ---------- */
+.bauhaus .entry + .entry { margin-top: 4mm; }
+.bauhaus .entry-title { font-size: 1.06rem; }
+.bauhaus .dates { font-family: var(--font-head); font-size: .9rem; font-weight: 600; letter-spacing: .04em; color: var(--mid); }
+.bauhaus .sidebar .dates { color: var(--mid); }
+.bauhaus .org { font-style: normal; font-weight: 700; color: var(--dark); }
+.bauhaus .org .location { font-weight: 400; color: var(--muted); }
+.bauhaus .org .location:not(:first-child)::before { content: " — "; }
+.bauhaus .extra span { font-weight: 700; }
+
+/* ---------- Lists, tags, skills ---------- */
+.bauhaus .bullets li::before, .bauhaus ul.desc li::before { top: .55em; width: 1.5mm; height: 1.5mm; border-radius: 0; background: var(--dark); }
+.bauhaus .tags { gap: 1.6mm; }
+.bauhaus .tags li + li::before { content: none; }
+.bauhaus .tags li { padding: .5mm 2.4mm .3mm; border-left: var(--thick) solid var(--mid); background: var(--tint); font-family: var(--font-head); font-size: .9rem; font-weight: 600; }
+.bauhaus .tags li:nth-child(3n+2) { border-color: var(--dark); }
+.bauhaus .tags li:nth-child(3n) { border-color: var(--light); }
+.bauhaus .skill-group > h3 { font-family: var(--font-head); font-size: .82rem; letter-spacing: .12em; color: var(--mid); }
+.bauhaus .main-column .skill-group > h3 { font-size: .98rem; letter-spacing: .04em; text-transform: uppercase; color: var(--ink); }
+.bauhaus .languages .lang { font-weight: 700; }
+.bauhaus .sidebar .languages li { display: flex; justify-content: space-between; align-items: baseline; }
+.bauhaus .sidebar .languages .level::before { content: none; }
+.bauhaus .sidebar .languages .level { font-family: var(--font-head); font-weight: 600; color: var(--mid); }
+.bauhaus dl.rows dt { font-family: var(--font-head); font-weight: 700; color: var(--mid); }
+
+/* ---------- Sidebar: thick rule on the left ---------- */
+.bauhaus .sidebar { padding-left: 5mm; border-left: var(--thick) solid var(--ink); }
+.bauhaus .sidebar .contacts .icon-wrap { width: 5.4mm; height: 5.4mm; }
+
+/* ---------- Privacy note ---------- */
+.bauhaus .privacy { border-top: var(--thick) solid var(--ink); }

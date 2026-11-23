@@ -1,0 +1,104 @@
+/* =====================  BUBBLE STYLE  =====================
+   Round and soft: section titles as filled pills, entries in very rounded tinted
+   bubbles, pill tags and contact chips, a round photo with a thick soft ring and a few
+   floating bubbles, Nunito throughout. Friendly and playful.
+   With the sidebar: a rounded tinted panel on the left.
+
+   @name    Bubble
+   @group   creative
+   @color   plum
+   @tags    bubble, rounded, round photo, pills, soft, friendly, playful, chips, tinted sidebar, nunito
+*/
+:root {
+  --ink: #221f2a;
+  --muted: #5e5a68;
+  --rule: #e3dfea;
+  --dark: var(--p-dark, #3d2856);
+  --mid: var(--p-mid, #6a4a94);
+  --light: var(--p-light, #b9a0dc);
+  --soft-ring: color-mix(in srgb, var(--light) 38%, #fff);
+  --bubble: color-mix(in srgb, var(--light) 17%, #fff);
+  --font-body: 'Nunito', 'Helvetica Neue', Arial, sans-serif;
+  --side-w: 62mm;
+  --side-gap: 8mm;
+  --side-accent: var(--dark);
+}
+@page { @bottom-right { font-family: 'Nunito', sans-serif; font-weight: 700; color: var(--p-mid, #777); } }
+body { line-height: 1.42; }
+.page.bubble { padding: 14mm 15mm 0; }
+
+/* ---------- Header: ringed round photo, floating bubbles ---------- */
+.bubble .cv-header { position: relative; gap: 11mm; margin-bottom: 9mm; padding-left: 3mm; }
+.bubble .header-photo {
+  order: 0; width: 40mm; height: 40mm; margin: 3mm 0; border-radius: 50%;
+  box-shadow: 0 0 0 3.2mm var(--soft-ring), 0 0 0 4mm color-mix(in srgb, var(--light) 55%, #fff);
+}
+.bubble .cv-header:has(.header-photo)::before, .bubble .cv-header:has(.header-photo)::after { content: ""; position: absolute; border-radius: 50%; pointer-events: none; }
+.bubble .cv-header:has(.header-photo)::before { width: 9mm; height: 9mm; left: 39mm; top: -1mm; background: var(--light); }
+.bubble .cv-header:has(.header-photo)::after { width: 5mm; height: 5mm; left: 46mm; top: 7mm; background: var(--soft-ring); }
+.bubble .name { font-weight: 800; font-size: 3.4rem; line-height: 1.02; letter-spacing: -.01em; color: var(--dark); }
+.bubble .last-name { color: var(--mid); }
+.bubble .headline {
+  display: inline-block; margin-top: 2.6mm; padding: 1mm 4.2mm; border-radius: 6mm; background: var(--soft-ring);
+  font-size: .92rem; font-weight: 800; letter-spacing: .06em; text-transform: none; color: var(--dark);
+}
+/* contact chips */
+.bubble .cv-header .contacts { gap: 1.8mm 1.8mm; margin-top: 4.4mm; font-size: .88rem; }
+.bubble .contacts li { gap: 1.6mm; padding: .7mm 3mm .7mm .7mm; border-radius: 5mm; background: var(--tint); }
+.bubble .contacts .icon-wrap { width: 5.4mm; height: 5.4mm; border-radius: 50%; background: #fff; color: var(--mid); }
+.bubble .contacts .icon { width: 3mm; height: 3mm; }
+.bubble .cv-header .details { gap: 1.8mm; margin-top: 1.8mm; }
+.bubble .cv-header .details li { padding: .5mm 3mm; border-radius: 5mm; border: .35mm solid var(--soft-ring); }
+.bubble .cv-header .details strong { font-weight: 800; }
+
+/* ---------- Section titles: filled pills ---------- */
+.bubble .cv-section { margin-top: 7mm; }
+.bubble .sidebar-photo + .cv-section { margin-top: 0; }
+.bubble .cv-section > h2 {
+  position: relative; width: fit-content; margin-bottom: 3.2mm; padding: 1.2mm 5.4mm 1.3mm; border: 0; border-radius: 6mm; background: var(--mid);
+  font-size: 1.2rem; font-weight: 800; line-height: 1.25; letter-spacing: .03em; text-transform: none; color: #fff;
+}
+.bubble .sidebar .cv-section > h2 { font-size: 1.08rem; background: var(--dark); color: #fff; }
+/* two little bubbles trailing each pill */
+.bubble .cv-section > h2::after {
+  content: ""; position: absolute; left: calc(100% + 1.4mm); top: 50%; width: 7.4mm; height: 3.4mm; margin-top: -1.9mm;
+  background: radial-gradient(circle 1.5mm at 1.5mm 50%, var(--light) 98%, transparent) no-repeat,
+              radial-gradient(circle .95mm at 5.8mm 30%, var(--soft-ring) 98%, transparent) no-repeat;
+}
+
+/* ---------- Entries: very rounded tinted bubbles ---------- */
+.bubble .entry { padding: 3.2mm 4.6mm 3.4mm; border-radius: 5.5mm; background: var(--bubble); }
+.bubble .entry + .entry { margin-top: 2.6mm; }
+.bubble .entry-title { font-size: 1.06rem; font-weight: 800; color: var(--dark); }
+.bubble .dates { padding: .2mm 2.6mm; border-radius: 4mm; background: #fff; font-size: .84rem; font-weight: 800; color: var(--mid); }
+.bubble .sidebar .dates { display: inline-block; margin-top: .6mm; color: var(--mid); }
+.bubble .org { font-style: normal; font-weight: 700; color: var(--mid); }
+.bubble .org .location { font-weight: 400; color: var(--muted); }
+.bubble .org .location:not(:first-child)::before { content: " · "; }
+.bubble .extra span { font-weight: 800; }
+
+/* ---------- Lists, pill tags, skills ---------- */
+.bubble .bullets li::before, .bubble ul.desc li::before { top: .48em; width: 1.9mm; height: 1.9mm; background: var(--light); }
+.bubble .tags { gap: 1.6mm; }
+.bubble .tags li + li::before { content: none; }
+.bubble .tags li { padding: .5mm 3.2mm; border-radius: 5mm; background: var(--soft-ring); font-size: .9rem; font-weight: 700; color: var(--dark); }
+.bubble .skill-group > h3 { font-size: .8rem; font-weight: 800; letter-spacing: .08em; color: var(--mid); }
+.bubble .main-column .skill-group > h3 { font-size: .98rem; letter-spacing: 0; text-transform: none; color: var(--dark); }
+.bubble .languages .lang { font-weight: 800; }
+.bubble .languages .level::before { content: none; }
+.bubble .languages .level { margin-left: 1.4mm; padding: .1mm 2.4mm; border-radius: 4mm; background: var(--mid); font-size: .8rem; font-weight: 700; color: #fff; }
+.bubble .sidebar .languages li { display: flex; justify-content: space-between; align-items: center; }
+.bubble .sidebar .languages li + li { margin-top: 1.4mm; }
+.bubble dl.rows dt { font-weight: 800; color: var(--mid); }
+
+/* ---------- Sidebar: rounded tinted panel ---------- */
+.bubble .sidebar { padding: 6mm 4.6mm 6.5mm; border-radius: 7mm; background: var(--tint); }
+.bubble .sidebar .contacts li { width: fit-content; max-width: 100%; background: #fff; }
+.bubble .sidebar .contacts li + li { margin-top: 1.6mm; }
+.bubble .sidebar .contacts .icon-wrap { background: var(--tint); }
+.bubble .sidebar .entry { background: #fff; }
+.bubble .sidebar .tags li { background: #fff; }
+.bubble .sidebar .details strong { font-weight: 800; }
+
+/* ---------- Privacy note ---------- */
+.bubble .privacy { padding: 2.6mm 4mm; border: 0; border-radius: 4mm; background: var(--bubble); }

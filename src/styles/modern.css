@@ -1,0 +1,107 @@
+/* =====================  MODERN STYLE  =====================
+   Full-height coloured sidebar (on every page) with the photo; name, experience
+   and education on the right. Without the sidebar: a coloured band at the top.
+
+   @name    Modern
+   @group   modern
+   @color   teal
+   @tags    dark sidebar, full-height sidebar, round photo, coloured band, sans-serif, geometric
+   @print-sidebar @page{@top-left{background:$dark}@bottom-left{background:$dark}}
+*/
+:root {
+  --ink: #1d232b;
+  --muted: #59636e;
+  --dark: var(--p-dark, #134e4a);     /* sidebar, name, headings */
+  --mid: var(--p-mid, #0f766e);       /* organisations, last name */
+  --light: var(--p-light, #2ec4b6);   /* decorations */
+  --light-text: color-mix(in srgb, var(--light) 55%, #fff);
+  --on-dark: rgba(255, 255, 255, .8); /* secondary text on the sidebar */
+  --line: #e1e5e9;
+  --font-head: 'Montserrat', sans-serif;
+  --side-w: 68mm;
+  --side-gap: 0mm;
+  --side-ink: #fff;
+  --side-muted: var(--on-dark);
+  --side-accent: #fff;
+  --side-rule: rgba(255, 255, 255, .3);
+}
+/* The coloured column on every page: in the top and bottom margins with two
+   page-margin boxes (coloured only when the sidebar is shown), elsewhere with a
+   fixed strip (print only). */
+@page {
+  @top-left { content: ""; width: 68mm; }
+  @bottom-left { content: ""; width: 68mm; }
+  @bottom-right { font-family: 'Source Sans 3', sans-serif; }
+}
+.page.modern { padding: 0; }
+.page.modern.has-sidebar { background: linear-gradient(to right, var(--dark) 68mm, #fff 68mm); }
+@media print {
+  /* a short CV still fills the first page (A4 height minus the bottom margin) */
+  .page.modern.has-sidebar { min-height: 283mm; }
+  .page.modern.has-sidebar::before { content: ""; position: fixed; top: 0; bottom: 0; left: 0; width: 68mm; background: var(--dark); z-index: -1; }
+}
+
+/* ---------- Name ---------- */
+.modern .name { font-weight: 800; font-size: 3rem; line-height: 1; letter-spacing: -.01em; color: var(--dark); }
+.modern .name span { display: block; }
+.modern .last-name { color: var(--mid); }
+.modern .headline {
+  display: inline-block; margin-top: 4mm; padding-top: 2.6mm; border-top: .7mm solid var(--light);
+  font-family: 'Montserrat', sans-serif; font-size: .8rem; letter-spacing: .14em; color: var(--ink);
+}
+
+/* ---------- With the sidebar: photo at the top of the coloured column ---------- */
+.modern.has-sidebar .cv-header { display: contents; }
+.modern.has-sidebar .header-photo { display: none; }
+.modern.has-sidebar .identity { grid-column: 2; grid-row: 1; padding: 16mm 13mm 8mm 11mm; }
+.modern.has-sidebar > .sidebar { grid-row: 1 / span 2; padding: 14mm 8mm 6mm 9mm; }
+.modern.has-sidebar .sidebar-photo { display: block; width: 42mm; height: 42mm; margin: 0 auto 9mm; border-radius: 50%; overflow: hidden; border: 1.2mm solid var(--light); }
+.modern.has-sidebar > .main-column { padding: 0 13mm 0 11mm; }
+.modern.has-sidebar > .privacy { grid-column: 2; margin: 8mm 13mm 0 11mm; }
+.modern .identity .contacts .icon-wrap { color: var(--mid); }
+
+/* ---------- Without the sidebar: coloured band ---------- */
+.modern.no-sidebar .cv-header { margin: 0 0 8mm; padding: 14mm 16mm 10mm; background: var(--dark); color: #fff; }
+.modern.no-sidebar .header-photo { order: 0; width: 38mm; height: 38mm; border-radius: 50%; border: 1.2mm solid var(--light); }
+.modern.no-sidebar .name { color: #fff; }
+.modern.no-sidebar .last-name { color: var(--light-text); }
+.modern.no-sidebar .headline { color: #fff; }
+.modern.no-sidebar .cv-header .contacts .icon-wrap { color: var(--light-text); }
+.modern.no-sidebar .cv-header .details { color: var(--on-dark); }
+.modern.no-sidebar .cv-header .details strong { color: #fff; }
+.modern.no-sidebar > .main-column { padding: 0 16mm; }
+.modern.no-sidebar > .privacy { margin: 8mm 16mm 0; }
+
+/* ---------- Sections ---------- */
+.modern .cv-section { margin-top: 7mm; }
+.modern .cv-section > h2 { margin-bottom: 3mm; font-size: .92rem; }
+.modern .main-column .cv-section > h2 { display: flex; align-items: center; gap: 2.6mm; padding: 0; border: 0; color: var(--dark); }
+.modern .main-column .cv-section > h2::before { content: ""; flex: none; width: 2.4mm; height: 2.4mm; border-radius: .5mm; background: var(--light); }
+.modern .main-column .cv-section > h2::after { content: ""; flex: 1; height: .3mm; background: var(--line); }
+.modern .sidebar .cv-section { break-inside: avoid; }
+.modern .sidebar .cv-section > h2 { padding-bottom: 1.6mm; }
+.modern .skill-group > h3 { color: var(--mid); }
+.modern .sidebar .skill-group > h3 { color: var(--light-text); }
+
+/* ---------- Sidebar ---------- */
+.modern .sidebar .contacts .icon-wrap { width: 6.2mm; height: 6.2mm; border-radius: 50%; background: rgba(255, 255, 255, .13); color: var(--light-text); }
+.modern .sidebar .contacts li { gap: 2.6mm; }
+.modern .sidebar .details strong { font-weight: 700; }
+.modern .sidebar .languages li { display: flex; justify-content: space-between; align-items: center; }
+.modern .sidebar .languages li + li { margin-top: 1.3mm; }
+.modern .sidebar .languages .level::before { content: none; }
+.modern .sidebar .languages .level { padding: .1mm 2.4mm; border-radius: 3mm; background: rgba(255, 255, 255, .14); font-size: .78rem; font-weight: 700; color: #fff; }
+.modern .tags { gap: 1.6mm; }
+.modern .tags li + li::before { content: none; }
+.modern .tags li { padding: .4mm 2.4mm; border-radius: 1mm; background: color-mix(in srgb, var(--light) 20%, #fff); color: var(--dark); font-size: .86rem; font-weight: 600; }
+.modern .sidebar .tags li { background: rgba(255, 255, 255, .13); color: #fff; }
+.modern .sidebar p, .modern .sidebar .bullets li { color: var(--on-dark); }
+.modern .bullets li::before, .modern ul.desc li::before { background: var(--light); }
+
+/* ---------- Main column ---------- */
+.modern .entry + .entry { margin-top: 4mm; }
+.modern .org { font-style: normal; font-weight: 600; color: var(--mid); }
+.modern .org .location { font-weight: 400; color: var(--muted); }
+.modern .org .location:not(:first-child)::before { content: " · "; }
+.modern .sidebar .org { color: var(--light-text); }
+.modern .privacy { border-top-color: var(--line); }

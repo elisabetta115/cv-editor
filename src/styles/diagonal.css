@@ -1,0 +1,110 @@
+/* =====================  DIAGONAL STYLE  =====================
+   Angles everywhere: a gradient header band with a slanted bottom edge, section titles
+   on slanted parallelogram labels followed by diagonal stripes, a photo in a slanted
+   frame, skewed tags and bullets. With the sidebar: a tinted panel with a slanted top edge.
+
+   @name    Diagonal
+   @group   creative
+   @color   plum
+   @tags    diagonal, slanted, angles, gradient header, stripes, dynamic, sporty, sans-serif, tinted sidebar
+*/
+:root {
+  --ink: #1b1a22;
+  --muted: #5b5966;
+  --rule: #dcd9e2;
+  --dark: var(--p-dark, #3d2856);
+  --mid: var(--p-mid, #6a4a94);
+  --light: var(--p-light, #b9a0dc);
+  --light-text: color-mix(in srgb, var(--light) 50%, #fff);
+  --slant: 12deg;
+  --font-body: 'Lato', 'Helvetica Neue', Arial, sans-serif;
+  --font-head: 'Montserrat', sans-serif;
+  --side-w: 60mm;
+  --side-gap: 9mm;
+  --side-accent: var(--dark);
+}
+@page { @bottom-right { font-family: 'Montserrat', sans-serif; font-weight: 600; color: var(--p-mid, #777); } }
+.page.diagonal { padding: 0 16mm; }
+
+/* ---------- Header: gradient band with a slanted bottom edge ---------- */
+.diagonal .cv-header {
+  position: relative; gap: 9mm; margin: 0 -16mm 6mm; padding: 15mm 18mm 22mm 16mm;
+  background: linear-gradient(118deg, var(--dark) 0%, var(--dark) 35%, var(--mid) 100%); color: #fff;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 16mm), 0 100%);
+}
+/* a lighter slanted stripe crossing the band */
+.diagonal .cv-header::before {
+  content: ""; position: absolute; top: 0; bottom: 0; right: 30mm; width: 26mm; z-index: 0;
+  background: rgba(255, 255, 255, .07); transform: skewX(calc(-1 * var(--slant) * 2)); pointer-events: none;
+}
+.diagonal .cv-header > * { position: relative; z-index: 1; }
+.diagonal .name { font-weight: 800; font-size: 3.3rem; line-height: .98; letter-spacing: -.005em; text-transform: uppercase; color: #fff; }
+.diagonal .name span { display: block; }
+.diagonal .last-name { color: var(--light-text); }
+.diagonal .headline {
+  display: inline-block; position: relative; isolation: isolate; margin: 4mm 0 0 1mm; padding: .9mm 3.4mm;
+  font-family: var(--font-head); font-size: .84rem; font-weight: 700; letter-spacing: .14em; color: var(--dark);
+}
+.diagonal .headline::before { content: ""; position: absolute; inset: 0; z-index: -1; background: #fff; transform: skewX(calc(-1 * var(--slant))); }
+.diagonal .cv-header .contacts { gap: 1.4mm 5.5mm; margin-top: 4.5mm; font-size: .9rem; }
+.diagonal .cv-header .contacts .icon-wrap { color: var(--light-text); }
+.diagonal .cv-header .details { color: rgba(255, 255, 255, .8); }
+.diagonal .cv-header .details strong { color: #fff; }
+/* photo in a slanted frame */
+.diagonal .header-photo {
+  width: 42mm; height: 46mm; padding: 1.2mm; border-radius: 0; background: var(--light);
+  clip-path: polygon(16% 0, 100% 0, 84% 100%, 0 100%);
+}
+.diagonal .header-photo img { clip-path: polygon(15.5% 0, 100% 0, 84.5% 100%, 0 100%); }
+
+/* ---------- Section titles: parallelogram label + diagonal stripes ---------- */
+/* the small top padding keeps the skewed label off the page edge when a section starts a page */
+.diagonal .cv-section { margin-top: 6.2mm; padding-top: .8mm; overflow-x: clip; }
+.diagonal .sidebar-photo + .cv-section { margin-top: 0; }
+.diagonal .cv-section > h2 {
+  break-inside: avoid;
+  position: relative; isolation: isolate; width: fit-content; margin: 0 0 3.4mm 1mm; padding: 1.1mm 4mm 1mm;
+  border: 0; font-size: .9rem; font-weight: 700; line-height: 1.25; letter-spacing: .14em; color: #fff;
+}
+.diagonal .cv-section > h2::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--dark); transform: skewX(calc(-1 * var(--slant))); }
+.diagonal .cv-section > h2::after {
+  content: ""; position: absolute; top: 50%; left: calc(100% + 3mm); width: 200mm; height: 2.4mm; margin-top: -1.2mm;
+  background: repeating-linear-gradient(-60deg, var(--light) 0 .7mm, transparent .7mm 2mm);
+}
+.diagonal .sidebar .cv-section > h2 { color: #fff; }
+.diagonal .sidebar .cv-section > h2::before { background: var(--mid); }
+
+/* ---------- Entries ---------- */
+.diagonal .entry + .entry { margin-top: 4mm; }
+.diagonal .entry-title { font-family: var(--font-head); font-size: .98rem; font-weight: 700; color: var(--dark); }
+.diagonal .dates { font-family: var(--font-head); font-size: .8rem; font-weight: 700; font-style: italic; color: var(--mid); }
+.diagonal .sidebar .dates { color: var(--mid); }
+.diagonal .org { font-style: normal; font-weight: 700; color: var(--mid); }
+.diagonal .org .location { font-weight: 400; font-style: italic; color: var(--muted); }
+.diagonal .org .location:not(:first-child)::before { content: " / "; font-style: normal; }
+
+/* ---------- Lists, tags, skills: skewed shapes ---------- */
+.diagonal .bullets li::before, .diagonal ul.desc li::before { top: .55em; width: 2mm; height: 1.3mm; border-radius: 0; background: var(--mid); transform: skewX(-20deg); }
+.diagonal .tags { gap: 1.6mm 2.2mm; padding-left: .6mm; }
+.diagonal .tags li { position: relative; isolation: isolate; padding: .4mm 2.6mm; font-size: .88rem; font-weight: 700; color: var(--dark); }
+.diagonal .tags li::before, .diagonal .tags li + li::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; margin: 0;
+  background: color-mix(in srgb, var(--light) 35%, #fff); transform: skewX(calc(-1 * var(--slant)));
+}
+.diagonal .skill-group > h3 { font-family: var(--font-head); font-size: .76rem; letter-spacing: .1em; color: var(--mid); }
+.diagonal .main-column .skill-group > h3 { font-size: .9rem; letter-spacing: .02em; color: var(--dark); }
+.diagonal .languages .level::before { content: none; }
+.diagonal .languages .level { margin-left: 1.6mm; font-style: italic; font-weight: 700; color: var(--mid); }
+.diagonal .sidebar .languages li { display: flex; justify-content: space-between; }
+.diagonal dl.rows dt { font-family: var(--font-head); font-size: .9rem; color: var(--mid); }
+
+/* ---------- Sidebar: tinted panel with a slanted top edge ---------- */
+.diagonal .sidebar { position: relative; margin-top: 9mm; padding: 2mm 5.5mm 7mm; background: var(--tint); }
+.diagonal .sidebar::before {
+  content: ""; position: absolute; left: 0; right: 0; bottom: calc(100% - .2mm); height: 9mm;
+  background: var(--tint); clip-path: polygon(0 100%, 100% 0, 100% 100%);
+}
+.diagonal .sidebar .contacts .icon-wrap { color: var(--mid); }
+
+/* ---------- Privacy note ---------- */
+.diagonal .privacy { border-top: 0; padding-top: 3.4mm; background: repeating-linear-gradient(-60deg, var(--light) 0 .5mm, transparent .5mm 1.6mm) top / 100% 1.6mm no-repeat; }

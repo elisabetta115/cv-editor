@@ -1,0 +1,112 @@
+/* =====================  NEON STYLE  =====================
+   A night sign: a near-black page, the name and section titles in thin wide capitals glowing in
+   the palette's light colour, the header framed by a neon tube, crisp light text for the content.
+   With the sidebar: a slightly lighter dark panel with a glowing edge.
+
+   @name    Neon
+   @group   themed
+   @color   plum
+   @tags    dark, night, neon, glow, black page, capitals, nightlife, music, events, gaming
+*/
+:root {
+  --night: #101217;
+  --ink: #d9dde4;
+  --muted: #9aa3b0;
+  --rule: rgba(255, 255, 255, .13);
+  --glow: var(--p-light, #b9a0dc);
+  --glow-soft: color-mix(in srgb, var(--p-light, #b9a0dc) 50%, transparent);
+  --tube: color-mix(in srgb, var(--p-light, #b9a0dc) 42%, #fff);         /* the white-hot core of the tube */
+  --bright: color-mix(in srgb, var(--p-light, #b9a0dc) 72%, #fff);       /* organisations, dates */
+  --neon-text: 0 0 .35mm var(--glow), 0 0 1.4mm var(--glow), 0 0 3.6mm var(--glow-soft);
+  --neon-box: 0 0 .5mm var(--glow), 0 0 2.2mm var(--glow-soft), inset 0 0 .5mm var(--glow), inset 0 0 2mm var(--glow-soft);
+  --accent: var(--tube);
+  --accent-2: var(--bright);
+  --soft: var(--glow);
+  --page-bg: var(--night);
+  --font-body: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --font-head: 'Josefin Sans', 'Century Gothic', sans-serif;
+  --side-w: 60mm;
+  --side-gap: 9mm;
+  --side-ink: var(--ink);
+  --side-muted: var(--muted);
+  --side-accent: var(--tube);
+  --side-rule: var(--rule);
+}
+@page { background: #101217; @bottom-right { font-family: 'Inter', sans-serif; color: #8b93a1; } }
+body { line-height: 1.45; }
+.page.neon { padding: 14mm 15mm 0; color: var(--ink); }
+.neon strong { font-weight: 600; color: #fff; }
+
+/* ---------- Header: framed by a neon tube ---------- */
+.neon .cv-header {
+  gap: 8mm; margin-bottom: 9mm; padding: 8mm 9mm; border: .45mm solid var(--tube); border-radius: 3.5mm; box-shadow: var(--neon-box);
+}
+.neon .header-photo {
+  order: 0; width: 30mm; height: 36mm; border-radius: 2.5mm; border: .45mm solid var(--tube);
+  box-shadow: 0 0 .5mm var(--glow), 0 0 2.4mm var(--glow-soft);
+}
+.neon .name {
+  font-family: var(--font-head); font-weight: 300; font-size: 2.6rem; line-height: 1.12; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--tube); text-shadow: var(--neon-text);
+}
+.neon .last-name { font-weight: 400; }
+.neon .headline { margin-top: 2.4mm; font-family: var(--font-head); font-size: .92rem; font-weight: 400; letter-spacing: .34em; color: #c9ced6; }
+.neon .cv-header .contacts { gap: 1.3mm 6mm; margin-top: 4.5mm; font-size: .9rem; color: var(--ink); }
+.neon .contacts .icon-wrap { color: var(--bright); filter: drop-shadow(0 0 .5mm var(--glow)); }
+.neon .cv-header .details { font-size: .9rem; color: var(--muted); }
+.neon .cv-header .details strong { color: var(--ink); }
+
+/* ---------- Section titles: glowing capitals and a tube that fades out ---------- */
+.neon .cv-section { margin-top: 4.4mm; }
+/* the padding keeps the glow inside the title (it would show at the bottom of the previous page) */
+.neon .cv-section > h2 {
+  display: flex; align-items: center; gap: 4mm; margin-bottom: 3.4mm; padding: 2.6mm 0 0; border: 0;
+  font-family: var(--font-head); font-size: 1.05rem; font-weight: 400; letter-spacing: .3em; line-height: 1.3;
+  color: var(--tube); text-shadow: var(--neon-text);
+}
+.neon .cv-section > h2::after {
+  content: ""; flex: 1; height: .45mm; border-radius: .3mm; margin-bottom: .5mm;
+  background: linear-gradient(to right, var(--tube), color-mix(in srgb, var(--tube) 0%, transparent));
+  filter: drop-shadow(0 0 .6mm var(--glow));
+}
+
+/* ---------- Entries ---------- */
+.neon .entry + .entry { margin-top: 4mm; }
+.neon .entry-title { font-size: 1.03rem; font-weight: 600; color: #f3f5f8; }
+.neon .dates { font-family: var(--font-head); font-size: .9rem; letter-spacing: .1em; color: var(--bright); }
+.neon .org { font-style: normal; color: var(--bright); }
+.neon .org .location { color: var(--muted); }
+.neon .org .location:not(:first-child)::before { content: " · "; }
+.neon .entry .desc { color: #c4cad3; }
+.neon .extra span { font-weight: 600; color: #fff; }
+.neon .bullets li::before, .neon ul.desc li::before { top: .58em; width: 1.2mm; height: 1.2mm; background: var(--tube); box-shadow: 0 0 .5mm var(--glow), 0 0 1.4mm var(--glow); }
+
+/* ---------- Skills ---------- */
+.neon .tags { gap: 1.8mm; }
+.neon .tags li + li::before { content: none; }
+.neon .tags li {
+  padding: .3mm 2.4mm; border: .3mm solid color-mix(in srgb, var(--glow) 85%, transparent); border-radius: 1.2mm;
+  box-shadow: 0 0 1.2mm var(--glow-soft), inset 0 0 1mm var(--glow-soft); font-size: .9rem; color: #eef0f4;
+}
+.neon .skill-group > h3 { font-family: var(--font-head); font-size: .84rem; font-weight: 600; letter-spacing: .16em; color: var(--bright); }
+.neon .main-column .skill-group > h3 { font-family: var(--font-head); font-size: .9rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--bright); }
+.neon .languages .lang { font-weight: 600; color: #fff; }
+.neon .languages .level { color: var(--muted); }
+.neon dl.rows dt { font-family: var(--font-head); font-weight: 600; letter-spacing: .06em; color: var(--bright); }
+.neon .main-column .section-body > p { color: #d0d5dc; }
+
+/* ---------- Sidebar: a lighter panel with a glowing edge ---------- */
+.neon .sidebar { position: relative; padding: 6mm 5.5mm 6mm 5mm; border-radius: 2.5mm; background: #181b23; }
+.neon .sidebar::after {
+  content: ""; position: absolute; top: 5mm; bottom: 5mm; right: 0; width: .5mm; border-radius: .3mm;
+  background: var(--tube); box-shadow: 0 0 .5mm var(--glow), 0 0 2.4mm var(--glow);
+}
+.neon .sidebar .cv-section { break-inside: avoid; }
+.neon .sidebar .cv-section > h2 { font-size: .95rem; letter-spacing: .26em; }
+.neon .sidebar .cv-section > h2::after { content: none; }
+.neon .sidebar .details strong { color: #fff; }
+.neon .sidebar p, .neon .sidebar .bullets li { color: #c4cad3; }
+
+/* ---------- Privacy note ---------- */
+.neon .privacy { border-top-color: var(--rule); color: var(--muted); }
+.neon .privacy .signature img { filter: brightness(0) invert(1); }  /* the signature, white on the dark page */

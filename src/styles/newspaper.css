@@ -1,0 +1,94 @@
+/* =====================  NEWSPAPER STYLE  =====================
+   A newspaper front page: a huge masthead name between thick and thin rules, a dateline
+   with the headline and contacts, Playfair headlines and the text set in two ruled columns.
+   With the sidebar: a narrow column on the right, separated by a vertical hairline.
+
+   @name    Newspaper
+   @group   themed
+   @color   graphite
+   @side    right
+   @tags    newspaper, editorial, serif, two columns, masthead, black and white, framed photo, journalist
+*/
+:root {
+  --base: 9.3pt;
+  --ink: #151515;
+  --muted: #555;
+  --rule: #b9b9b9;
+  --font-body: 'Merriweather', Georgia, serif;
+  --font-head: 'Playfair Display', Georgia, serif;
+  --side-w: 55mm;
+  --side-gap: 6mm;
+  --side-accent: var(--ink);
+}
+@page { @bottom-right { font-family: 'Merriweather', Georgia, serif; color: #555; } }
+body { line-height: 1.5; }
+.page.newspaper { padding: 10mm 14mm 0; }
+
+/* ---------- Masthead: rules, name (with the photo as an "ear"), dateline ---------- */
+.newspaper .cv-header { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0; margin-bottom: 6mm; padding-bottom: 1.5mm; border-bottom: .25mm solid var(--ink); }
+.newspaper .identity { display: contents; }
+/* thick + thin rule above the name */
+.newspaper .cv-header::before { content: ""; order: 0; flex: 0 0 100%; height: 2.3mm; background: linear-gradient(var(--ink), var(--ink)) top / 100% 1.4mm no-repeat, linear-gradient(var(--ink), var(--ink)) bottom / 100% .3mm no-repeat; }
+.newspaper .header-photo { order: 1; width: 25mm; height: 31mm; margin: 2.5mm 0; padding: .8mm; border: .3mm solid var(--ink); border-radius: 0; background: #fff; }
+.newspaper .name { order: 2; flex: 1 1 60%; min-width: 0; padding: 3.2mm 0 2.6mm; text-align: center; font-weight: 900; font-size: 5.2rem; line-height: .98; letter-spacing: -.012em; color: var(--ink); }
+/* an empty ear on the right keeps the name centred when there is a photo */
+.newspaper .cv-header:has(.header-photo)::after { content: ""; order: 3; width: 25mm; }
+/* thin + thick rule below the name, then the hairline over the dateline */
+.newspaper .identity::before { content: ""; order: 4; flex: 0 0 100%; height: 3.6mm; margin-bottom: 1.4mm;
+  background: linear-gradient(var(--ink), var(--ink)) top / 100% .3mm no-repeat,
+              linear-gradient(var(--ink), var(--ink)) 0 .8mm / 100% 1.4mm no-repeat,
+              linear-gradient(var(--ink), var(--ink)) bottom / 100% .25mm no-repeat; }
+/* the dateline: headline in small capitals, contacts and details inline */
+.newspaper .cv-header { column-gap: 4.2mm; }
+.newspaper .headline { order: 5; margin: 0; font-family: var(--font-body); font-size: 1.02rem; font-weight: 700; font-variant: small-caps; letter-spacing: .12em; text-transform: lowercase; color: var(--accent); }
+.newspaper .cv-header .contacts, .newspaper .cv-header .details { display: contents; }
+.newspaper .cv-header .contacts li { order: 6; }
+.newspaper .cv-header .details li { order: 7; color: var(--muted); }
+.newspaper .cv-header li { gap: 1.2mm; margin: .4mm 0; font-size: .84rem; line-height: 1.3; }
+.newspaper .cv-header .details strong { font-weight: 700; color: var(--ink); }
+.newspaper .contacts .icon-wrap { color: var(--ink); }
+.newspaper .contacts .icon { width: 2.9mm; height: 2.9mm; stroke-width: 2.2; }
+
+/* ---------- Section titles: heavy rule above, hairline below ---------- */
+.newspaper .cv-section + .cv-section { margin-top: 5.5mm; }
+.newspaper .cv-section > h2 { margin-bottom: 2.6mm; padding: 1.1mm 0 1mm; border-top: .8mm solid var(--ink); border-bottom: .25mm solid var(--ink); font-size: 1.25rem; font-weight: 700; line-height: 1.2; letter-spacing: 0; text-transform: none; color: var(--ink); }
+.newspaper .sidebar .cv-section > h2 { font-size: 1.1rem; border-color: var(--ink); }
+
+/* ---------- Without the sidebar: two newspaper columns with a column rule ---------- */
+.newspaper.no-sidebar .main-column { columns: 2; column-fill: auto; column-gap: 9mm; column-rule: .25mm solid var(--rule); }
+.newspaper.no-sidebar .main-column > .cv-section:first-child { margin-top: 0; }
+/* print fills each page column by column; the on-screen sheet has no page height, so balance it */
+@media screen { .newspaper.no-sidebar .main-column { column-fill: balance; } }
+/* the profile, when it opens the page, is the lead: across both columns */
+.newspaper.no-sidebar .main-column > .sec-profile:first-child { column-span: all; margin-bottom: 5mm; }
+.newspaper.no-sidebar .main-column .bullets.cols { columns: auto; }
+.newspaper.no-sidebar .main-column .skill-group { display: block; }
+.newspaper.no-sidebar .main-column .skill-group > h3 { margin-bottom: .8mm; }
+.newspaper .main-column > .sec-profile:first-child .section-body > p { font-size: 1.12rem; line-height: 1.55; font-style: italic; }
+
+/* ---------- Entries: headline, byline, justified text ---------- */
+.newspaper .entry + .entry { margin-top: 3.8mm; }
+.newspaper .entry-title { font-family: var(--font-head); font-size: 1.12rem; font-weight: 700; line-height: 1.22; }
+.newspaper .dates { font-size: .8rem; font-style: italic; color: var(--muted); }
+.newspaper .org { margin-top: .3mm; font-size: .84rem; font-style: italic; color: var(--accent); }
+.newspaper .org .location { color: var(--muted); }
+.newspaper .org .location:not(:first-child)::before { content: " — "; }
+.newspaper .entry .desc { margin-top: 1mm; text-align: justify; hyphens: auto; }
+.newspaper .bullets li::before, .newspaper ul.desc li::before { top: .66em; width: 1.1mm; height: 1.1mm; border-radius: 0; background: var(--ink); }
+.newspaper .extra span { font-weight: 700; }
+.newspaper .skill-group > h3 { font-family: var(--font-head); font-size: .98rem; font-weight: 700; letter-spacing: 0; text-transform: none; color: var(--ink); }
+.newspaper .main-column .skill-group > h3 { font-size: 1rem; }
+.newspaper .languages .lang { font-weight: 700; }
+.newspaper .tags { display: block; }
+.newspaper .tags li { display: inline; }
+/* the square stays at the end of a line, never at the start of the next one */
+.newspaper .tags li + li::before { content: "\00a0\00a0\25aa\00a0\0020"; margin: 0; color: var(--accent); }
+.newspaper dl.rows dt { font-family: var(--font-head); font-weight: 700; font-size: 1.02rem; }
+
+/* ---------- Sidebar: a narrow column after a vertical hairline ---------- */
+.newspaper .sidebar { padding-left: 6mm; border-left: .25mm solid var(--ink); }
+.newspaper .sidebar .contacts li { gap: 2mm; font-size: .86rem; }
+.newspaper .sidebar .contacts .icon-wrap { color: var(--accent); }
+.newspaper .sidebar .details { font-size: .9rem; }
+.newspaper .sidebar .section-body > p { font-size: .95rem; }
+.newspaper .privacy { border-top: .25mm solid var(--ink); font-style: italic; }

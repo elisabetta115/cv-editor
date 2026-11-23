@@ -1,0 +1,180 @@
+/* Settings shared by every style.
+   The CV flows over as many A4 pages as it needs: top and bottom margins on every page
+   (except the top edge of the first one) and the page number at the bottom.
+   Every style uses the same page structure (see render_page in generate_cv.py):
+     .page (.has-sidebar or .no-sidebar)  >  .cv-header, .sidebar, .main-column, .privacy
+   and the same blocks inside the sections. This file gives every block a sensible
+   default; each style only changes what makes it different. */
+
+@page {
+  size: A4;
+  margin: 13mm 0 14mm;
+  @bottom-right {
+    content: counter(page) " / " counter(pages);
+    margin-right: 12mm;
+    font-size: 7.5pt;
+    color: #7b8794;
+  }
+}
+@page :first { margin-top: 0; }
+
+:root {
+  --base: 10pt;
+  --ink: #1f2328;
+  --muted: #5d6670;
+  --rule: #d5dbe1;
+  /* colours come from the palette chosen in the editor (--p-...) */
+  --accent: var(--p-dark, #1d3a5f);     /* headings, name */
+  --accent-2: var(--p-mid, #2e5c8a);    /* organisations, icons */
+  --soft: var(--p-light, #6fa8dc);      /* bullets, decorations */
+  --tint: var(--p-bg, #eef2f7);         /* light backgrounds */
+  --page-bg: #fff;
+  --font-body: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  --font-head: var(--font-body);
+  --font-name: var(--font-head);
+  --side-w: 60mm;                        /* sidebar width */
+  --side-gap: 9mm;
+  --side-ink: var(--ink);
+  --side-muted: var(--muted);
+  --side-accent: var(--accent);
+  --side-rule: var(--rule);
+}
+
+* { box-sizing: border-box; }
+html { font-size: var(--base); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { margin: 0; font-family: var(--font-body); color: var(--ink); line-height: 1.42; }
+h1, h2, h3, p, ul, dl, dd { margin: 0; }
+ul { padding: 0; list-style: none; }
+a { color: inherit; text-decoration: none; }
+.icon { flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+/* small arrow next to clickable titles */
+.icon-link { width: .7em; height: .7em; margin-left: .3em; vertical-align: .02em; opacity: .6; stroke-width: 2.4; }
+/* links written in the text: a thin underline in the colour of the text, so they show on every style,
+   on screen and on paper; a long address may break anywhere rather than run out of a narrow column */
+.text-link { text-decoration: underline; text-decoration-thickness: max(1px, .06em); text-underline-offset: .16em;
+             text-decoration-color: color-mix(in srgb, currentColor 50%, transparent); overflow-wrap: anywhere; }
+/* no entries split in half, no headings left alone at the bottom of a page */
+.entry, li, .skill-group, dt, dd { break-inside: avoid; }
+h2, h3, dt { break-after: avoid; }
+[contenteditable]:focus { outline: none; }
+
+/* ---------- Page and layout ---------- */
+.page { position: relative; width: 210mm; padding: 15mm 16mm 0; background: var(--page-bg); }
+.page.has-sidebar { display: grid; grid-template-columns: var(--side-w) minmax(0, 1fr); column-gap: var(--side-gap); align-items: start; }
+.page.has-sidebar.side-right { grid-template-columns: minmax(0, 1fr) var(--side-w); }
+.page.has-sidebar > .cv-header, .page.has-sidebar > .privacy { grid-column: 1 / -1; }
+.page.has-sidebar > .sidebar { grid-column: 1; grid-row: 2; }
+.page.has-sidebar > .main-column { grid-column: 2; grid-row: 2; }
+.page.has-sidebar.side-right > .sidebar { grid-column: 2; }
+.page.has-sidebar.side-right > .main-column { grid-column: 1; }
+.sidebar { color: var(--side-ink); }
+.sidebar-photo { display: none; }
+
+/* ---------- Header ---------- */
+.cv-header { display: flex; align-items: center; gap: 8mm; margin-bottom: 7mm; }
+.cv-header .identity { flex: 1; min-width: 0; }
+.header-photo { order: 2; flex: none; width: 32mm; height: 40mm; border-radius: 1mm; overflow: hidden; }
+.header-photo img, .sidebar-photo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 12%; }
+/* The shape chosen in the editor for the photo (Frame → Shape) replaces the one of the style: its cut-out
+   (clip-path), inner rings and marks (::before, ::after) and corners. Size, border and colours stay. */
+.page :is(.shape-rect, .shape-rounded, .shape-square, .shape-circle) { clip-path: none !important; overflow: hidden !important; }
+.page :is(.shape-rect, .shape-rounded, .shape-square, .shape-circle)::before,
+.page :is(.shape-rect, .shape-rounded, .shape-square, .shape-circle)::after { display: none !important; }
+.page :is(.shape-rect, .shape-rounded, .shape-square, .shape-circle) img { clip-path: none !important; transform: none !important; }
+.page :is(.shape-rect, .shape-square), .page :is(.shape-rect, .shape-square) img { border-radius: 0 !important; }
+.page .shape-rounded { border-radius: 3mm !important; }
+.page .shape-rounded img { border-radius: 2mm !important; }
+.page .shape-circle, .page .shape-circle img { border-radius: 50% !important; }
+.page :is(.shape-square, .shape-circle) { aspect-ratio: 1 / 1; height: auto !important; }
+.name { font-family: var(--font-name); font-weight: 600; font-size: 2.8rem; line-height: 1.05; color: var(--accent); }
+.headline { margin-top: 1.8mm; font-size: .86rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-2); }
+.cv-header .contacts { display: flex; flex-wrap: wrap; gap: 1.2mm 5mm; margin-top: 4mm; font-size: .92rem; }
+.cv-header .details { display: flex; flex-wrap: wrap; gap: .5mm 5mm; margin-top: 1.6mm; font-size: .92rem; color: var(--muted); }
+.cv-header .details strong { color: var(--ink); font-weight: 600; }
+.contacts li { display: flex; align-items: center; gap: 1.6mm; }
+.contacts .icon-wrap { flex: none; display: inline-grid; place-items: center; color: var(--accent-2); }
+.contacts .icon { width: 3.4mm; height: 3.4mm; }
+/* never split an e-mail in the middle: in a narrow column it may run into the padding */
+.contacts .contact-text { min-width: 0; white-space: nowrap; }
+
+/* ---------- Sections ---------- */
+.cv-section { margin-top: 6mm; }
+.main-column > .cv-section:first-child, .sidebar > .cv-section:first-child, .sidebar-photo + .cv-section { margin-top: 0; }
+.cv-section > h2 {
+  margin-bottom: 3mm;
+  padding-bottom: 1.4mm;
+  border-bottom: .3mm solid var(--rule);
+  font-family: var(--font-head);
+  font-size: .86rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.sidebar .cv-section > h2 { color: var(--side-accent); border-color: var(--side-rule); }
+.section-body > * + * { margin-top: 2.2mm; }
+.section-body p + p { margin-top: 2mm; }
+.main-column .section-body > p { text-align: justify; hyphens: auto; }
+
+/* ---------- Entries (experience, education, extra sections) ---------- */
+.entry + .entry { margin-top: 3.6mm; }
+.entry-head { display: flex; justify-content: space-between; align-items: baseline; gap: 4mm; }
+.entry-title { font-size: 1.05rem; font-weight: 700; line-height: 1.28; }
+.dates { flex: none; font-size: .88rem; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.org { color: var(--accent-2); font-style: italic; }
+.org .location:not(:first-child)::before { content: ", "; }
+.entry .desc { margin-top: .8mm; }
+.entry .extra { margin-top: .4mm; }
+.extra span { font-weight: 700; }
+.extra em { font-style: italic; }
+.sidebar .entry-head { display: block; }
+.sidebar .dates { display: block; white-space: normal; color: var(--side-muted); }
+
+/* ---------- Lists, tags, tables, skills ---------- */
+.bullets li, ul.desc li { position: relative; padding-left: 3.8mm; }
+.bullets li + li, ul.desc li + li { margin-top: .5mm; }
+.bullets li::before, ul.desc li::before {
+  content: ""; position: absolute; left: .6mm; top: .62em;
+  width: 1.2mm; height: 1.2mm; border-radius: 50%; background: var(--soft);
+}
+.main-column .bullets.cols { columns: 2; column-gap: 7mm; }
+.tags { display: flex; flex-wrap: wrap; }
+.tags li + li::before { content: "·"; margin: 0 2mm; color: var(--muted); }
+.languages li + li { margin-top: .8mm; }
+.languages .lang { font-weight: 700; }
+.languages .level { color: var(--muted); }
+.languages .level::before { content: " – "; }
+.main-column .languages { display: flex; flex-wrap: wrap; gap: 0 5mm; }
+.main-column .languages li + li { margin-top: 0; }
+dl.rows { display: grid; grid-template-columns: max-content 1fr; gap: 1.2mm 5mm; }
+dl.rows dt { font-weight: 700; }
+/* in the grid a label and its value share a row: "avoid" would spread from the last row to the whole
+   section, which then could never be followed by a page break (pushed to the next page) */
+.main-column dl.rows dt { break-after: auto; }
+.sidebar dl.rows { display: block; }
+.sidebar dl.rows dd { margin-bottom: 1.2mm; color: var(--side-muted); }
+.skill-group + .skill-group { margin-top: 2.6mm; }
+.skill-group > h3 { margin-bottom: 1.2mm; font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-2); }
+.main-column .skill-group { display: grid; grid-template-columns: 36mm 1fr; column-gap: 4mm; }
+.main-column .skill-group > h3 { margin: 0; font-size: 1rem; letter-spacing: 0; text-transform: none; color: var(--ink); }
+.sidebar .details li + li { margin-top: 1mm; }
+.sidebar .details { color: var(--side-muted); }
+.sidebar .details strong { color: var(--side-ink); }
+.sidebar .contacts { font-size: .92rem; }
+.sidebar .contacts li { gap: 2.4mm; line-height: 1.25; }
+.sidebar .contacts li + li { margin-top: 2mm; }
+
+/* ---------- Privacy note ---------- */
+.privacy { margin-top: 8mm; padding-top: 2.4mm; border-top: .3mm solid var(--rule); font-size: .66rem; line-height: 1.38; color: var(--muted); break-inside: avoid; }
+/* the signature: under the privacy note, on the right (alone, without the line above it) */
+.privacy .privacy-text { display: inline; }  /* the text flows as without a signature (e.g. after a style's ::before) */
+.privacy .signature { display: flex; justify-content: flex-end; margin-top: 2.5mm; }
+.privacy .signature img { display: block; max-width: 55mm; max-height: 18mm; width: auto; height: auto; }
+.page .privacy.signature-only { border-top: 0; padding-top: 0; }
+.page .privacy.signature-only::before { content: none; }
+
+/* ---------- On screen only (the editor preview): sheet on a grey background ---------- */
+@media screen {
+  body { background: #8b949e; padding: 24px 0; }
+  .page { margin: 0 auto; min-height: 297mm; padding-bottom: 14mm !important; box-shadow: 0 6px 30px rgba(0, 0, 0, .35); }
+}

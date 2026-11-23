@@ -1,0 +1,115 @@
+/* =====================  SCRAPBOOK STYLE  =====================
+   A collage: the photo as a tilted polaroid, section titles on torn paper labels held by tape,
+   skills on little sticky notes, the name and dates handwritten.
+   With the sidebar: a paper card taped to the page.
+
+   @name    Scrapbook
+   @group   themed
+   @color   terracotta
+   @tags    scrapbook, collage, polaroid, washi tape, sticky notes, handwritten, playful, creative, crafts
+*/
+:root {
+  --base: 9.6pt;
+  --ink: #2b2622;
+  --muted: #6b625b;
+  --rule: #e6e0da;
+  --font-body: 'Poppins', 'Helvetica Neue', Arial, sans-serif;
+  --font-hand: 'Caveat', 'Comic Sans MS', cursive;
+  --tape: color-mix(in srgb, var(--p-light, #f0a47c) 62%, transparent);
+  --tape-2: color-mix(in srgb, var(--p-light, #f0a47c) 42%, transparent);
+  --label: color-mix(in srgb, var(--p-light, #f0a47c) 36%, #fff);
+  --note-1: color-mix(in srgb, var(--p-light, #f0a47c) 24%, #fffdf2);
+  --note-2: #fff4c4;
+  --card: #fffdf8;
+  --side-w: 64mm;
+  --side-gap: 9mm;
+  /* torn edges, used by the washi tape and the labels */
+  --zigzag-ends: polygon(0 0, 100% 0, 96% 20%, 100% 40%, 96% 60%, 100% 80%, 96% 100%, 0 100%, 4% 80%, 0 60%, 4% 40%, 0 20%);
+  --torn: polygon(0 6%, 18% 0, 46% 5%, 77% 0, 100% 4%, 98.5% 28%, 100% 50%, 98% 74%, 100% 100%, 70% 95%, 38% 100%, 12% 94%, 0 100%, 1.5% 72%, 0 47%, 1.8% 24%);
+}
+@page { @bottom-right { font-family: 'Caveat', cursive; font-size: 11pt; font-weight: 700; color: #8a7f76; } }
+.page.scrapbook { padding: 15mm 15mm 0; }
+.scrapbook strong { font-weight: 600; }
+
+/* a strip of washi tape (on the titles and the sidebar card; never on the photo) */
+.scrapbook .sidebar::before, .scrapbook .cv-section > h2::before {
+  content: ""; position: absolute; z-index: 2; height: 5.6mm; pointer-events: none;
+  background: repeating-linear-gradient(90deg, var(--tape) 0 2.2mm, var(--tape-2) 2.2mm 4.4mm);
+  clip-path: var(--zigzag-ends);
+}
+
+/* ---------- Header: a polaroid and a handwritten name ---------- */
+.scrapbook .cv-header { gap: 11mm; margin-bottom: 9mm; padding-left: 2mm; }
+.scrapbook .header-photo {
+  order: 0; position: relative; overflow: visible; width: 37mm; height: 45mm; margin: 2mm 0 1mm;
+  padding: 2.4mm 2.4mm 9.5mm; border-radius: .5mm; background: #fff;
+  box-shadow: 0 .7mm 2.6mm rgba(0, 0, 0, .22), 0 0 0 .15mm rgba(0, 0, 0, .06); rotate: -3.5deg;
+}
+.scrapbook .name { font-family: var(--font-hand); font-weight: 700; font-size: 4.3rem; line-height: .92; color: var(--ink); }
+/* a highlighter stroke over the last name */
+.scrapbook .last-name {
+  padding: 0 1.5mm; margin: 0 -1.5mm;
+  background: linear-gradient(176deg, transparent 52%, color-mix(in srgb, var(--p-light, #f0a47c) 55%, transparent) 52% 88%, transparent 88%);
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
+}
+.scrapbook .headline {
+  display: inline-block; margin-top: 2mm; rotate: -2deg; font-family: var(--font-hand); font-size: 1.75rem; font-weight: 500;
+  line-height: 1.1; letter-spacing: 0; text-transform: none; color: var(--accent-2);
+}
+.scrapbook .cv-header .contacts { gap: 1.2mm 5.5mm; margin-top: 3.6mm; font-size: .9rem; }
+.scrapbook .cv-header .details { font-size: .9rem; }
+
+/* ---------- Section titles: torn paper labels with a piece of tape ---------- */
+.scrapbook .cv-section { margin-top: 7mm; }
+.scrapbook .cv-section > h2 {
+  position: relative; width: fit-content; max-width: 100%; margin-bottom: 3.4mm; padding: 1.3mm 5.5mm 1.1mm 5mm; border: 0;
+  rotate: -1.2deg; transform-origin: 100% 0; font-size: .98rem; font-weight: 600; letter-spacing: .08em; color: var(--accent);
+}
+/* the label (behind the text: the rotation makes the title its own layer). The rotation pivots on
+   a top corner and the tape stays inside the title's height: nothing strays onto the previous page. */
+.scrapbook .cv-section > h2::after { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--label); clip-path: var(--torn); }
+.scrapbook .cv-section > h2::before { width: 9.5mm; height: 4.4mm; top: calc(50% - 2.2mm); left: -5.2mm; rotate: -14deg; }
+.scrapbook .cv-section:nth-child(even) > h2 { rotate: .9deg; transform-origin: 0 0; }
+.scrapbook .cv-section:nth-child(even) > h2::before { rotate: 12deg; }
+
+/* ---------- Entries ---------- */
+.scrapbook .entry + .entry { margin-top: 3.8mm; }
+.scrapbook .entry-title { font-size: 1.03rem; font-weight: 600; }
+.scrapbook .dates { display: inline-block; rotate: -2.5deg; font-family: var(--font-hand); font-size: 1.4rem; font-weight: 700; line-height: 1; color: var(--accent-2); }
+.scrapbook .org { font-style: normal; color: var(--accent-2); }
+.scrapbook .org .location { color: var(--muted); }
+.scrapbook .org .location:not(:first-child)::before { content: " · "; }
+.scrapbook .entry .desc { color: #463f3a; }
+.scrapbook .extra span { font-weight: 600; }
+.scrapbook .bullets li, .scrapbook ul.desc li { padding-left: 4.4mm; }
+.scrapbook .bullets li::before, .scrapbook ul.desc li::before { left: .5mm; top: .55em; width: 1.6mm; height: 1.6mm; border-radius: .2mm; background: var(--soft); rotate: 22deg; }
+.scrapbook .bullets li:nth-child(even)::before, .scrapbook ul.desc li:nth-child(even)::before { background: var(--accent-2); rotate: -14deg; }
+
+/* ---------- Skills on sticky notes ---------- */
+.scrapbook .tags { gap: 2.4mm 2.2mm; padding: .6mm 0; }
+.scrapbook .tags li + li::before { content: none; }
+.scrapbook .tags li {
+  padding: 1.5mm 2.6mm 1.3mm; background: var(--note-1); box-shadow: 0 .5mm 1.1mm rgba(0, 0, 0, .16);
+  font-family: var(--font-hand); font-size: 1.3rem; font-weight: 700; line-height: 1; color: var(--ink); rotate: -2deg;
+}
+.scrapbook .tags li:nth-child(even) { background: var(--note-2); rotate: 1.7deg; }
+.scrapbook .tags li:nth-child(3n) { rotate: -.6deg; }
+.scrapbook .skill-group > h3 { font-size: .8rem; font-weight: 600; color: var(--accent-2); }
+.scrapbook .main-column .skill-group > h3 { font-weight: 600; }
+.scrapbook .languages .lang { font-weight: 600; }
+.scrapbook dl.rows dt { font-family: var(--font-hand); font-size: 1.3rem; font-weight: 700; line-height: 1.1; color: var(--accent-2); }
+
+/* ---------- Sidebar: a paper card taped to the page ---------- */
+.scrapbook .sidebar {
+  position: relative; margin-top: 2mm; padding: 8mm 4.5mm 6mm; border-radius: .6mm; background: var(--card);
+  box-shadow: 0 .8mm 3mm rgba(0, 0, 0, .15), 0 0 0 .15mm rgba(0, 0, 0, .06);
+}
+.scrapbook .sidebar::before { width: 24mm; height: 6.4mm; top: -3mm; left: calc(50% - 12mm); rotate: -3deg; }
+.scrapbook .sidebar .cv-section { break-inside: avoid; }
+.scrapbook .sidebar .cv-section > h2 { font-size: .9rem; }
+.scrapbook .sidebar .contacts { font-size: .88rem; }
+.scrapbook .sidebar .contacts .icon-wrap { color: var(--accent-2); }
+.scrapbook .sidebar .details strong { font-weight: 600; }
+
+/* ---------- Privacy note ---------- */
+.scrapbook .privacy { border-top: .3mm dashed var(--rule); }

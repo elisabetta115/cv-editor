@@ -1,0 +1,106 @@
+/* =====================  RIBBON STYLE  =====================
+   Banners: section titles on ribbons that run out past the left edge of the text and fold
+   behind it, the headline on a ribbon with swallowtail ends, the dates on small ribbons hanging
+   out on the right, serif display titles.
+   With the sidebar: its titles on ribbons the width of the column.
+
+   @name    Ribbon
+   @group   themed
+   @color   burgundy
+   @tags    ribbons, banners, serif, elegant, classic, playful, colourful titles, folded, events
+*/
+:root {
+  --ink: #23201f;
+  --muted: #6a6264;
+  --rule: #e6dfe1;
+  --rib: var(--p-mid, #962d43);                                                  /* ribbons */
+  --rib-fold: color-mix(in srgb, var(--p-dark, #5e1a2a) 72%, #000);              /* the folded ends */
+  --tag: color-mix(in srgb, var(--p-light, #e28a9b) 30%, #fff);                  /* small ribbons */
+  --tag-fold: color-mix(in srgb, var(--p-light, #e28a9b) 55%, var(--p-dark, #5e1a2a));
+  --font-body: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  --font-head: 'Playfair Display', Georgia, serif;
+  --over: 7mm;                                                                   /* how far a ribbon runs past the text */
+  --side-w: 58mm;
+  --side-gap: 13mm;
+}
+@page { @bottom-right { font-family: 'Source Sans 3', sans-serif; color: #7b7375; } }
+.page.ribbon { padding: 15mm 17mm 0 21mm; }
+
+/* ---------- Header ---------- */
+.ribbon .cv-header { gap: 9mm; margin-bottom: 8mm; }
+.ribbon .header-photo { position: relative; width: 33mm; height: 41mm; border-radius: 1mm; }
+.ribbon .name { font-family: var(--font-head); font-weight: 700; font-size: 3.2rem; line-height: 1.05; color: var(--accent); }
+.ribbon .headline {
+  display: inline-block; margin-top: 3.2mm; padding: 1.3mm 7mm 1.2mm; background: var(--accent); color: #fff;
+  font-size: .82rem; font-weight: 700; letter-spacing: .16em;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 2.6mm) 50%, 100% 100%, 0 100%, 2.6mm 50%);
+}
+.ribbon .cv-header .contacts { gap: 1.3mm 5.5mm; margin-top: 4mm; font-size: .93rem; }
+.ribbon .cv-header .details { font-size: .93rem; }
+
+/* ---------- Section titles: ribbons folding behind the text ---------- */
+.ribbon .cv-section { margin-top: 7mm; }
+.ribbon .cv-section > h2 {
+  position: relative; width: fit-content; min-width: 38mm; max-width: calc(100% + var(--over));
+  margin: 0 0 4.6mm calc(-1 * var(--over)); padding: 1.3mm 9mm 1.3mm var(--over); border: 0;
+  background: var(--rib);
+  font-family: var(--font-head); font-size: 1.18rem; font-weight: 700; line-height: 1.3; letter-spacing: .01em; text-transform: none; color: #fff;
+}
+/* the fold, under the end that runs past the text */
+.ribbon .cv-section > h2::before {
+  content: ""; position: absolute; left: 0; top: 100%; width: var(--over); height: 2.4mm;
+  background: var(--rib-fold); clip-path: polygon(0 0, 100% 0, 100% 100%);
+}
+/* the swallowtail at the other end: a notch in the colour of the page */
+.ribbon .cv-section > h2::after {
+  content: ""; position: absolute; top: 0; bottom: 0; right: -.1mm; width: 3.2mm;
+  background: var(--notch, #fff); clip-path: polygon(100% 0, 0 50%, 100% 100%);
+}
+
+/* ---------- Entries: dates on small ribbons hanging out on the right ---------- */
+.ribbon .entry + .entry { margin-top: 4mm; }
+.ribbon .entry-head { align-items: center; }
+.ribbon .entry-title { font-size: 1.06rem; font-weight: 700; }
+.ribbon .dates {
+  position: relative; padding: .5mm 3.4mm .5mm 3.6mm; background: var(--tag);
+  font-size: .84rem; font-weight: 600; color: var(--accent); line-height: 1.3;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 1.6mm 50%);
+}
+.ribbon .main-column .dates { margin-right: calc(-1 * var(--over)); padding-right: var(--over); clip-path: none; }
+.ribbon .main-column .dates::before {
+  content: ""; position: absolute; top: 0; bottom: 0; left: -.1mm; width: 1.7mm; background: #fff; clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+.ribbon .main-column .dates::after {
+  content: ""; position: absolute; right: 0; top: 100%; width: var(--over); height: 1.8mm;
+  background: var(--tag-fold); clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+.ribbon .sidebar .dates { display: inline-block; margin-top: .4mm; }
+.ribbon .org { font-style: italic; color: var(--accent-2); }
+.ribbon .org .location { color: var(--muted); }
+.ribbon .extra span { font-weight: 700; }
+/* bullets as tiny bookmarks */
+.ribbon .bullets li::before, .ribbon ul.desc li::before {
+  left: .9mm; top: .42em; width: 1.4mm; height: 2.1mm; border-radius: 0; background: var(--rib);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 70%, 0 100%);
+}
+
+/* ---------- Skills ---------- */
+.ribbon .tags { gap: 1.6mm; }
+.ribbon .tags li + li::before { content: none; }
+.ribbon .tags li {
+  padding: .3mm 2.6mm .3mm 3.4mm; background: var(--tag); font-size: .92rem; color: var(--accent);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 1.4mm 50%);
+}
+.ribbon .skill-group > h3 { font-size: .8rem; color: var(--accent-2); }
+.ribbon .main-column .skill-group > h3 { font-family: var(--font-head); font-size: 1.02rem; color: var(--accent); }
+.ribbon dl.rows dt { font-family: var(--font-head); color: var(--accent-2); }
+
+/* ---------- Sidebar: ribbons the width of the column ---------- */
+.ribbon .sidebar { --over: 5mm; }
+.ribbon .sidebar .cv-section { break-inside: avoid; }
+.ribbon .sidebar .cv-section > h2 { width: auto; min-width: 0; max-width: none; margin-right: 0; font-size: 1.08rem; }
+.ribbon .sidebar .contacts .icon-wrap { color: var(--accent-2); }
+.ribbon .sidebar .details strong { font-weight: 700; }
+
+/* ---------- Privacy note ---------- */
+.ribbon .privacy { border-top-color: var(--rule); }

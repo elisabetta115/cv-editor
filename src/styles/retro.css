@@ -1,0 +1,97 @@
+/* =====================  RETRO STYLE  =====================
+   The 1970s: a warm cream page, a band of three stacked stripes across the header with the round
+   photo rising over it like a sunset, a chunky heavy serif name, striped section dividers and
+   rounded, warm details.
+   With the sidebar: a lighter cream panel with rounded corners and a striped top.
+
+   @name    Retro
+   @group   themed
+   @color   terracotta
+   @tags    retro, 70s, vintage, stripes, warm, cream page, round photo, groovy, heavy serif, creative
+*/
+:root {
+  --cream: #f5e4c6;
+  --cream-2: #fbf2e1;
+  --ink: #3a2a1f;
+  --muted: #76604c;
+  --rule: #e0c8a2;
+  --s1: var(--p-dark, #6b2e14);
+  --s2: var(--p-mid, #a8461d);
+  --s3: var(--p-light, #f0a47c);
+  --page-bg: var(--cream);
+  --font-body: 'Work Sans', 'Helvetica Neue', Arial, sans-serif;
+  --font-head: 'Fraunces', Georgia, serif;
+  --side-w: 60mm;
+  --side-gap: 9mm;
+}
+@page { background: #f5e4c6; @bottom-right { font-family: 'Work Sans', sans-serif; color: #8a7058; } }
+body { line-height: 1.45; }
+.page.retro { padding: 0 15mm; }
+.retro strong { font-weight: 600; }
+
+/* ---------- Header: three stripes, the photo rising over them ---------- */
+.retro .cv-header { position: relative; align-items: flex-end; gap: 10mm; margin: 0 -15mm 10mm; padding: 15mm 20mm 0 15mm; }
+.retro .cv-header::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 5mm; height: 9.6mm;
+  background: linear-gradient(var(--s1) 0 2.8mm, transparent 2.8mm 3.4mm, var(--s2) 3.4mm 6.2mm, transparent 6.2mm 6.8mm, var(--s3) 6.8mm);
+}
+.retro .cv-header .identity { padding-bottom: 21mm; }
+.retro .header-photo {
+  position: relative; z-index: 1; width: 40mm; height: 40mm; margin-bottom: 1mm; border-radius: 50%;
+  box-shadow: 0 0 0 1.4mm var(--cream), 0 0 0 2.8mm var(--s3), 0 0 0 4.2mm var(--s2), 0 0 0 5.6mm var(--s1);
+}
+.retro .name { font-family: var(--font-head); font-weight: 900; font-size: 3.9rem; line-height: .95; letter-spacing: -.015em; color: var(--s1); }
+.retro .headline { margin-top: 2.4mm; font-family: var(--font-head); font-size: 1.4rem; font-weight: 400; font-style: italic; letter-spacing: 0; text-transform: none; color: var(--s2); }
+.retro .cv-header .contacts { gap: 1.3mm 5.5mm; margin-top: 4mm; font-size: .92rem; }
+.retro .contacts .icon-wrap { color: var(--s2); }
+.retro .cv-header .details strong { font-weight: 600; }
+
+/* ---------- Section titles: heavy serif and a striped pill ---------- */
+.retro .cv-section { margin-top: 7mm; }
+.retro .cv-section > h2 {
+  display: flex; align-items: center; gap: 4mm; margin-bottom: 3.2mm; padding: 0; border: 0;
+  font-family: var(--font-head); font-size: 1.4rem; font-weight: 900; line-height: 1.15; letter-spacing: 0; text-transform: none; color: var(--s1);
+}
+.retro .cv-section > h2::after {
+  content: ""; flex: 1; min-width: 8mm; height: 3.6mm; border-radius: 1.8mm;
+  background: linear-gradient(var(--s1) 0 1mm, transparent 1mm 1.3mm, var(--s2) 1.3mm 2.3mm, transparent 2.3mm 2.6mm, var(--s3) 2.6mm);
+}
+
+/* ---------- Entries ---------- */
+.retro .entry + .entry { margin-top: 4mm; }
+.retro .entry-head { align-items: center; }
+.retro .entry-title { font-size: 1.04rem; font-weight: 600; color: var(--ink); }
+.retro .dates {
+  padding: .3mm 2.6mm; border-radius: 3mm; background: color-mix(in srgb, var(--s3) 38%, var(--cream-2));
+  font-size: .82rem; font-weight: 600; color: var(--s1);
+}
+.retro .org { font-family: var(--font-head); font-size: 1.04rem; color: var(--s2); }
+.retro .org .location { font-family: var(--font-body); font-size: .92rem; font-style: normal; color: var(--muted); }
+.retro .org .location:not(:first-child)::before { content: " · "; }
+.retro .entry .desc { color: #4a392c; }
+.retro .extra span { font-weight: 600; }
+.retro .bullets li::before, .retro ul.desc li::before { top: .52em; width: 1.6mm; height: 1.6mm; background: var(--s2); }
+
+/* ---------- Skills ---------- */
+.retro .tags { gap: 1.6mm; }
+.retro .tags li + li::before { content: none; }
+.retro .tags li { padding: .2mm 2.8mm; border: .35mm solid var(--s2); border-radius: 3mm; background: var(--cream-2); font-size: .9rem; color: var(--s1); }
+.retro .skill-group > h3 { font-size: .78rem; font-weight: 600; letter-spacing: .1em; color: var(--s2); }
+.retro .main-column .skill-group > h3 { font-family: var(--font-head); font-size: 1.05rem; font-weight: 700; color: var(--s1); }
+.retro .languages .lang { font-weight: 600; }
+.retro dl.rows dt { font-family: var(--font-head); font-weight: 700; color: var(--s2); }
+
+/* ---------- Sidebar: a lighter panel with a striped top ---------- */
+.retro .sidebar {
+  padding: 11mm 5.5mm 6.5mm; border-radius: 5mm; background: var(--cream-2);
+  box-shadow: inset 0 2.4mm 0 var(--s1), inset 0 4.8mm 0 var(--s2), inset 0 7.2mm 0 var(--s3);
+}
+.retro .sidebar .cv-section { break-inside: avoid; }
+.retro .sidebar .cv-section > h2 { font-size: 1.2rem; }
+.retro .sidebar .cv-section > h2::after { height: 2.4mm; background: linear-gradient(var(--s1) 0 .6mm, transparent .6mm .9mm, var(--s2) .9mm 1.5mm, transparent 1.5mm 1.8mm, var(--s3) 1.8mm); }
+.retro .sidebar .contacts { font-size: .88rem; }
+.retro .sidebar .contacts .icon-wrap { color: var(--s2); }
+.retro .sidebar .details strong { font-weight: 600; }
+
+/* ---------- Privacy note ---------- */
+.retro .privacy { border-top-color: var(--rule); }

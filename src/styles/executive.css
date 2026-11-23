@@ -1,0 +1,51 @@
+/* =====================  EXECUTIVE STYLE  =====================
+   Serif capital name, tinted full-height sidebar on the right with the photo,
+   clean sans-serif text. Without the sidebar: photo on the right of the header.
+
+   @name    Executive
+   @group   classic
+   @color   navy
+   @side    right
+   @tags    serif, capitals, senior, manager, right sidebar, tinted sidebar, full-height sidebar
+   @print-sidebar @page{@top-right{background:$bg}@bottom-right{background:$bg}}
+*/
+:root {
+  --ink: #1d2127;
+  --muted: #5f6670;
+  --rule: #d9dde3;
+  --font-name: 'Source Serif 4', Georgia, serif;
+  --side-w: 64mm;
+  --side-gap: 0mm;
+}
+/* The tinted column on every page: margin boxes (coloured only when the sidebar is
+   shown) and a fixed strip in print. */
+@page {
+  @top-right { content: ""; width: 64mm; }
+  @bottom-right { width: 52mm; margin-right: 0; padding-right: 12mm; text-align: right; font-family: 'Source Sans 3', sans-serif; }
+}
+.page.executive.has-sidebar { padding: 0; background: linear-gradient(to left, var(--tint) 64mm, #fff 64mm); }
+@media print {
+  .page.executive.has-sidebar { min-height: 283mm; }
+  .page.executive.has-sidebar::before { content: ""; position: fixed; top: 0; bottom: 0; right: 0; width: 64mm; background: var(--tint); z-index: -1; }
+}
+
+/* ---------- Header ---------- */
+.executive .cv-header { padding-bottom: 6mm; border-bottom: .3mm solid var(--rule); }
+.executive .name { font-size: 2.5rem; line-height: 1.1; letter-spacing: .08em; text-transform: uppercase; }
+.executive .headline { display: inline-block; margin-top: 2.5mm; padding-top: 2.5mm; border-top: .4mm solid var(--soft); font-size: .84rem; letter-spacing: .18em; }
+.executive .header-photo { border-radius: 2mm; }
+
+/* with the sidebar: header in the main column, photo at the top of the sidebar */
+.executive.has-sidebar > .cv-header { grid-column: 1; grid-row: 1; margin: 0 12mm 7mm 16mm; padding-top: 16mm; }
+.executive.has-sidebar .header-photo { display: none; }
+.executive.has-sidebar > .sidebar { grid-row: 1 / span 2; padding: 16mm 9mm 6mm; }
+.executive.has-sidebar .sidebar-photo { display: block; width: 38mm; height: 46mm; margin: 0 auto 8mm; border-radius: 2mm; overflow: hidden; }
+.executive.has-sidebar > .main-column { padding: 0 12mm 0 16mm; }
+.executive.has-sidebar > .privacy { grid-column: 1; margin: 8mm 12mm 0 16mm; }
+
+/* ---------- Sections ---------- */
+.executive .cv-section > h2 { padding: 0; border: 0; font-size: .82rem; letter-spacing: .2em; }
+.executive .cv-section > h2::after { content: ""; display: block; width: 10mm; height: .6mm; margin-top: 1.4mm; background: var(--soft); }
+.executive .org { font-style: normal; font-weight: 600; }
+.executive .sidebar .languages li { display: flex; justify-content: space-between; }
+.executive .sidebar .languages .level::before { content: none; }

@@ -1,0 +1,79 @@
+/* =====================  NORDIC STYLE  =====================
+   Airy and Scandinavian: the header is a large rounded tinted block with a round photo,
+   no rules anywhere, sections separated by white space only, sentence-case titles with a
+   soft dot, dates and skills in soft rounded pills, muted greys.
+   With the sidebar: a quiet column on the left, no background, just space.
+
+   @name    Nordic
+   @group   modern
+   @color   teal
+   @tags    airy, calm, scandinavian, rounded, round photo, pills, white space, no rules, light, sans-serif
+*/
+:root {
+  --ink: #2a3034;
+  --muted: #6c757b;
+  --pill: color-mix(in srgb, var(--tint) 70%, color-mix(in srgb, var(--soft) 22%, #fff));
+  --font-body: 'Manrope', 'Helvetica Neue', Arial, sans-serif;
+  --side-w: 54mm;
+  --side-gap: 13mm;
+}
+@page { @bottom-right { font-family: 'Manrope', sans-serif; color: #8a9297; } }
+body { line-height: 1.62; }
+.page.nordic { padding: 12mm 17mm 0; }
+
+/* ---------- Header: rounded tinted block ---------- */
+.nordic .cv-header { gap: 9mm; margin-bottom: 11mm; padding: 10mm 11mm; border-radius: 5mm; background: var(--tint); }
+.nordic .header-photo { order: 0; width: 36mm; height: 36mm; border-radius: 50%; }
+.nordic .name { font-weight: 600; font-size: 2.6rem; line-height: 1.1; letter-spacing: -.02em; color: var(--ink); }
+.nordic .last-name { color: var(--accent); }
+.nordic .headline { margin-top: 1.6mm; font-size: 1.12rem; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--muted); }
+.nordic .cv-header .contacts { gap: 1.6mm 6mm; margin-top: 5mm; font-size: .9rem; color: var(--ink); }
+.nordic .contacts .icon-wrap { color: var(--accent-2); }
+.nordic .contacts .icon { width: 3.2mm; height: 3.2mm; stroke-width: 1.8; }
+.nordic .cv-header .details { margin-top: 2mm; font-size: .9rem; }
+.nordic .cv-header .details strong, .nordic .sidebar .details strong { font-weight: 600; color: var(--ink); }
+
+/* ---------- Sections: no rules, sentence case, a soft dot ---------- */
+.nordic .cv-section { margin-top: 9mm; }
+.nordic .sidebar-photo + .cv-section { margin-top: 0; }
+.nordic .cv-section > h2 {
+  display: flex; align-items: center; gap: 2.6mm; margin-bottom: 3.6mm; padding: 0; border: 0;
+  font-size: 1.28rem; font-weight: 600; letter-spacing: -.01em; text-transform: none; color: var(--ink);
+}
+.nordic .cv-section > h2::before { content: ""; flex: none; width: 2.2mm; height: 2.2mm; border-radius: 50%; background: var(--soft); }
+.nordic .sidebar .cv-section > h2 { font-size: 1.12rem; color: var(--ink); }
+.nordic .section-body { color: #3d4448; }
+.nordic .main-column .section-body > p { text-align: left; hyphens: manual; }
+
+/* ---------- Entries ---------- */
+.nordic .entry + .entry { margin-top: 5.2mm; }
+.nordic .entry-head { align-items: center; }
+.nordic .entry-title { font-size: 1.06rem; font-weight: 600; line-height: 1.35; color: var(--ink); }
+.nordic .dates { padding: .2mm 2.6mm; border-radius: 4mm; background: var(--pill); font-size: .8rem; font-weight: 600; color: var(--accent); }
+.nordic .org { font-style: normal; color: var(--accent-2); }
+.nordic .org .location { color: var(--muted); }
+.nordic .org .location:not(:first-child)::before { content: ", "; }
+.nordic .entry .desc { margin-top: 1.2mm; }
+.nordic .extra span { font-weight: 600; }
+.nordic .bullets li, .nordic ul.desc li { padding-left: 4.4mm; }
+.nordic .bullets li + li, .nordic ul.desc li + li { margin-top: .8mm; }
+.nordic .bullets li::before, .nordic ul.desc li::before { left: .5mm; top: .7em; width: 1.4mm; height: 1.4mm; background: var(--soft); opacity: .8; }
+
+/* ---------- Tags, languages, skills ---------- */
+.nordic .tags { gap: 1.8mm; }
+.nordic .tags li + li::before { content: none; }
+.nordic .tags li { padding: .5mm 3mm; border-radius: 4mm; background: var(--pill); font-size: .88rem; color: var(--ink); }
+.nordic .skill-group > h3 { margin-bottom: 1.8mm; font-size: .92rem; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--accent-2); }
+.nordic .main-column .skill-group > h3 { font-size: .98rem; color: var(--accent-2); }
+.nordic .skill-group + .skill-group { margin-top: 4mm; }
+.nordic .languages .lang, .nordic dl.rows dt { font-weight: 600; }
+.nordic .languages .level { color: var(--muted); }
+.nordic .sidebar .languages li { display: flex; justify-content: space-between; }
+.nordic .sidebar .languages .level::before { content: none; }
+.nordic .sidebar .contacts li + li { margin-top: 2.6mm; }
+.nordic dl.rows dd { color: #3d4448; }
+
+/* ---------- Without rules ---------- */
+.nordic .privacy { margin-top: 11mm; padding-top: 0; border: 0; }
+/* the last table row must not glue the whole section to the next one */
+.nordic .main-column dl.rows dt { break-after: auto; }
