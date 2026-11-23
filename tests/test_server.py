@@ -128,6 +128,13 @@ class EditorRequestsTest(ServerTestCase):
         self.assertEqual(self.api("/api/example"), example())
 
 
+class DemoTest(ServerTestCase):
+    demo = True
+
+    def test_the_editor_knows_it_is_the_demo(self):
+        self.assertEqual(self.api("/api/cvs"), {"profiles": [], "demo": True})
+
+
 @unittest.skipUnless(chrome(), "Chrome or Chromium is not installed")
 class PdfTest(ServerTestCase):
     def test_pdf_of_the_view(self):

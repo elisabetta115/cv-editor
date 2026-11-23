@@ -96,7 +96,7 @@ class ZipTest(DataDirTestCase):
         except RuntimeError:
             names = []
         for name in names:
-            self.assertTrue((cv.CVS_DIR / name).resolve().is_relative_to(cv.CVS_DIR.resolve()))
+            self.assertTrue((cv.workspace().cvs_dir / name).resolve().is_relative_to(cv.workspace().cvs_dir.resolve()))
         written = {p.relative_to(self.data_dir).parts[0] for p in self.data_dir.rglob("*") if p.is_file()}
         self.assertLessEqual(written, {"cvs", "html"})
         self.assertFalse((self.data_dir.parent / "outside").exists())

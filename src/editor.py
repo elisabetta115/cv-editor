@@ -49,16 +49,13 @@ UPDATED_PAGE = """<!doctype html><meta charset="utf-8"><title>CV Editor</title>
 <h1 style="font-size: 22px">The CV editor has been updated</h1>
 <p>Close the small terminal window of the editor and open <b>CV Editor</b> again.</p></body>"""
 LOCK = threading.Lock()            # one file operation at a time
-PHOTO_SRC = {}                     # CV name -> {photo file name -> path used in the HTML}
 EXPORT_FORMAT = "cv-editor"        # marks the example .json file (and those exported by older versions)
 MAX_PHOTO_BYTES = 15_000_000
-
-DEMO = False                       # --demo: an empty editor in a temporary folder
 
 
 # Folders the browser may read (nothing else)
 def static_folders():
-    return {"/styles/": HERE / "styles", "/fonts/": HERE / "fonts", "/html/": cv.HTML_DIR}
+    return {"/styles/": HERE / "styles", "/fonts/": HERE / "fonts", "/html/": cv.workspace().html_dir}
 
 
 # ---------------------------------------------------------------------
@@ -250,7 +247,7 @@ def free_name(name):
     """The name itself, or "Name (2)", "Name (3)"... if a CV with that name already exists."""
     base = cv.check_cv_name(name)
     candidate, n = base, 2
-    while (cv.CVS_DIR / candidate).exists():
+    while (cv.workspace().cvs_dir / candidate).exists():
         candidate = f"{base} ({n})"
         n += 1
     return candidate
@@ -258,7 +255,8 @@ def free_name(name):
 
 def remove_profile_files(profile):
     """Deletes a CV: its folder in cvs/, its PDFs and its generated pages."""
-    for folder, parent in ((profile.dir, cv.CVS_DIR), (profile.pdf_dir, cv.PDF_DIR), (profile.html_dir, cv.HTML_DIR)):
+    place = cv.workspace()
+    for folder, parent in ((profile.dir, place.cvs_dir), (profile.pdf_dir, place.pdf_dir), (profile.html_dir, place.html_dir)):
         if folder.is_dir() and folder.resolve().parent == parent.resolve():
             shutil.rmtree(folder)
 
@@ -400,7 +398,7 @@ def import_cvs(found, mode):
     imported one gets another name. Every CV is written under a new name first, and the old one is replaced
     only when all of them were written: a failed import leaves the CVs as they were."""
     if mode == "check":
-        return {"cvs": [{"name": x["name"], "exists": (cv.CVS_DIR / x["name"]).exists()} for x in found]}
+        return {"cvs": [{"name": x["name"], "exists": (cv.workspace().cvs_dir / x["name"]).exists()} for x in found]}
     written = []
     try:
         for x in found:
@@ -547,7 +545,7 @@ def read_zip(body):
 def refresh_photos(profile):
     photos = cv.find_photos(profile)
     paths = cv.prepare_photos(profile, photos)
-    PHOTO_SRC[profile.name] = {f.name: src for f, src in paths.items()}
+    cv.workspace().photo_src[profile.name] = {f.name: src for f, src in paths.items()}
     base = "/html/" + quote(profile.name) + "/"
     return [{"name": f.name, "src": base + paths[f]} for f in photos]
 
@@ -599,11 +597,11 @@ def view(r):
     if style not in cv.STYLES:
         raise RuntimeError(f"Unknown style: {style!r}")
     prepared = cv.prepare(clean_cv(r.get("data") or {}), cv.language_config(language)["content"], language)
-    if profile.name not in PHOTO_SRC:
+    if profile.name not in cv.workspace().photo_src:
         refresh_photos(profile)
     photo = r.get("photo") or ""
     color = r.get("color") if r.get("color") in cv.COLORS else None
-    src = PHOTO_SRC[profile.name].get(photo)
+    src = cv.workspace().photo_src[profile.name].get(photo)
     frame = cv.photo_frame(r.get("frame")) if src else None  # how the photo is framed (not saved yet included)
     signature = cv.signature_src(profile)  # shown only when the content asks for it ([signature] show = true)
     return profile, language, style, prepared, cv.framed_photo(profile, src, frame), photo, color, frame, signature
@@ -844,7 +842,7 @@ class Handler(BaseHTTPRequestHandler):
                     return self._json(translator.status())
                 with LOCK:
                     if path == "/api/cvs":
-                        return self._json({**list_profiles(), "demo": DEMO})
+                        return self._json({**list_profiles(), "demo": cv.workspace().demo})
                     if path == "/api/templates":  # known languages, for a first CV
                         return self._json({"templates": [{"code": k, "name": v["name"], "labels": v.get("labels")}
                                                          for k, v in cv.KNOWN_LANGUAGES.items()]})
@@ -946,16 +944,14 @@ def main():
     args = ap.parse_args()
     if args.install:
         return install()
-    global DEMO
     demo_dir = None
     if args.demo:
-        DEMO, demo_dir = True, tempfile.mkdtemp(prefix="cv-editor-demo-")
-        translator.MEMORY = {}  # a translator key added in the demo is forgotten with it
-        cv.set_data_dir(demo_dir)
+        demo_dir = tempfile.mkdtemp(prefix="cv-editor-demo-")
+        cv.use_workspace(cv.Workspace(demo_dir, demo=True))  # a translator key added in the demo is forgotten with it
         if args.port == PORT:
             args.port = PORT + 1  # next to a normal editor that may be open
     elif args.data:
-        cv.set_data_dir(args.data)
+        cv.use_workspace(cv.Workspace(args.data))
 
     try:
         server = ThreadingHTTPServer(("127.0.0.1", args.port), Handler)
@@ -970,7 +966,7 @@ def main():
         if hasattr(signal, sig):
             signal.signal(getattr(signal, sig), lambda *_: sys.exit(0))
     address = f"http://127.0.0.1:{server.server_address[1]}/"
-    print(f"CV editor running at {address}" + ("  (DEMO: empty, nothing is kept)" if DEMO else ""))
+    print(f"CV editor running at {address}" + ("  (DEMO: empty, nothing is kept)" if cv.workspace().demo else ""))
     print("To close it, close this window (or press Ctrl+C).")
     if not args.no_browser:
         threading.Timer(0.5, webbrowser.open, [address]).start()

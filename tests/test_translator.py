@@ -1,9 +1,10 @@
 """Automatic translation: what is translated, what stays as written, and links kept through the translation.
 No translator is called: a fake one stands in for the local AI and for Azure."""
+import os
 import unittest
 from unittest import mock
 
-from support import cv, example_content, translator
+from support import DataDirTestCase, cv, example_content, translator
 
 
 def fake_engine(lines, kinds, r):
@@ -74,6 +75,41 @@ class TranslateCvTest(unittest.TestCase):
     def test_unknown_translator(self):
         with self.assertRaises(RuntimeError):
             translator.translate_cv({"data": {}, "from": "en", "to": "it", "engine": "nope"})
+
+
+class KeyTest(DataDirTestCase):
+    """Where the Microsoft Translator key is kept: a file in the user's settings, or only in memory in the demo."""
+
+    def setUp(self):
+        super().setUp()
+        patches = [mock.patch.object(translator, "CONFIG_FILE", self.data_dir / "config" / "translator.json"),
+                   mock.patch.dict("os.environ", {}, clear=False)]
+        for p in patches:
+            p.start()
+            self.addCleanup(p.stop)
+        os.environ.pop("AZURE_TRANSLATOR_KEY", None)
+
+    def test_key_in_a_file(self):
+        translator.CONFIG_FILE.parent.mkdir()
+        translator.CONFIG_FILE.write_text('{"key": "' + "k" * 32 + '", "region": "westeurope"}')
+        self.assertEqual(translator.credentials(), ("k" * 32, "westeurope"))
+        translator.set_key({"key": ""})                       # an empty key removes it
+        self.assertFalse(translator.CONFIG_FILE.exists())
+        self.assertEqual(translator.credentials(), ("", ""))
+
+
+class DemoKeyTest(DataDirTestCase):
+    demo = True
+
+    def test_the_demo_keeps_the_key_in_memory(self):
+        with mock.patch.object(translator, "CONFIG_FILE", self.data_dir / "config" / "translator.json"), \
+                mock.patch.dict("os.environ", {}, clear=False):
+            os.environ.pop("AZURE_TRANSLATOR_KEY", None)
+            self.workspace.translator_memory.update({"key": "d" * 32, "region": "northeurope"})
+            self.assertEqual(translator.credentials(), ("d" * 32, "northeurope"))
+            translator.set_key({"key": ""})
+            self.assertEqual(self.workspace.translator_memory, {})
+            self.assertFalse(translator.CONFIG_FILE.parent.exists())   # nothing written
 
 
 if __name__ == "__main__":

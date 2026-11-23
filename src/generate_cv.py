@@ -28,6 +28,7 @@ Usage:
     python3 generate_cv.py --style creative --photo photo2
     python3 generate_cv.py --style modern,swiss,zen      # some styles only (there are 50)
     python3 generate_cv.py --photo 0                  # only the versions without a photo
+    python3 generate_cv.py --data /path/to/folder     # the CVs kept in another folder (as with the editor)
 
 Requirements: Python 3.11+ and Google Chrome or Chromium.
 If Chrome is not found, give its path in the CHROME variable:
@@ -55,16 +56,49 @@ except ImportError:
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 STYLES_DIR = HERE / "styles"
-CVS_DIR = ROOT / "cvs"      # one folder per person
-PDF_DIR = ROOT / "PDF"      # PDF/<person>/<language>/
-HTML_DIR = HERE / "html"    # generated pages, html/<person>/ (not kept in git)
 
 
-def set_data_dir(folder):
-    """Keep the CVs, the PDFs and the generated pages in another folder (e.g. the editor's demo)."""
-    global CVS_DIR, PDF_DIR, HTML_DIR
-    folder = Path(folder).resolve()
-    CVS_DIR, PDF_DIR, HTML_DIR = folder / "cvs", folder / "PDF", folder / "html"
+class Workspace:
+    """Where the CVs are kept, with their PDFs and generated pages, and what belongs to that place.
+
+        cvs_dir    cvs/<person>/              the CVs
+        pdf_dir    PDF/<person>/<language>/   the PDFs built from the terminal
+        html_dir   html/<person>/             the generated pages (in the project folder: src/html/, not kept in git)
+
+    Without a folder it is the project folder; with one (the editor's --data or --demo), that folder.
+    One workspace is in use at a time: workspace() gives it, use_workspace() changes it."""
+
+    def __init__(self, folder=None, demo=False):
+        if folder is None:
+            self.cvs_dir, self.pdf_dir, self.html_dir = ROOT / "cvs", ROOT / "PDF", HERE / "html"
+        else:
+            folder = Path(folder).resolve()
+            self.cvs_dir, self.pdf_dir, self.html_dir = folder / "cvs", folder / "PDF", folder / "html"
+        self.demo = demo                                # the editor's demo: an empty temporary folder
+        self.translator_memory = {} if demo else None   # the demo keeps a translator key in memory, not in a file
+        self.photo_src = {}                             # CV name -> {photo file name -> path used in the HTML}
+
+
+_workspace = Workspace()
+
+
+def workspace():
+    """The workspace in use."""
+    return _workspace
+
+
+def use_workspace(new):
+    """Keeps the CVs, the PDFs and the generated pages in another place from now on (--data, --demo, the tests)."""
+    global _workspace
+    _workspace = new
+    return new
+
+
+def short_path(path):
+    """A path in a message: from the project folder when it is inside it, in full otherwise."""
+    path = Path(path)
+    return path.relative_to(ROOT) if path.is_relative_to(ROOT) else path
+
 
 PHOTO_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif", ".bmp"}
 CONVERT_FIRST_EXTENSIONS = {".heic", ".heif", ".tif", ".tiff", ".dng", ".raw", ".cr2", ".cr3", ".nef", ".arw"}
@@ -87,13 +121,14 @@ class Profile:
 
     def __init__(self, name):
         self.name = check_cv_name(name)
-        self.dir = CVS_DIR / self.name
+        place = workspace()
+        self.dir = place.cvs_dir / self.name
         self.settings_file = self.dir / "settings.toml"
         self.photo_dir = self.dir / "photos"
-        self.html_dir = HTML_DIR / self.name
+        self.html_dir = place.html_dir / self.name
         # smaller copies of the photos, used by the HTML pages (keeps the PDFs light)
         self.html_photo_dir = self.html_dir / "photos"
-        self.pdf_dir = PDF_DIR / self.name
+        self.pdf_dir = place.pdf_dir / self.name
 
     def exists(self):
         return self.dir.is_dir()
@@ -101,10 +136,11 @@ class Profile:
 
 def profiles():
     """Every CV in cvs/, in alphabetical order."""
-    if not CVS_DIR.is_dir():
+    cvs_dir = workspace().cvs_dir
+    if not cvs_dir.is_dir():
         return []
     found = []
-    for d in sorted(CVS_DIR.iterdir(), key=lambda x: x.name.lower()):
+    for d in sorted(cvs_dir.iterdir(), key=lambda x: x.name.lower()):
         if d.is_dir() and not d.name.startswith("."):
             try:
                 found.append(Profile(d.name))
@@ -1088,7 +1124,7 @@ def generate(profile, language=None, style=None, photo=None, html_only=False, lo
     photo_versions = pick_photos(profile, all_photos, photo)
     photo_src = prepare_photos(profile, all_photos)
     if not all_photos:
-        log(f"  (no photos in {profile.photo_dir.relative_to(ROOT)}: creating only the versions without a photo)")
+        log(f"  (no photos in {short_path(profile.photo_dir)}: creating only the versions without a photo)")
     chrome = None if html_only else find_chrome()
     all_settings = load_settings(profile)
     settings, frames = all_settings["styles"], all_settings["photos"]
@@ -1119,14 +1155,14 @@ def generate(profile, language=None, style=None, photo=None, html_only=False, lo
                 source.write_text(document(cv, code, style_id, src, color=color, frame=frame, signature=signature),
                                   encoding="utf-8")
                 if not chrome:
-                    log(f"  ✓ {source.relative_to(ROOT)}")
+                    log(f"  ✓ {short_path(source)}")
                     continue
                 pdf = folder / f"{name}.pdf"
                 print_pdf(chrome, source, pdf)
                 pages = count_pages(pdf)
                 created.append({"pdf": pdf, "pages": pages, "language": code, "style": style_id,
                                 "photo": f.name if f else None})
-                log(f"  ✓ {pdf.relative_to(ROOT)}  ({pages} p.)")
+                log(f"  ✓ {short_path(pdf)}  ({pages} p.)")
 
     stale = []
     if not (language or style or photo) and chrome:
@@ -1143,7 +1179,11 @@ def main():
     ap.add_argument("--photo", metavar="NAME",
                     help="only the photo with this file name (e.g. photo2 or sea.jpg); 0 = no photo")
     ap.add_argument("--html-only", action="store_true", help="create only the HTML pages (no PDFs)")
+    ap.add_argument("--data", metavar="FOLDER",
+                    help="the CVs are in this folder instead of the project folder (as with the editor's --data)")
     args = ap.parse_args()
+    if args.data:
+        use_workspace(Workspace(args.data))
     if args.style:
         args.style = [x.strip().lower() for x in args.style.split(",") if x.strip()]
         unknown = [x for x in args.style if x not in STYLES]
@@ -1153,10 +1193,10 @@ def main():
     if args.cv:
         available = [x for x in available if x.name.lower() == args.cv.strip().lower()]
         if not available:
-            sys.exit(f"No CV called \"{args.cv}\" in {CVS_DIR}. Available: "
+            sys.exit(f"No CV called \"{args.cv}\" in {short_path(workspace().cvs_dir)}. Available: "
                      + (", ".join(x.name for x in profiles()) or "none"))
     if not available:
-        sys.exit(f"No CV found in {CVS_DIR}: create one with the editor (python3 editor.py).")
+        sys.exit(f"No CV found in {short_path(workspace().cvs_dir)}: create one with the editor (python3 editor.py).")
     for profile in available:
         print(f"{profile.name}:")
         _, stale = generate(profile, args.language, args.style, args.photo, args.html_only)
@@ -1164,7 +1204,7 @@ def main():
         if stale:
             print("  These PDFs no longer match any photo or style (you can delete them):")
             for f in stale:
-                print(f"    - {f.relative_to(ROOT)}")
+                print(f"    - {short_path(f)}")
 
 
 if __name__ == "__main__":

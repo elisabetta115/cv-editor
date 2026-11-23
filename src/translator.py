@@ -160,7 +160,6 @@ def _language_name(name, code):
 # ---------------------------------------------------------------------
 AZURE_ENDPOINT = os.environ.get("AZURE_TRANSLATOR_ENDPOINT", "https://api.cognitive.microsofttranslator.com").rstrip("/")
 CONFIG_FILE = Path(os.environ.get("XDG_CONFIG_HOME") or Path.home() / ".config") / "cv-editor" / "translator.json"
-MEMORY = None   # the demo keeps the key in memory only: a dict instead of the file
 AZURE_CODES = {"zh": "zh-Hans", "no": "nb"}        # where Azure's code differs from the editor's
 AZURE_MAX_CHARS, AZURE_MAX_ITEMS = 10_000, 100     # per request (Azure: 50 000 and 1000; free tier: ~33 000 a minute)
 KEY = re.compile(r"[A-Za-z0-9]{20,200}")
@@ -168,8 +167,9 @@ REGION = re.compile(r"[a-z0-9]{0,40}")
 
 
 def _config():
-    if MEMORY is not None:
-        return MEMORY
+    memory = cv.workspace().translator_memory  # the demo keeps the key in memory only: a dict instead of the file
+    if memory is not None:
+        return memory
     try:
         data = json.loads(CONFIG_FILE.read_text(encoding="utf-8"))
     except (OSError, ValueError):
@@ -206,9 +206,10 @@ def set_key(r):
             raise RuntimeError("The region is written like westeurope or northeurope (see “Keys and Endpoint”).")
         _azure_batch(["Hello"], "en", "it", key, region)  # a wrong key or region stops here
     data = {"key": key, "region": region} if key else {}
-    if MEMORY is not None:
-        MEMORY.clear()
-        MEMORY.update(data)
+    memory = cv.workspace().translator_memory
+    if memory is not None:
+        memory.clear()
+        memory.update(data)
     elif data:
         CONFIG_FILE.parent.mkdir(parents=True, exist_ok=True)
         fd = os.open(CONFIG_FILE, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)

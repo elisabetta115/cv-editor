@@ -25,7 +25,7 @@ import translator                    # noqa: E402
 
 _first = tempfile.mkdtemp(prefix="cv-editor-tests-")
 atexit.register(shutil.rmtree, _first, True)
-cv.set_data_dir(_first)              # never the real cvs/ folder
+cv.use_workspace(cv.Workspace(_first))   # never the real cvs/ folder
 
 
 def chrome():
@@ -54,15 +54,15 @@ TINY_PNG = bytes.fromhex(
 
 
 class DataDirTestCase(unittest.TestCase):
-    """A test with its own empty data folder (cvs/, PDF/, html/)."""
+    """A test with its own empty data folder (cvs/, PDF/, html/). demo = True: the editor's demo."""
+    demo = False
 
     def setUp(self):
         self.data_dir = Path(tempfile.mkdtemp(prefix="cv-editor-test-"))
-        cv.set_data_dir(self.data_dir)
-        editor.PHOTO_SRC.clear()
+        self.workspace = cv.use_workspace(cv.Workspace(self.data_dir, demo=self.demo))
         self.addCleanup(shutil.rmtree, self.data_dir, True)
         # a last check: the CVs of this test are in its own folder
-        self.assertTrue(cv.CVS_DIR.resolve().is_relative_to(self.data_dir.resolve()))
+        self.assertTrue(cv.workspace().cvs_dir.resolve().is_relative_to(self.data_dir.resolve()))
 
     def import_example(self):
         """The example CV, imported as "Try the example" does. Returns its Profile."""

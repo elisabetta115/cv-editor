@@ -269,8 +269,12 @@ src/
 
 - Build every version at once (every language, style and photo) without the editor:
   `python3 src/generate_cv.py` (options: `--cv "Jane Doe"`, `--language en`, `--style modern,swiss`,
-  `--photo photo2`, `--photo 0` = no photo, `--html-only`). Without `--cv` every CV is built. With 50 styles
+  `--photo photo2`, `--photo 0` = no photo, `--html-only`, `--data /path/to/folder` for CVs kept in another
+  folder, as with the editor). Without `--cv` every CV is built. With 50 styles
   that is many PDFs per language and photo: `--style` builds only the styles you name.
+- **Where the CVs are**: the `Workspace` in `src/generate_cv.py` holds the folders in use (`cvs/`, `PDF/`, the
+  generated pages) and whether this is the demo; `workspace()` gives the one in use, `use_workspace()` changes it
+  (`--data`, `--demo`, the tests). Nothing else in the code says where the CVs are.
 - **Exported `.zip`**: the files of `cvs/<name>/` as they are on disk, under `cvs/<name>/` in the zip.
   On import, every folder of the zip that holds `content_<code>.toml` files is one CV, named after the
   folder (or after the person, when the files are at the top of the zip); its `settings.toml`,

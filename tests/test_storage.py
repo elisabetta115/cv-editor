@@ -128,7 +128,7 @@ class ProfilesTest(DataDirTestCase):
         self.assertEqual(cv.load_settings(editor.get_profile(copy)), cv.load_settings(profile))
         left = editor.delete_profile({"profile": copy})["profiles"]
         self.assertEqual([x["name"] for x in left], [profile.name])
-        self.assertFalse((cv.CVS_DIR / copy).exists())
+        self.assertFalse((cv.workspace().cvs_dir / copy).exists())
 
 
 if __name__ == "__main__":
