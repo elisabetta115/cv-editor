@@ -599,17 +599,18 @@ dialog::backdrop { background: rgba(16, 24, 40, .35); }
 "use strict";
 const TOKEN = "__TOKEN__";
 const $ = s => document.querySelector(s);
-// the kinds of contact, in groups (the list of the type of each contact)
-const CONTACT_GROUPS = [
-  ["Basic", { phone: "Phone", email: "Email", address: "Address", web: "Website" }],
-  ["Professional", { linkedin: "LinkedIn", github: "GitHub", gitlab: "GitLab", stackoverflow: "Stack Overflow", behance: "Behance", dribbble: "Dribbble" }],
-  ["Research", { orcid: "ORCID", scholar: "Google Scholar", researchgate: "ResearchGate" }],
-  ["Messaging and social", { whatsapp: "WhatsApp", telegram: "Telegram", x: "X (Twitter)", instagram: "Instagram", facebook: "Facebook", youtube: "YouTube" }],
-];
-const CONTACT_TYPES = Object.assign({}, ...CONTACT_GROUPS.map(g => g[1]));
+// the kinds of contact, in groups, with their names: they come with the CV (CONTACT_GROUPS in contacts.py)
+let CONTACT_GROUPS = [], CONTACT_TYPES = {}, ICON_NAMES = {}, WEB_CONTACTS = [];
 // names of the other icons a contact can have
-const ICON_NAMES = { ...CONTACT_TYPES, address: "Place", web: "Globe", mobile: "Mobile phone", chat: "Chat", chain: "Link", home: "Home",
-                     calendar: "Calendar", user: "Person", briefcase: "Work", star: "Star", heart: "Heart" };
+const OTHER_ICON_NAMES = { address: "Place", web: "Globe", mobile: "Mobile phone", chat: "Chat", chain: "Link", home: "Home",
+                           calendar: "Calendar", user: "Person", briefcase: "Work", star: "Star", heart: "Heart" };
+function setContactKinds(groups) {
+  CONTACT_GROUPS = groups;
+  CONTACT_TYPES = Object.assign({}, ...groups.map(g => g[1]));
+  ICON_NAMES = { ...CONTACT_TYPES, ...OTHER_ICON_NAMES };
+  // the contacts with a link of their own (the others make it from the text: email, phone, WhatsApp, ORCID iD)
+  WEB_CONTACTS = Object.keys(CONTACT_TYPES).filter(k => !["phone", "email", "address", "whatsapp", "orcid"].includes(k));
+}
 const DESC_HINT = "Each line is a bullet point in the CV. You can use **bold**, *italic* and links.";
 
 const S = {
@@ -1250,9 +1251,7 @@ function rows(arr, columns, addLabel, o = {}) {
   return box;
 }
 
-// contacts: for GitHub, LinkedIn and websites the name shown and the link are separate
-// the contacts with a link of their own (the others make it from the text: email, phone, WhatsApp, ORCID iD)
-const WEB_CONTACTS = Object.keys(CONTACT_TYPES).filter(k => !["phone", "email", "address", "whatsapp", "orcid"].includes(k));
+// contacts: for GitHub, LinkedIn and websites the name shown and the link are separate (WEB_CONTACTS)
 const FROM_NAME = "Leave it empty: it is made from the user name";
 const CONTACT_EXAMPLES = {
   phone: ["+39 …"], email: ["name@email.com"], address: ["Street …, City"], whatsapp: ["Number, e.g. +39 333 …"],
@@ -3270,7 +3269,7 @@ async function start(name) {
     S.photoList = r.photos; S.signature = r.signature;
     S.photo = r.photos[0]?.name ?? null;
     S.styles = r.styles; S.styleGroups = r.style_groups; S.colors = r.colors; S.settings = r.settings; S.templates = r.templates;
-    S.canZoom = r.can_zoom; S.icons = r.icons;
+    S.canZoom = r.can_zoom; S.icons = r.icons; setContactKinds(r.contact_groups);
     if (!S.styles.some(x => x.id === S.style)) S.style = S.styles[0].id;
     S.sideSuggested = r.sidebar_suggested; S.lastSide = null;
     tagSections();

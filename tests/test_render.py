@@ -17,9 +17,10 @@ import unittest
 from pathlib import Path
 
 from support import example_content
-from cv_editor.content import FIXED_SECTIONS, SIDEBAR_SUGGESTED, prepare
+from cv_editor.content import prepare
 from cv_editor.photos import photo_frame
 from cv_editor.render import document
+from cv_editor.schema import FIXED_SECTIONS, SIDEBAR_SUGGESTED
 from cv_editor.styles import COLORS, STYLES
 from cv_editor.workspace import STYLES_DIR
 

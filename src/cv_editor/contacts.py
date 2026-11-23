@@ -39,9 +39,17 @@ ICONS = {
     "star": '<path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/>',
     "heart": '<path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 12 5a5.5 5.5 0 0 0-10 3.5c0 2.3 1.5 4 3 5.5l7 7z"/>',
 }
-# the contact types (their icon has the same name); "icon" in a contact chooses another one, "none" = no icon
-CONTACT_TYPES = ["phone", "email", "address", "web", "linkedin", "github", "gitlab", "stackoverflow", "behance", "dribbble",
-                 "orcid", "scholar", "researchgate", "whatsapp", "telegram", "x", "instagram", "facebook", "youtube"]
+# the kinds of contact, in the groups the editor shows them in, with their names (the editor's page receives them
+# with the CV); the icon of each has the same name. "icon" in a contact chooses another one, "none" = no icon
+CONTACT_GROUPS = [
+    ("Basic", {"phone": "Phone", "email": "Email", "address": "Address", "web": "Website"}),
+    ("Professional", {"linkedin": "LinkedIn", "github": "GitHub", "gitlab": "GitLab", "stackoverflow": "Stack Overflow",
+                      "behance": "Behance", "dribbble": "Dribbble"}),
+    ("Research", {"orcid": "ORCID", "scholar": "Google Scholar", "researchgate": "ResearchGate"}),
+    ("Messaging and social", {"whatsapp": "WhatsApp", "telegram": "Telegram", "x": "X (Twitter)",
+                              "instagram": "Instagram", "facebook": "Facebook", "youtube": "YouTube"}),
+]
+CONTACT_TYPES = [kind for _, kinds in CONTACT_GROUPS for kind in kinds]
 # a handle written instead of a link (e.g. @janedoe) becomes this link
 HANDLE_LINKS = {"github": "https://github.com/{}", "gitlab": "https://gitlab.com/{}", "x": "https://x.com/{}",
                 "instagram": "https://www.instagram.com/{}", "telegram": "https://t.me/{}"}

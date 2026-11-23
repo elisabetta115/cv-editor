@@ -28,13 +28,12 @@ from pathlib import Path
 from urllib.parse import urlencode
 
 from .language import KNOWN_LANGUAGES, VERSION_CODE, base_language
+from .schema import FIELD_KINDS, NOT_TRANSLATED, NOT_TRANSLATED_PARTS, PART_KINDS
 from .text import MARKDOWN_LINK
 from .workspace import workspace
 
 
-KEEP = {"first_name", "last_name", "organization", "link", "type", "id", "builtin", "hidden", "column", "after",
-        "copied_from"}
-KEEP_TOP = {"contacts", "cv_language"}             # whole parts of the CV that are not translated
+# fields and parts of the CV never translated, and what the text of each field is: schema.py
 
 
 # ---------------------------------------------------------------------
@@ -349,13 +348,6 @@ def _batches(texts, max_chars, max_items):
         yield batch
 
 
-# what a line is, from the key that holds it (for the AI: "Native" as a language level)
-FIELDS = {"role": "job title", "location": "place", "grade": "final grade", "thesis": "thesis title",
-          "language": "language name", "level": "language level", "digital": "digital skill", "soft": "soft skill",
-          "list": "list item", "tags": "tag", "profile": "profile text"}
-TOP_FIELDS = {"labels": "section title", "privacy": "privacy note", "interests": "interests"}
-
-
 def _texts(data):
     """(table or list, key, what it is) of every text of the CV to translate. Names of organisations stay as
     they are written: an official name (Sapienza Università di Roma) is always right, a translated one may not be."""
@@ -363,14 +355,14 @@ def _texts(data):
 
     def walk(node, field=None, fixed=False, top=False):
         for k, v in (node.items() if isinstance(node, dict) else enumerate(node)):
-            if isinstance(node, dict) and (k in KEEP or (top and k in KEEP_TOP)):
+            if isinstance(node, dict) and (k in NOT_TRANSLATED or (top and k in NOT_TRANSLATED_PARTS)):
                 continue
-            if top and k in TOP_FIELDS:
-                f, fx = TOP_FIELDS[k], True
+            if top and k in PART_KINDS:
+                f, fx = PART_KINDS[k], True
             elif fixed or not isinstance(node, dict):
                 f, fx = field, fixed
             else:
-                f, fx = FIELDS.get(k, str(k).replace("_", " ")), False
+                f, fx = FIELD_KINDS.get(k, str(k).replace("_", " ")), False
             if isinstance(v, str):
                 if v.strip():
                     found.append((node, k, f or "text"))

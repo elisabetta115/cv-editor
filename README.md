@@ -269,9 +269,11 @@ src/
 │   ├── workspace.py     where the CVs are kept (the workspace in use) and the folders of the project
 │   ├── storage.py       CVs on disk: one folder per person; reading and writing its content files and settings
 │   ├── language.py      the known languages, language codes, the languages of a CV
+│   ├── schema.py        the structure of a content file: its parts and their order, the fixed sections,
+│   │                    what can be hidden, which fields are never translated
 │   ├── content.py       a CV's content: its sections, their order, what is hidden; an empty CV
 │   ├── text.py          text as HTML: **bold**, *italic*, links, only safe addresses
-│   ├── contacts.py      kinds of contact, their links and icons
+│   ├── contacts.py      kinds of contact (with their names, sent to the editor's page), their links and icons
 │   ├── render.py        the CV as an HTML page: one page structure for every style
 │   ├── styles.py        the styles (src/styles/) and the colour palettes
 │   ├── photos.py        photos and the signature: saving, finding, framing, smaller copies for the pages
@@ -302,8 +304,9 @@ src/
 - **The example** ([`examples/example-cv.json`](examples/example-cv.json)), opened by *Try the example*:
   `{"format": "cv-editor", "version": 1, "name", "settings", "languages": {code: content}, "photos": [{"name",
   "data": "data:image/jpeg;base64,…"}]}`. The content of each language has the same structure as the `.toml` files.
-- **Content files** can also be edited by hand. Main tables: `[person]`, `[[details]]`, `[[contacts]]`
-  (`type` = phone | email | address | web | linkedin | github | … see `CONTACT_TYPES` in `src/cv_editor/contacts.py`;
+- **Content files** can also be edited by hand (their structure, in one place: `PARTS` and the lists after it in
+  `src/cv_editor/schema.py`). Main tables: `[person]`, `[[details]]`, `[[contacts]]`
+  (`type` = phone | email | address | web | linkedin | github | … see `CONTACT_GROUPS` in `src/cv_editor/contacts.py`;
   `icon` = another icon of `ICONS`, or `none`), `[[experience]]`, `[[education]]` (each entry may have a `link`),
   `[[languages]]`, `[skills]`, `[interests]`, `[privacy]`, `[labels]` (section titles), `[cv_language]`
   (name of the language) and `[[sections]]`: every section in CV order, either a fixed one
@@ -348,7 +351,8 @@ src/
   translation lost a link keeps its original text. With Ollama, paragraphs of 5 words or more are translated one at a time (and again, up to 3 times,
   when the answer copies the original), shorter ones together as a JSON object whose keys say what each one is
   (`"3: language level": "Native"`); a JSON schema as `format` keeps the answer to exactly those keys.
-  The fields in `KEEP` and `KEEP_TOP` (names, contacts, organisations, links) are not translated.
+  The fields in `NOT_TRANSLATED` and `NOT_TRANSLATED_PARTS` (`schema.py`: names, contacts, organisations, links)
+  are not translated.
   Section titles known for the new language come from `KNOWN_LANGUAGES`. Environment variables:
   `OLLAMA_HOST` (where Ollama listens), `CV_OLLAMA_MODEL` (another model: check its licence),
   `AZURE_TRANSLATOR_KEY` and `AZURE_TRANSLATOR_REGION` (instead of the saved key), `AZURE_TRANSLATOR_ENDPOINT`

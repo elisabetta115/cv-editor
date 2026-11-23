@@ -12,6 +12,7 @@ from urllib.parse import quote
 
 from support import TINY_PNG, DataDirTestCase, chrome, example
 from cv_editor.actions import read_data
+from cv_editor.contacts import CONTACT_GROUPS
 from cv_editor.server import MAX_BODY, TOKEN, Handler
 from cv_editor.storage import get_profile, profiles
 from cv_editor.styles import COLORS, STYLES
@@ -94,6 +95,7 @@ class EditorRequestsTest(ServerTestCase):
         self.assertEqual(name, "Alex Morgan")
         data = self.api("/api/data?cv=" + quote(name))
         self.assertEqual(len(data["styles"]), len(STYLES))
+        self.assertEqual(data["contact_groups"], [[g, kinds] for g, kinds in CONTACT_GROUPS])
         content = data["languages"]["en"]["data"]
 
         view = {"profile": name, "language": "en", "style": "modern", "color": "burgundy", "photo": None, "data": content}

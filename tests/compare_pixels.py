@@ -36,8 +36,12 @@ def render(tree, out):
     sys.path.insert(0, str(tree / "src"))
     try:  # the code in modules (src/cv_editor/)
         from cv_editor import content, pdf, render, styles
-        cv = SimpleNamespace(normalize=content.normalize, prepare=content.prepare, FIXED_SECTIONS=content.FIXED_SECTIONS,
-                             SIDEBAR_SUGGESTED=content.SIDEBAR_SUGGESTED, STYLES=styles.STYLES,
+        try:
+            from cv_editor import schema   # the structure of a CV, in its own module
+        except ImportError:                # before it had one: in content.py
+            schema = content
+        cv = SimpleNamespace(normalize=content.normalize, prepare=content.prepare, FIXED_SECTIONS=schema.FIXED_SECTIONS,
+                             SIDEBAR_SUGGESTED=schema.SIDEBAR_SUGGESTED, STYLES=styles.STYLES,
                              document=render.document, find_chrome=pdf.find_chrome, print_pdf=pdf.print_pdf)
     except ImportError:  # older versions: everything was in src/generate_cv.py
         import generate_cv as cv

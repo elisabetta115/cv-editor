@@ -8,6 +8,7 @@ import unittest
 from http.server import ThreadingHTTPServer
 
 from support import DataDirTestCase, chrome
+from cv_editor.contacts import CONTACT_GROUPS
 from cv_editor.server import Handler
 
 CHROME = chrome()
@@ -44,6 +45,10 @@ class EditorPageTest(DataDirTestCase):
         for section in ("Header", "Contacts", "Experience", "Education", "Skills"):
             self.assertIn(section, sections)
         self.assertRegex(page, r'srcdoc="[^"]*Morgan')                          # the CV is in the preview
+        # the kinds of contact come from the server (contacts.py): the menu of a contact shows them all
+        groups = re.findall(r'<optgroup label="([^"]+)"', page)
+        self.assertEqual(groups[:len(CONTACT_GROUPS)], [g for g, _ in CONTACT_GROUPS])
+        self.assertIn('<option value="stackoverflow">Stack Overflow</option>', page)
         self.assertNotIn("<h1>Welcome to CV Editor</h1>", page)
 
     def test_without_cvs(self):

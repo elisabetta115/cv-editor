@@ -5,8 +5,8 @@ import secrets
 import shutil
 from urllib.parse import quote, unquote
 
-from .contacts import ICONS
-from .content import FIXED_SECTIONS, SIDEBAR_SUGGESTED, empty_cv, normalize, prepare
+from .contacts import CONTACT_GROUPS, ICONS
+from .content import empty_cv, normalize, prepare
 from .language import KNOWN_LANGUAGES, base_language, language_config, languages
 from .pdf import find_chrome, print_pdf
 from .photos import (
@@ -14,6 +14,7 @@ from .photos import (
     write_signature,
 )
 from .render import document, has_sidebar, render_page
+from .schema import FIXED_SECTIONS, SIDEBAR_SUGGESTED
 from .storage import (
     Profile, check_code, clean_cv, delete_language, free_name, get_profile, load, load_settings,
     profiles as all_profiles, remove_profile_files, save_language, save_settings,
@@ -103,6 +104,7 @@ def read_data(profile):
             "sidebar_suggested": SIDEBAR_SUGGESTED,
             "colors": COLORS, "settings": load_settings(profile), "can_zoom": can_zoom(),
             "icons": {k: v for k, v in ICONS.items() if k != "link"},  # the icons a contact can have
+            "contact_groups": CONTACT_GROUPS,                           # the kinds of contact, with their names
             "templates": templates()}
 
 

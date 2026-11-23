@@ -6,9 +6,9 @@ import shutil
 import sys
 import tomllib
 
-from .contacts import CONTACT_TYPES
 from .language import VERSION_CODE, language_config, languages
 from .photos import MAX_ZOOM, PHOTO_NAME, SHAPES, photo_frame
+from .schema import FILE_ORDER, FILE_TITLES, HIDEABLE_LINES
 from .styles import COLORS, STYLES
 from .workspace import workspace
 
@@ -87,23 +87,12 @@ def load(profile, file):
 # ---------------------------------------------------------------------
 #  Writing the .toml files
 # ---------------------------------------------------------------------
-FILE_ORDER = ["cv_language", "labels", "person", "details", "contacts", "experience", "education", "languages",
-              "skills", "interests", "sections", "privacy"]
-FILE_TITLES = {
-    "cv_language": "LANGUAGE OF THIS CV", "labels": "SECTION TITLES AND LABELS",
-    "person": "NAME, HEADLINE AND INTRODUCTION", "details": "PERSONAL DETAILS",
-    "contacts": "CONTACTS  (type: " + " | ".join(CONTACT_TYPES) + ";  icon: another icon, none = no icon)",
-    "experience": "EXPERIENCE", "education": "EDUCATION", "languages": "LANGUAGES", "skills": "SKILLS",
-    "interests": "INTERESTS  (an empty line = new paragraph)",
-    "sections": "SECTIONS, in the order they appear in the CV  (builtin = a fixed section above; hidden = not shown;"
-                "  removed = a fixed section taken out of the CV)",
-    "privacy": "PRIVACY NOTE  (hidden = true: kept here, not shown in the CV; removed = true: deleted)",
-}
+# the parts of a content file, their order and titles: PARTS in schema.py
 FILE_HEADER = ["The easiest way to edit it is the editor:",
                "    python3 src/editor.py      (or \"CV Editor\" from the applications menu)",
                "You can still edit it by hand; in the text you can use **bold** and *italic*.",
                "hidden = true in a detail, contact, job, degree, language or row: kept here, not shown in the CV.",
-               "digital_hidden, soft_hidden, list_hidden, tags_hidden, description_hidden: the lines of that list",
+               ", ".join(f"{k}_hidden" for k in HIDEABLE_LINES) + ": the lines of that list",
                "    kept here but not shown in the CV."]
 
 

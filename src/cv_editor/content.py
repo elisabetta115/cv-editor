@@ -3,21 +3,15 @@ import copy
 import sys
 
 from .language import KNOWN_LANGUAGES, base_language, language_config
+from .schema import (
+    DEFAULT_AFTER, FIXED_SECTIONS, HIDEABLE, HIDEABLE_IN_SECTIONS, LISTS_OF_TABLES, PERSON, SECTION_LISTS,
+    SKILL_LISTS, TABLES,
+)
 
 
 # ---------------------------------------------------------------------
 #  Sections and their order
 # ---------------------------------------------------------------------
-# The fixed sections. Contacts and personal details sit in the header, unless they
-# are placed in the sidebar of a style that shows one.
-FIXED_SECTIONS = ["contacts", "details", "profile", "about_me", "experience", "education", "skills", "interests"]
-# The CV has a sidebar, in every style, as soon as one section is placed in it; without one,
-# every section is in the main column. These are suggested when the sidebar is switched on.
-SIDEBAR_SUGGESTED = ["contacts", "details", "about_me", "skills"]
-DEFAULT_AFTER = "skills"  # old files: extra sections without "after" go after the skills
-EXTRA_PARTS = ["text", "entries", "list", "tags", "rows"]
-
-
 def order_sections(cv, file):
     """The order of the CV sections: a list of
         {"kind": "builtin", "key": name, "hidden": bool, "side": bool}   fixed sections
@@ -83,10 +77,6 @@ def order_sections(cv, file):
 # ---------------------------------------------------------------------
 #  Reading the content
 # ---------------------------------------------------------------------
-TABLES = ["cv_language", "labels", "person", "skills", "interests", "privacy", "signature"]
-LISTS_OF_TABLES = ["details", "contacts", "experience", "education", "languages", "sections"]
-
-
 def normalize(data, language="en"):
     """Gives the content the expected shape: tables are dicts, lists hold dicts, lists of
     words hold strings, missing section titles come from the language. Content written
@@ -98,7 +88,7 @@ def normalize(data, language="en"):
     for k in LISTS_OF_TABLES:
         v = data.get(k)
         data[k] = [x for x in v if isinstance(x, dict)] if isinstance(v, list) else []
-    for k in ("digital", "soft"):
+    for k in SKILL_LISTS:
         v = data["skills"].get(k, [])
         data["skills"][k] = [str(x) for x in v if isinstance(x, (str, int, float))] if isinstance(v, list) else []
     for s in data["sections"]:
@@ -119,12 +109,8 @@ def normalize(data, language="en"):
     return data
 
 
-# lists whose items (a personal detail, a contact, a job...) can be hidden with hidden = true:
-# they stay in the file and in the editor, but not in the CV
-HIDEABLE = ["details", "contacts", "experience", "education", "languages"]
-HIDEABLE_IN_SECTIONS = ["entries", "rows"]
-
-
+# items with hidden = true (a personal detail, a contact, a job...: HIDEABLE in schema.py) stay in the file
+# and in the editor, but not in the CV
 def shown(items):
     return [x for x in items if not x.get("hidden")]
 
@@ -154,10 +140,10 @@ def prepare(data, file="content", language="en"):
         for k in HIDEABLE_IN_SECTIONS:
             if isinstance(s.get(k), list):
                 s[k] = shown(s[k])
-    for k in ("digital", "soft"):
+    for k in SKILL_LISTS:
         shown_lines(cv["skills"], k)
     for s in cv["sections"]:
-        for k in ("list", "tags"):
+        for k in SECTION_LISTS:
             shown_lines(s, k)
     for e in cv["experience"] + cv["education"] + [e for s in cv["sections"] for e in s.get("entries") or []]:
         shown_lines(e, "description")
@@ -172,9 +158,10 @@ def prepare(data, file="content", language="en"):
 
 
 def empty_cv(language, first_name="", last_name=""):
+    """The content of a new CV: every part empty, the section titles of its language."""
     known = KNOWN_LANGUAGES.get(base_language(language), {})
     labels = known.get("labels") or KNOWN_LANGUAGES["en"]["labels"]
-    return {"cv_language": {"name": language_config(language)["name"]}, "labels": dict(labels),
-            "person": {"first_name": first_name, "last_name": last_name, "headline": "", "profile": "", "about_me": ""},
-            "details": [], "contacts": [], "experience": [], "education": [], "languages": [],
-            "skills": {"digital": [], "soft": []}, "interests": {"text": ""}, "privacy": {"text": ""}}
+    person = {k: "" for k in PERSON} | {"first_name": first_name, "last_name": last_name}
+    return {"cv_language": {"name": language_config(language)["name"]}, "labels": dict(labels), "person": person,
+            **{k: [] for k in LISTS_OF_TABLES if k != "sections"},
+            "skills": {k: [] for k in SKILL_LISTS}, "interests": {"text": ""}, "privacy": {"text": ""}}
