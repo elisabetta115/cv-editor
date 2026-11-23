@@ -258,20 +258,23 @@ examples/                an example CV to import
 docs/                    the project's web page (GitHub Pages) and the screenshots
 tests/                   the tests (see Tests below)
 src/
-├── editor.py            local web server for the editor (Python standard library only)
-├── translator.py        automatic translation: local AI (Ollama) or Azure AI Translator (standard library only)
+├── editor.py            the command that opens the editor (the code is in cv_editor/)
 ├── editor.html          the editor's interface
 ├── generate_cv.py       the command that builds every version of the CVs (the code is in cv_editor/)
-├── cv_editor/           the code, one module per job:
+├── cv_editor/           the code, one module per job (Python standard library only; Pillow optional):
+│   ├── server.py        the editor's local web server: every request is one line of ROUTES
+│   ├── actions.py       what the editor asks for: read, preview, save, PDF, new CV, photos… (no web code)
+│   ├── transfer.py      export and import: the example .json file and .zip files
+│   ├── translator.py    automatic translation: local AI (Ollama) or Azure AI Translator
 │   ├── workspace.py     where the CVs are kept (the workspace in use) and the folders of the project
-│   ├── storage.py       CVs on disk: one folder per person, its content files and settings
+│   ├── storage.py       CVs on disk: one folder per person; reading and writing its content files and settings
 │   ├── language.py      the known languages, language codes, the languages of a CV
-│   ├── content.py       reading a CV's content: its sections, their order, what is hidden
+│   ├── content.py       a CV's content: its sections, their order, what is hidden; an empty CV
 │   ├── text.py          text as HTML: **bold**, *italic*, links, only safe addresses
 │   ├── contacts.py      kinds of contact, their links and icons
 │   ├── render.py        the CV as an HTML page: one page structure for every style
 │   ├── styles.py        the styles (src/styles/) and the colour palettes
-│   ├── photos.py        photos and the signature: finding, framing, smaller copies for the pages
+│   ├── photos.py        photos and the signature: saving, finding, framing, smaller copies for the pages
 │   ├── pdf.py           printing the pages to PDF with headless Chrome
 │   └── build.py         building every version of a CV (the generate_cv.py command)
 ├── styles/              base.css, fonts.css and one stylesheet per style
@@ -287,6 +290,10 @@ src/
 - **Where the CVs are**: the `Workspace` in `src/cv_editor/workspace.py` holds the folders in use (`cvs/`, `PDF/`, the
   generated pages) and whether this is the demo; `workspace()` gives the one in use, `use_workspace()` changes it
   (`--data`, `--demo`, the tests). Nothing else in the code says where the CVs are.
+- **The editor's requests**: one line each in `ROUTES` (`src/cv_editor/server.py`): method, address, the function
+  that answers (from `actions.py`, `transfer.py` or `translator.py`, which know nothing about the web) and whether
+  it waits for the lock (requests that read or write CV files take turns). The server answers only this computer,
+  and every request but `/api/ping` needs the secret token that the editor's page carries.
 - **Exported `.zip`**: the files of `cvs/<name>/` as they are on disk, under `cvs/<name>/` in the zip.
   On import, every folder of the zip that holds `content_<code>.toml` files is one CV, named after the
   folder (or after the person, when the files are at the top of the zip); its `settings.toml`,
@@ -334,7 +341,7 @@ src/
   write files), and the preview runs without scripts. An import writes every CV under a new name first and
   replaces the old CV only when all of them were written: a failed import changes nothing.
 - The editor listens on `127.0.0.1` only and refuses requests without its per-session token.
-- **Automatic translation** (`src/translator.py`): the text of the CV, paragraph by paragraph and each different one once,
+- **Automatic translation** (`src/cv_editor/translator.py`): the text of the CV, paragraph by paragraph and each different one once,
   goes either to Ollama's `/api/chat` or to Azure's Translator v3 API (`**bold**` and `*italic*` as `<b>`/`<i>`
   tags, `[words](address)` as `<a id="0">words</a>`: the address stays on the computer and is put back after).
   Ollama sees links as they are written; `_keep_links` puts their addresses back as they were, and a line whose

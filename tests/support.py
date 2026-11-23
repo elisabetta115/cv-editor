@@ -22,8 +22,9 @@ sys.path.insert(0, str(SRC))
 from cv_editor.content import normalize  # noqa: E402
 from cv_editor.pdf import find_chrome  # noqa: E402
 from cv_editor.workspace import Workspace, use_workspace, workspace  # noqa: E402
-import editor                        # noqa: E402
-import translator                    # noqa: E402
+from cv_editor import translator  # noqa: E402
+from cv_editor.storage import get_profile  # noqa: E402
+from cv_editor.transfer import import_cv  # noqa: E402
 
 _first = tempfile.mkdtemp(prefix="cv-editor-tests-")
 atexit.register(shutil.rmtree, _first, True)
@@ -68,5 +69,5 @@ class DataDirTestCase(unittest.TestCase):
 
     def import_example(self):
         """The example CV, imported as "Try the example" does. Returns its Profile."""
-        names = editor.import_cv({"data": example(), "mode": "copy"})["profiles"]
-        return editor.get_profile(names[0])
+        names = import_cv({"data": example(), "mode": "copy"})["profiles"]
+        return get_profile(names[0])

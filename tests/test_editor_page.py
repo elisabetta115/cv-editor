@@ -7,7 +7,8 @@ import threading
 import unittest
 from http.server import ThreadingHTTPServer
 
-from support import DataDirTestCase, chrome, editor
+from support import DataDirTestCase, chrome
+from cv_editor.server import Handler
 
 CHROME = chrome()
 
@@ -16,7 +17,7 @@ CHROME = chrome()
 class EditorPageTest(DataDirTestCase):
     def setUp(self):
         super().setUp()
-        self.server = ThreadingHTTPServer(("127.0.0.1", 0), editor.Handler)
+        self.server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
         threading.Thread(target=self.server.serve_forever, daemon=True).start()
         self.addCleanup(self.server.server_close)
         self.addCleanup(self.server.shutdown)

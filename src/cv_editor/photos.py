@@ -1,8 +1,12 @@
 """Photos and the signature: finding them, framing them, the smaller copies used by the pages."""
 import glob
+import io
 import re
 import shutil
+import subprocess
 import sys
+import tempfile
+from pathlib import Path
 from urllib.parse import quote, unquote
 
 
@@ -188,3 +192,105 @@ def pick_photos(profile, photos, wanted):
         available = ", ".join(f.name for f in photos) or "(the folder is empty)"
         sys.exit(f"No photo called \"{wanted}\" in {profile.photo_dir}.\nAvailable photos: {available}")
     return found
+
+
+MAX_PHOTO_BYTES = 15_000_000
+
+
+def write_photo(profile, name, content):
+    name = Path(unquote(str(name or ""))).name
+    ext = Path(name).suffix.lower()
+    if ext in CONVERT_FIRST_EXTENSIONS:
+        raise RuntimeError(f"{name}: browsers cannot read this format. Save it as JPG or PNG first.")
+    if ext not in PHOTO_EXTENSIONS or name.startswith("."):
+        raise RuntimeError(f"{name}: this does not look like a photo (JPG, PNG and WEBP work).")
+    if len(content) > MAX_PHOTO_BYTES:
+        raise RuntimeError(f"{name}: the photo is too large.")
+    profile.photo_dir.mkdir(parents=True, exist_ok=True)
+    target, n = profile.photo_dir / name, 2
+    while target.exists():
+        target = profile.photo_dir / f"{Path(name).stem}-{n}{ext}"
+        n += 1
+    target.write_bytes(content)
+    return target.name
+
+
+# ---------------------------------------------------------------------
+#  The signature: cvs/<name>/signature.png
+# ---------------------------------------------------------------------
+SIGNATURE_MAX_SIZE = (1200, 600)   # pixels: more than enough for a signature 5 cm wide
+
+
+def pdf_to_png(content):
+    """The first page of a PDF as a PNG, with Poppler, MuPDF or Ghostscript (whichever is installed)."""
+    tools = [("pdftoppm", lambda src, out: ["-png", "-r", "300", "-f", "1", "-l", "1", "-singlefile", src, out[:-4]]),
+             ("mutool", lambda src, out: ["draw", "-q", "-r", "300", "-o", out, src, "1"]),
+             ("gs", lambda src, out: ["-q", "-dSAFER", "-dBATCH", "-dNOPAUSE", "-sDEVICE=png16m", "-r300",
+                                      "-dFirstPage=1", "-dLastPage=1", f"-sOutputFile={out}", src])]
+    found = [(shutil.which(tool), args) for tool, args in tools if shutil.which(tool)]
+    if not found:
+        raise RuntimeError("To use a PDF the editor needs Poppler (on Linux: sudo apt install poppler-utils). "
+                           "Or save the signature as PNG or JPG: a photo or a scan of it works.")
+    with tempfile.TemporaryDirectory() as folder:
+        src, out = str(Path(folder) / "signature.pdf"), str(Path(folder) / "page.png")
+        Path(src).write_bytes(content)
+        for exe, args in found:
+            try:
+                subprocess.run([exe, *args(src, out)], check=True, timeout=60,
+                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                return Path(out).read_bytes()
+            except (subprocess.SubprocessError, OSError):
+                continue
+    raise RuntimeError("This PDF cannot be read. Save the signature as PNG or JPG instead.")
+
+
+def cut_out_signature(content):
+    """The signature cut out of the photo, scan or page it is on (needs Pillow): the paper becomes transparent,
+    the ink stays, and the image is cropped around it. Returns PNG bytes."""
+    from PIL import Image, ImageChops, ImageFilter, ImageOps
+    try:
+        with Image.open(io.BytesIO(content)) as im:
+            im.load()
+            im = ImageOps.exif_transpose(im)
+            transparent = im.mode in ("RGBA", "LA", "PA") or "transparency" in im.info
+            rgba = im.convert("RGBA")
+    except Exception:
+        raise RuntimeError("This file cannot be read as an image: save the signature as PNG or JPG.")
+    alpha = rgba.getchannel("A")
+    if not (transparent and alpha.getextrema()[0] < 250):  # on paper: the ink is what is darker than the paper around it
+        gray = rgba.convert("L")
+        # the paper: the brightest around each point (shadows and uneven light in a photo are paper too)
+        small = gray.resize((max(1, gray.width // 16), max(1, gray.height // 16)), Image.BILINEAR).filter(ImageFilter.MaxFilter(5))
+        paper = small.resize(gray.size, Image.BILINEAR).filter(ImageFilter.GaussianBlur(4))
+        ink = ImageChops.subtract(paper, gray)
+        alpha = ink.point(lambda v: 0 if v < 28 else 255 if v > 90 else (v - 28) * 255 // 62)
+        rgba.putalpha(alpha)
+    box = alpha.point(lambda v: 255 if v > 40 else 0).getbbox()
+    if not box:
+        raise RuntimeError("No signature found in this file: it looks empty.")
+    pad = max(6, (box[2] - box[0]) // 30)
+    rgba = rgba.crop((max(0, box[0] - pad), max(0, box[1] - pad), min(rgba.width, box[2] + pad), min(rgba.height, box[3] + pad)))
+    rgba.thumbnail(SIGNATURE_MAX_SIZE, Image.LANCZOS)
+    out = io.BytesIO()
+    rgba.save(out, "PNG", optimize=True)
+    return out.getvalue()
+
+
+def write_signature(profile, name, content):
+    """Saves the signature of a CV (in place of the one it had): an image (PNG, JPG...) or a PDF (its first page).
+    With Pillow it is cut out of its background; without it, an image is kept as it is."""
+    ext = Path(unquote(str(name or ""))).suffix.lower()
+    if ext not in PHOTO_EXTENSIONS | {".pdf"}:
+        raise RuntimeError("Choose an image (PNG, JPG) or a PDF of your signature.")
+    if len(content) > MAX_PHOTO_BYTES:
+        raise RuntimeError("The file is too large.")
+    if ext == ".pdf":
+        if not can_zoom():
+            raise RuntimeError("To use a PDF the editor needs Pillow (pip install pillow). Or save the signature as PNG or JPG.")
+        content, ext = pdf_to_png(content), ".png"
+    if can_zoom():
+        content, ext = cut_out_signature(content), ".png"
+    profile.dir.mkdir(parents=True, exist_ok=True)
+    for old in profile.dir.glob("signature.*"):
+        old.unlink()
+    (profile.dir / f"signature{ext}").write_bytes(content)

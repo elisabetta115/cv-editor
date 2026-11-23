@@ -4,7 +4,8 @@ import os
 import unittest
 from unittest import mock
 
-from support import DataDirTestCase, example_content, translator
+from support import DataDirTestCase, example_content
+from cv_editor import translator
 from cv_editor.language import KNOWN_LANGUAGES
 
 

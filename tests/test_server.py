@@ -3,21 +3,25 @@ files outside the folders it may show)."""
 import http.client
 import io
 import json
+import socket
 import threading
 import unittest
 import zipfile
 from http.server import ThreadingHTTPServer
 from urllib.parse import quote
 
-from support import DataDirTestCase, chrome, editor, example
-from cv_editor.storage import profiles
+from support import TINY_PNG, DataDirTestCase, chrome, example
+from cv_editor.actions import read_data
+from cv_editor.server import MAX_BODY, TOKEN, Handler
+from cv_editor.storage import get_profile, profiles
 from cv_editor.styles import COLORS, STYLES
+from cv_editor.transfer import import_cv
 
 
 class ServerTestCase(DataDirTestCase):
     def setUp(self):
         super().setUp()
-        self.server = ThreadingHTTPServer(("127.0.0.1", 0), editor.Handler)
+        self.server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
         self.port = self.server.server_address[1]
         threading.Thread(target=self.server.serve_forever, daemon=True).start()
         self.addCleanup(self.server.server_close)
@@ -29,7 +33,7 @@ class ServerTestCase(DataDirTestCase):
         self.addCleanup(connection.close)
         h = {"Host": host or f"127.0.0.1:{self.port}", **(headers or {})}
         if token:
-            h["X-Token"] = editor.TOKEN
+            h["X-Token"] = TOKEN
         if isinstance(body, dict):
             body, h["Content-Type"] = json.dumps(body).encode(), "application/json"
         connection.request(method, path, body=body, headers=h)
@@ -50,7 +54,7 @@ class SecurityTest(ServerTestCase):
     def test_the_page_carries_the_token(self):
         status, headers, page = self.request("GET", "/", token=False)
         self.assertEqual(status, 200)
-        self.assertIn(editor.TOKEN.encode(), page)
+        self.assertIn(TOKEN.encode(), page)
         self.assertNotIn(b"__TOKEN__", page)
         self.assertEqual(headers["Cache-Control"], "no-store")
 
@@ -121,6 +125,51 @@ class EditorRequestsTest(ServerTestCase):
         self.assertEqual(self.api("/api/cvs/delete", {"profile": "Jane Doe"}),
                          {"profiles": [{"name": "Jane – Sales", "languages": ["en"]}]})
 
+    def test_photos(self):
+        name = self.api("/api/import", {"data": example(), "mode": "copy"})["profiles"][0]
+        added = self.api("/api/photos", TINY_PNG, headers={"X-CV": quote(name), "X-File-Name": "me.png"})
+        self.assertEqual(added["name"], "me.png")
+        self.assertEqual([p["name"] for p in self.api("/api/data?cv=" + quote(name))["photos"]], ["me.png"])
+        self.assertEqual(self.api("/api/photos/delete", {"profile": name, "name": "me.png"}), {"photos": []})
+        status, _, body = self.request("POST", "/api/photos", b"not an image", headers={"X-CV": quote(name),
+                                                                                         "X-File-Name": "notes.txt"})
+        self.assertEqual(status, 500)
+        self.assertIn("does not look like a photo", json.loads(body)["error"])
+
+    def test_known_languages(self):
+        templates = {t["code"]: t for t in self.api("/api/templates")["templates"]}
+        self.assertEqual(templates["it"]["name"], "Italiano")
+        self.assertIn("experience", templates["en"]["labels"])
+
+    def test_export_every_cv(self):
+        status, _, body = self.request("GET", "/api/export-zip")
+        self.assertEqual(status, 500)
+        self.assertEqual(json.loads(body), {"error": "There is no CV to export."})
+        self.api("/api/import", {"data": example(), "mode": "copy"})
+        self.api("/api/cvs/new", {"first_name": "Jane", "last_name": "Doe"})
+        status, headers, body = self.request("GET", "/api/export-zip?photos=0")
+        self.assertEqual(status, 200)
+        self.assertIn('filename="cvs.zip"', headers["Content-Disposition"])
+        folders = {n.split("/")[1] for n in zipfile.ZipFile(io.BytesIO(body)).namelist()}
+        self.assertEqual(folders, {"Alex Morgan", "Jane Doe"})
+
+    def test_too_large(self):
+        """A request bigger than the limit is refused before it is read."""
+        with socket.create_connection(("127.0.0.1", self.port), timeout=30) as s:
+            s.sendall(f"POST /api/save HTTP/1.1\r\nHost: 127.0.0.1:{self.port}\r\nX-Token: {TOKEN}\r\n"
+                      f"Content-Length: {MAX_BODY + 1}\r\n\r\n".encode())
+            answer = b""
+            while chunk := s.recv(4096):  # until the server closes the connection
+                answer += chunk
+            answer = answer.decode()
+        self.assertTrue(answer.startswith("HTTP/1.0 413") or answer.startswith("HTTP/1.1 413"), answer[:40])
+        self.assertIn("File too large.", answer)
+
+    def test_invalid_json(self):
+        for path in ("/api/save", "/api/pdf", "/api/preview"):
+            status, _, body = self.request("POST", path, b"[1, 2]")
+            self.assertEqual((status, json.loads(body)), (500, {"error": "Invalid request."}), path)
+
     def test_errors_are_reported(self):
         status, _, body = self.request("POST", "/api/preview", {"profile": "Nobody", "language": "en", "style": "modern"})
         self.assertEqual(status, 500)
@@ -140,8 +189,8 @@ class DemoTest(ServerTestCase):
 @unittest.skipUnless(chrome(), "Chrome or Chromium is not installed")
 class PdfTest(ServerTestCase):
     def test_pdf_of_the_view(self):
-        name = editor.import_cv({"data": example(), "mode": "copy"})["profiles"][0]
-        content = editor.read_data(editor.get_profile(name))["languages"]["en"]["data"]
+        name = import_cv({"data": example(), "mode": "copy"})["profiles"][0]
+        content = read_data(get_profile(name))["languages"]["en"]["data"]
         status, headers, pdf = self.request("POST", "/api/pdf", {"profile": name, "language": "en", "style": "formal",
                                                                  "data": content, "inline": True})
         self.assertEqual(status, 200, pdf[:300])

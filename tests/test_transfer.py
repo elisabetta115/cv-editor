@@ -4,9 +4,13 @@ import io
 import unittest
 import zipfile
 
-from support import TINY_PNG, DataDirTestCase, editor, example
+from support import TINY_PNG, DataDirTestCase, example
+from cv_editor.actions import add_photo, read_data, save
+from cv_editor.photos import MAX_PHOTO_BYTES
 from cv_editor.photos import find_photos
+from cv_editor.storage import get_profile
 from cv_editor.storage import load, load_settings, profiles
+from cv_editor.transfer import MAX_CONTENT_BYTES, MAX_ZIP_FILES, export_zip, import_cv, import_zip
 from cv_editor.workspace import workspace
 
 
@@ -26,26 +30,26 @@ class JsonImportTest(DataDirTestCase):
     def test_example(self):
         profile = self.import_example()
         self.assertEqual(profile.name, "Alex Morgan")
-        data = editor.read_data(profile)
+        data = read_data(profile)
         self.assertEqual(list(data["languages"]), ["en"])
         self.assertEqual(data["languages"]["en"]["data"]["person"]["last_name"], "Morgan")
         self.assertEqual(load_settings(profile)["styles"]["formal"]["color"], "navy")
 
     def test_check_copy_and_replace(self):
         self.import_example()
-        self.assertEqual(editor.import_cv({"data": example(), "mode": "check"}),
+        self.assertEqual(import_cv({"data": example(), "mode": "check"}),
                          {"cvs": [{"name": "Alex Morgan", "exists": True}]})
-        self.assertEqual(editor.import_cv({"data": example(), "mode": "copy"})["profiles"], ["Alex Morgan (2)"])
+        self.assertEqual(import_cv({"data": example(), "mode": "copy"})["profiles"], ["Alex Morgan (2)"])
         changed = example()
         changed["languages"]["en"]["person"]["headline"] = "Replaced"
-        self.assertEqual(editor.import_cv({"data": changed, "mode": "replace"})["profiles"], ["Alex Morgan"])
-        self.assertEqual(load(editor.get_profile("Alex Morgan"), "content_en.toml")["person"]["headline"], "Replaced")
+        self.assertEqual(import_cv({"data": changed, "mode": "replace"})["profiles"], ["Alex Morgan"])
+        self.assertEqual(load(get_profile("Alex Morgan"), "content_en.toml")["person"]["headline"], "Replaced")
         self.assertEqual(len(profiles()), 2)
 
     def test_with_a_photo(self):
         data = example()
         data["photos"] = [{"name": "me.png", "data": "data:image/png;base64," + base64.b64encode(TINY_PNG).decode()}]
-        profile = editor.get_profile(editor.import_cv({"data": data, "mode": "copy"})["profiles"][0])
+        profile = get_profile(import_cv({"data": data, "mode": "copy"})["profiles"][0])
         self.assertEqual([f.name for f in find_photos(profile)], ["me.png"])
 
     def test_bad_files(self):
@@ -55,22 +59,22 @@ class JsonImportTest(DataDirTestCase):
         bad_language["languages"] = {"../en": bad_language["languages"]["en"]}
         for data in ({}, {"format": "something else"}, {"format": "cv-editor", "languages": {}}, damaged_photo, bad_language):
             with self.assertRaises(RuntimeError):
-                editor.import_cv({"data": data, "mode": "copy"})
+                import_cv({"data": data, "mode": "copy"})
         self.assertEqual(profiles(), [])  # nothing half-imported
 
 
 class ZipTest(DataDirTestCase):
     def test_export_and_import_again(self):
         profile = self.import_example()
-        editor.add_photo(profile.name, "me.png", TINY_PNG)
-        editor.save({"profile": profile.name, "languages": {"en": editor.read_data(profile)["languages"]["en"]["data"]},
+        add_photo(profile.name, "me.png", TINY_PNG)
+        save({"profile": profile.name, "languages": {"en": read_data(profile)["languages"]["en"]["data"]},
                      "settings": {"styles": {"modern": {"color": "burgundy"}}}})
-        body = editor.export_zip([profile])
+        body = export_zip([profile])
         names = sorted(zipfile.ZipFile(io.BytesIO(body)).namelist())
         self.assertEqual(names, ["cvs/Alex Morgan/content_en.toml", "cvs/Alex Morgan/photos/me.png",
                                  "cvs/Alex Morgan/settings.toml"])
-        self.assertEqual(editor.import_zip(body, "check"), {"cvs": [{"name": "Alex Morgan", "exists": True}]})
-        copy = editor.get_profile(editor.import_zip(body, "copy")["profiles"][0])
+        self.assertEqual(import_zip(body, "check"), {"cvs": [{"name": "Alex Morgan", "exists": True}]})
+        copy = get_profile(import_zip(body, "copy")["profiles"][0])
         self.assertEqual(copy.name, "Alex Morgan (2)")
         self.assertEqual(load(copy, "content_en.toml"), load(profile, "content_en.toml"))
         self.assertEqual(load_settings(copy)["styles"]["modern"]["color"], "burgundy")
@@ -78,15 +82,15 @@ class ZipTest(DataDirTestCase):
 
     def test_without_photos(self):
         profile = self.import_example()
-        editor.add_photo(profile.name, "me.png", TINY_PNG)
-        names = zipfile.ZipFile(io.BytesIO(editor.export_zip([profile], with_photos=False))).namelist()
+        add_photo(profile.name, "me.png", TINY_PNG)
+        names = zipfile.ZipFile(io.BytesIO(export_zip([profile], with_photos=False))).namelist()
         self.assertFalse(any("photos/" in n for n in names))
 
     def test_a_zip_made_by_hand(self):
         """A CV folder zipped by hand, with the extra files macOS adds."""
         body = zip_of({"Zip Test/content_en.toml": CONTENT, "Zip Test/photos/a.png": TINY_PNG,
                        "__MACOSX/Zip Test/._content_en.toml": "junk", "Zip Test/.DS_Store": "junk"})
-        profile = editor.get_profile(editor.import_zip(body, "copy")["profiles"][0])
+        profile = get_profile(import_zip(body, "copy")["profiles"][0])
         self.assertEqual(profile.name, "Zip Test")
         self.assertEqual(load(profile, "content_en.toml")["person"]["first_name"], "Zip")
         self.assertEqual([f.name for f in find_photos(profile)], ["a.png"])
@@ -95,7 +99,7 @@ class ZipTest(DataDirTestCase):
         body = zip_of({"../../outside/content_en.toml": CONTENT, "/absolute/content_en.toml": CONTENT,
                        "x/../../content_en.toml": CONTENT})
         try:
-            names = editor.import_zip(body, "copy")["profiles"]
+            names = import_zip(body, "copy")["profiles"]
         except RuntimeError:
             names = []
         for name in names:
@@ -105,13 +109,13 @@ class ZipTest(DataDirTestCase):
         self.assertFalse((self.data_dir.parent / "outside").exists())
 
     def test_bad_zips(self):
-        too_big = zip_of({"A/content_en.toml": "x" * (editor.MAX_CONTENT_BYTES + 1)})
-        too_many = zip_of({f"A/{i}.txt": "" for i in range(editor.MAX_ZIP_FILES + 1)})
+        too_big = zip_of({"A/content_en.toml": "x" * (MAX_CONTENT_BYTES + 1)})
+        too_many = zip_of({f"A/{i}.txt": "" for i in range(MAX_ZIP_FILES + 1)})
         not_toml = zip_of({"A/content_en.toml": "this is [not toml"})
         no_cv = zip_of({"notes.txt": "hello"})
         for body in (b"not a zip", too_big, too_many, not_toml, no_cv):
             with self.assertRaises(RuntimeError):
-                editor.import_zip(body, "copy")
+                import_zip(body, "copy")
         self.assertEqual(profiles(), [])
 
     def test_a_failed_import_changes_nothing(self):
@@ -119,9 +123,9 @@ class ZipTest(DataDirTestCase):
         profile = self.import_example()
         before = profile.dir.joinpath("content_en.toml").read_bytes()
         body = zip_of({"cvs/Alex Morgan/content_en.toml": CONTENT, "cvs/Broken/content_en.toml": CONTENT,
-                       "cvs/Broken/photos/big.png": b"x" * (editor.MAX_PHOTO_BYTES + 1)})
+                       "cvs/Broken/photos/big.png": b"x" * (MAX_PHOTO_BYTES + 1)})
         with self.assertRaises(RuntimeError):
-            editor.import_zip(body, "replace")
+            import_zip(body, "replace")
         self.assertEqual([p.name for p in profiles()], ["Alex Morgan"])
         self.assertEqual(profile.dir.joinpath("content_en.toml").read_bytes(), before)
 

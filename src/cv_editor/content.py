@@ -2,7 +2,7 @@
 import copy
 import sys
 
-from .language import KNOWN_LANGUAGES, base_language
+from .language import KNOWN_LANGUAGES, base_language, language_config
 
 
 # ---------------------------------------------------------------------
@@ -169,3 +169,12 @@ def prepare(data, file="content", language="en"):
     cv["signed"] = bool(cv["signature"].get("show"))  # the signature at the end of the CV (when there is one)
     cv["order"] = order_sections(cv, file)
     return cv
+
+
+def empty_cv(language, first_name="", last_name=""):
+    known = KNOWN_LANGUAGES.get(base_language(language), {})
+    labels = known.get("labels") or KNOWN_LANGUAGES["en"]["labels"]
+    return {"cv_language": {"name": language_config(language)["name"]}, "labels": dict(labels),
+            "person": {"first_name": first_name, "last_name": last_name, "headline": "", "profile": "", "about_me": ""},
+            "details": [], "contacts": [], "experience": [], "education": [], "languages": [],
+            "skills": {"digital": [], "soft": []}, "interests": {"text": ""}, "privacy": {"text": ""}}

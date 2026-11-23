@@ -27,9 +27,10 @@ import urllib.request
 from pathlib import Path
 from urllib.parse import urlencode
 
-from cv_editor.language import KNOWN_LANGUAGES, VERSION_CODE, base_language
-from cv_editor.text import MARKDOWN_LINK
-from cv_editor.workspace import workspace
+from .language import KNOWN_LANGUAGES, VERSION_CODE, base_language
+from .text import MARKDOWN_LINK
+from .workspace import workspace
+
 
 KEEP = {"first_name", "last_name", "organization", "link", "type", "id", "builtin", "hidden", "column", "after",
         "copied_from"}
