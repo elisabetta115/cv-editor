@@ -19,19 +19,21 @@ EXAMPLE = REPO / "examples" / "example-cv.json"
 sys.dont_write_bytecode = True       # no __pycache__ folders left in src/
 sys.path.insert(0, str(SRC))
 
-import generate_cv as cv             # noqa: E402
+from cv_editor.content import normalize  # noqa: E402
+from cv_editor.pdf import find_chrome  # noqa: E402
+from cv_editor.workspace import Workspace, use_workspace, workspace  # noqa: E402
 import editor                        # noqa: E402
 import translator                    # noqa: E402
 
 _first = tempfile.mkdtemp(prefix="cv-editor-tests-")
 atexit.register(shutil.rmtree, _first, True)
-cv.use_workspace(cv.Workspace(_first))   # never the real cvs/ folder
+use_workspace(Workspace(_first))   # never the real cvs/ folder
 
 
 def chrome():
     """The path of Chrome or Chromium, None when it is not installed (the tests that need it are skipped)."""
     try:
-        return cv.find_chrome()
+        return find_chrome()
     except SystemExit:  # find_chrome() stops the program when there is none
         return None
 
@@ -43,7 +45,7 @@ def example():
 
 def example_content(language="en"):
     """The content of one language of the example CV, normalised as the editor reads it."""
-    return cv.normalize(copy.deepcopy(example()["languages"][language]), language)
+    return normalize(copy.deepcopy(example()["languages"][language]), language)
 
 
 # A valid 1 × 1 pixel PNG image: a photo that every tool can read, without needing Pillow to make it.
@@ -59,10 +61,10 @@ class DataDirTestCase(unittest.TestCase):
 
     def setUp(self):
         self.data_dir = Path(tempfile.mkdtemp(prefix="cv-editor-test-"))
-        self.workspace = cv.use_workspace(cv.Workspace(self.data_dir, demo=self.demo))
+        self.workspace = use_workspace(Workspace(self.data_dir, demo=self.demo))
         self.addCleanup(shutil.rmtree, self.data_dir, True)
         # a last check: the CVs of this test are in its own folder
-        self.assertTrue(cv.workspace().cvs_dir.resolve().is_relative_to(self.data_dir.resolve()))
+        self.assertTrue(workspace().cvs_dir.resolve().is_relative_to(self.data_dir.resolve()))
 
     def import_example(self):
         """The example CV, imported as "Try the example" does. Returns its Profile."""

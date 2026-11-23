@@ -27,7 +27,9 @@ import urllib.request
 from pathlib import Path
 from urllib.parse import urlencode
 
-import generate_cv as cv
+from cv_editor.language import KNOWN_LANGUAGES, VERSION_CODE, base_language
+from cv_editor.text import MARKDOWN_LINK
+from cv_editor.workspace import workspace
 
 KEEP = {"first_name", "last_name", "organization", "link", "type", "id", "builtin", "hidden", "column", "after",
         "copied_from"}
@@ -151,7 +153,7 @@ def _translate_local(lines, kinds, r):
 
 
 def _language_name(name, code):
-    name = str(name or cv.KNOWN_LANGUAGES.get(code, {}).get("name") or "").strip()[:40]
+    name = str(name or KNOWN_LANGUAGES.get(code, {}).get("name") or "").strip()[:40]
     return f"{name} ({code})" if name else code
 
 
@@ -167,7 +169,7 @@ REGION = re.compile(r"[a-z0-9]{0,40}")
 
 
 def _config():
-    memory = cv.workspace().translator_memory  # the demo keeps the key in memory only: a dict instead of the file
+    memory = workspace().translator_memory  # the demo keeps the key in memory only: a dict instead of the file
     if memory is not None:
         return memory
     try:
@@ -206,7 +208,7 @@ def set_key(r):
             raise RuntimeError("The region is written like westeurope or northeurope (see “Keys and Endpoint”).")
         _azure_batch(["Hello"], "en", "it", key, region)  # a wrong key or region stops here
     data = {"key": key, "region": region} if key else {}
-    memory = cv.workspace().translator_memory
+    memory = workspace().translator_memory
     if memory is not None:
         memory.clear()
         memory.update(data)
@@ -267,14 +269,14 @@ def _azure_batch(texts, source, target, key, region):
 def _keep_links(line, out):
     """The translation of a line with links ([words](address)) with their addresses as in the line: the AI
     may change an address while translating the words. None when the translation lost or added a link."""
-    addresses = [m.group(2) for m in cv.MARKDOWN_LINK.finditer(line)]
-    found = [m.group(2) for m in cv.MARKDOWN_LINK.finditer(out)]
+    addresses = [m.group(2) for m in MARKDOWN_LINK.finditer(line)]
+    found = [m.group(2) for m in MARKDOWN_LINK.finditer(out)]
     if not out or len(found) != len(addresses):
         return None
     if sorted(found) == sorted(addresses):  # copied right (the words may have moved, with their links)
         return out
     rest = iter(addresses)
-    return cv.MARKDOWN_LINK.sub(lambda m: f"[{m.group(1)}]({next(rest)})", out)
+    return MARKDOWN_LINK.sub(lambda m: f"[{m.group(1)}]({next(rest)})", out)
 
 
 # **bold**, *italic* and the words of links travel as HTML tags, so that the translation keeps them around
@@ -289,7 +291,7 @@ def _to_html(line):
     def link(m):
         addresses.append(m.group(2))
         return f"\ue000{len(addresses) - 1}\ue001{m.group(1)}\ue002"
-    s = cv.MARKDOWN_LINK.sub(link, line.replace("\ue000", "").replace("\ue001", "").replace("\ue002", ""))
+    s = MARKDOWN_LINK.sub(link, line.replace("\ue000", "").replace("\ue001", "").replace("\ue002", ""))
     s = html.escape(s, quote=False)
     s = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", s)
     s = re.sub(r"\*(.+?)\*", r"<i>\1</i>", s)
@@ -393,15 +395,15 @@ def translate_cv(r):
     Every paragraph is translated as a whole (titles, list items and sentences are paragraphs too), each
     different one once. Section titles known for the new language come from the editor."""
     for code in (r.get("from"), r.get("to")):
-        if not isinstance(code, str) or not cv.VERSION_CODE.fullmatch(code):
+        if not isinstance(code, str) or not VERSION_CODE.fullmatch(code):
             raise RuntimeError(f"Invalid language code: {code!r}.")
     # another version in a language (en-ireland) is translated as its language (en)
-    r = {**r, "from": cv.base_language(r["from"]), "to": cv.base_language(r["to"])}
+    r = {**r, "from": base_language(r["from"]), "to": base_language(r["to"])}
     engine = ENGINES.get(r.get("engine") or "azure")
     if not engine:
         raise RuntimeError("Unknown translator.")
     data = copy.deepcopy(r.get("data")) if isinstance(r.get("data"), dict) else {}
-    template = cv.KNOWN_LANGUAGES.get(r["to"], {}).get("labels") or {}
+    template = KNOWN_LANGUAGES.get(r["to"], {}).get("labels") or {}
     labels = data.get("labels") if isinstance(data.get("labels"), dict) else {}
     data["labels"] = {k: v for k, v in labels.items() if k not in template}
 

@@ -9,7 +9,9 @@ import zipfile
 from http.server import ThreadingHTTPServer
 from urllib.parse import quote
 
-from support import DataDirTestCase, chrome, cv, editor, example
+from support import DataDirTestCase, chrome, editor, example
+from cv_editor.storage import profiles
+from cv_editor.styles import COLORS, STYLES
 
 
 class ServerTestCase(DataDirTestCase):
@@ -63,7 +65,7 @@ class SecurityTest(ServerTestCase):
         self.assertEqual(self.request("GET", "/api/cvs", token=False)[0], 403)
         self.assertEqual(self.request("GET", "/api/cvs", headers={"X-Token": "wrong"}, token=False)[0], 403)
         self.assertEqual(self.request("POST", "/api/cvs/new", {"first_name": "A", "last_name": "B"}, token=False)[0], 403)
-        self.assertEqual(cv.profiles(), [])
+        self.assertEqual(profiles(), [])
 
     def test_only_the_allowed_folders_are_shown(self):
         self.assertEqual(self.request("GET", "/styles/base.css")[0], 200)
@@ -87,14 +89,14 @@ class EditorRequestsTest(ServerTestCase):
         name = self.api("/api/import", {"data": self.api("/api/example"), "mode": "copy"})["profiles"][0]
         self.assertEqual(name, "Alex Morgan")
         data = self.api("/api/data?cv=" + quote(name))
-        self.assertEqual(len(data["styles"]), len(cv.STYLES))
+        self.assertEqual(len(data["styles"]), len(STYLES))
         content = data["languages"]["en"]["data"]
 
         view = {"profile": name, "language": "en", "style": "modern", "color": "burgundy", "photo": None, "data": content}
         preview = self.api("/api/preview", view)
         self.assertIn("Alex", preview["document"])
         self.assertIn("/styles/modern.css", preview["document"])
-        self.assertIn(cv.COLORS["burgundy"]["dark"], preview["document"])
+        self.assertIn(COLORS["burgundy"]["dark"], preview["document"])
         self.assertFalse(preview["sidebar"])
 
         content["person"]["headline"] = "Changed by the test"

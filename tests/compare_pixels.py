@@ -21,6 +21,7 @@ import tarfile
 import tempfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+from types import SimpleNamespace
 
 REPO = Path(__file__).resolve().parents[1]
 TINY_PNG = bytes.fromhex(
@@ -33,7 +34,13 @@ def render(tree, out):
     """Prints the example CV in every style with the code in tree/src; writes out/<version>-<style>.pdf."""
     sys.dont_write_bytecode = True
     sys.path.insert(0, str(tree / "src"))
-    import generate_cv as cv
+    try:  # the code in modules (src/cv_editor/)
+        from cv_editor import content, pdf, render, styles
+        cv = SimpleNamespace(normalize=content.normalize, prepare=content.prepare, FIXED_SECTIONS=content.FIXED_SECTIONS,
+                             SIDEBAR_SUGGESTED=content.SIDEBAR_SUGGESTED, STYLES=styles.STYLES,
+                             document=render.document, find_chrome=pdf.find_chrome, print_pdf=pdf.print_pdf)
+    except ImportError:  # older versions: everything was in src/generate_cv.py
+        import generate_cv as cv
     data = cv.normalize(json.loads((tree / "examples" / "example-cv.json").read_text(encoding="utf-8"))["languages"]["en"], "en")
     side = copy.deepcopy(data)
     extras = [s for s in side.get("sections", []) if "builtin" not in s]

@@ -261,7 +261,19 @@ src/
 ├── editor.py            local web server for the editor (Python standard library only)
 ├── translator.py        automatic translation: local AI (Ollama) or Azure AI Translator (standard library only)
 ├── editor.html          the editor's interface
-├── generate_cv.py       builds the HTML pages and prints them to PDF with headless Chrome
+├── generate_cv.py       the command that builds every version of the CVs (the code is in cv_editor/)
+├── cv_editor/           the code, one module per job:
+│   ├── workspace.py     where the CVs are kept (the workspace in use) and the folders of the project
+│   ├── storage.py       CVs on disk: one folder per person, its content files and settings
+│   ├── language.py      the known languages, language codes, the languages of a CV
+│   ├── content.py       reading a CV's content: its sections, their order, what is hidden
+│   ├── text.py          text as HTML: **bold**, *italic*, links, only safe addresses
+│   ├── contacts.py      kinds of contact, their links and icons
+│   ├── render.py        the CV as an HTML page: one page structure for every style
+│   ├── styles.py        the styles (src/styles/) and the colour palettes
+│   ├── photos.py        photos and the signature: finding, framing, smaller copies for the pages
+│   ├── pdf.py           printing the pages to PDF with headless Chrome
+│   └── build.py         building every version of a CV (the generate_cv.py command)
 ├── styles/              base.css, fonts.css and one stylesheet per style
 ├── fonts/               bundled fonts (SIL Open Font License)
 └── html/                generated pages used to print the PDFs (not kept in git)
@@ -272,7 +284,7 @@ src/
   `--photo photo2`, `--photo 0` = no photo, `--html-only`, `--data /path/to/folder` for CVs kept in another
   folder, as with the editor). Without `--cv` every CV is built. With 50 styles
   that is many PDFs per language and photo: `--style` builds only the styles you name.
-- **Where the CVs are**: the `Workspace` in `src/generate_cv.py` holds the folders in use (`cvs/`, `PDF/`, the
+- **Where the CVs are**: the `Workspace` in `src/cv_editor/workspace.py` holds the folders in use (`cvs/`, `PDF/`, the
   generated pages) and whether this is the demo; `workspace()` gives the one in use, `use_workspace()` changes it
   (`--data`, `--demo`, the tests). Nothing else in the code says where the CVs are.
 - **Exported `.zip`**: the files of `cvs/<name>/` as they are on disk, under `cvs/<name>/` in the zip.
@@ -284,7 +296,7 @@ src/
   `{"format": "cv-editor", "version": 1, "name", "settings", "languages": {code: content}, "photos": [{"name",
   "data": "data:image/jpeg;base64,…"}]}`. The content of each language has the same structure as the `.toml` files.
 - **Content files** can also be edited by hand. Main tables: `[person]`, `[[details]]`, `[[contacts]]`
-  (`type` = phone | email | address | web | linkedin | github | … see `CONTACT_TYPES` in `src/generate_cv.py`;
+  (`type` = phone | email | address | web | linkedin | github | … see `CONTACT_TYPES` in `src/cv_editor/contacts.py`;
   `icon` = another icon of `ICONS`, or `none`), `[[experience]]`, `[[education]]` (each entry may have a `link`),
   `[[languages]]`, `[skills]`, `[interests]`, `[privacy]`, `[labels]` (section titles), `[cv_language]`
   (name of the language) and `[[sections]]`: every section in CV order, either a fixed one
@@ -294,13 +306,13 @@ src/
   every style, as soon as one visible section has it. A fixed section taken out of the CV is
   `{builtin = "interests", removed = true}` (without it, a fixed section missing from the list is added back).
   Items of `[[details]]`, `[[contacts]]`, `[[experience]]`, `[[education]]`, `[[languages]]` and of a section's
-  `entries` and `rows` can have `hidden = true`: kept in the file, left out of the CV (`prepare` in `src/generate_cv.py`).
+  `entries` and `rows` can have `hidden = true`: kept in the file, left out of the CV (`prepare` in `src/cv_editor/content.py`).
   Lines of a list are hidden by their text in `<list>_hidden`: `digital_hidden`, `soft_hidden` (in `[skills]`),
   `list_hidden`, `tags_hidden` (in a section) and `description_hidden` (in an entry). `copied_from = "en"` marks an extra section copied from another
   language and not translated yet (the editor offers to translate it). Older files without `builtin` entries are still read.
   Texts can hold links, `[words](address)` or an address written as it is (`MARKDOWN_LINK` and `TEXT_LINK` in
-  `src/generate_cv.py`, rendered by `rich`): everywhere but names, section titles, organisations, places, dates and contacts.
-- **Styles** share one page structure (`render_page` in `src/generate_cv.py`): `.cv-header`, an optional
+  `src/cv_editor/text.py`, rendered by `rich`): everywhere but names, section titles, organisations, places, dates and contacts.
+- **Styles** share one page structure (`render_page` in `src/cv_editor/render.py`): `.cv-header`, an optional
   `.sidebar`, `.main-column`, `.privacy`. `src/styles/base.css` styles every block; each style's stylesheet
   only changes what makes it different, for both `.has-sidebar` and `.no-sidebar` pages.
 - **Adding a style** is adding one file, `src/styles/<id>.css`: the comment at its top describes it and the
@@ -308,14 +320,14 @@ src/
   (the palette it starts with), `@side right` (sidebar on the right), `@tags` (words for the search, separated
   by commas) and, when needed, `@print` / `@print-sidebar`: rules for the printed page that use the palette,
   written with `$dark`, `$mid`, `$light`, `$bg` (CSS variables do not work inside `@page`). The rest of the
-  comment is the description shown in the editor. See `load_styles` in `src/generate_cv.py`.
+  comment is the description shown in the editor. See `load_styles` in `src/cv_editor/styles.py`.
 - **Photo framing**: `[photos."<file>"]` in `settings.toml` (`x`, `y` = 0-100, `zoom` = 1-4, `shape` = rect |
-  rounded | square | circle; each optional), read by `load_settings` and checked by `photo_frame`. The shape is a
+  rounded | square | circle; each optional), read by `load_settings` (`storage.py`) and checked by `photo_frame` (`photos.py`). The shape is a
   `shape-*` class on the photo's frame; the rules at the top of `base.css` replace the style's cut-outs, rings
   (`::before`, `::after`) and corners, so a new style needs nothing for it. The position is an inline `object-position` on the `<img>`; the zoom
   is a cut copy of the photo made by `framed_photo` (Pillow), because several styles give the `<img>` itself its
   shape (`clip-path`, round border), so the page cannot simply enlarge it.
-- Colour palettes live in `COLORS` in `src/generate_cv.py`; layout and typography in `src/styles/<style>.css`.
+- Colour palettes live in `COLORS` in `src/cv_editor/styles.py`; layout and typography in `src/styles/<style>.css`.
   Styles read their colours from the `--p-dark`, `--p-mid`, `--p-light` and `--p-bg` variables.
 - Imported files are treated as untrusted: content is normalised and HTML-escaped, only `http(s)`, `mailto`
   and `tel` links are kept, photo names cannot leave the CV folder (paths inside a `.zip` are never used to

@@ -3,7 +3,10 @@ import subprocess
 import sys
 import unittest
 
-from support import SRC, DataDirTestCase, cv
+from support import SRC, DataDirTestCase
+from cv_editor.build import generate
+from cv_editor.workspace import ROOT, SRC, Workspace, short_path
+from pathlib import Path
 
 
 def run(script, *args):
@@ -29,7 +32,7 @@ class GenerateTest(DataDirTestCase):
         """The CVs kept in another folder (the editor's --data): the pages are built there."""
         profile = self.import_example()
         messages = []
-        cv.generate(profile, "en", ["formal"], None, html_only=True, log=messages.append)
+        generate(profile, "en", ["formal"], None, html_only=True, log=messages.append)
         self.assertEqual([f.name for f in profile.html_dir.glob("CV_*.html")], ["CV_Alex_Morgan_EN_Formal_NoPhoto.html"])
         self.assertTrue(profile.html_dir.is_relative_to(self.data_dir.resolve()))
         self.assertIn(str(profile.html_dir / "CV_Alex_Morgan_EN_Formal_NoPhoto.html"), "\n".join(messages))
@@ -51,16 +54,16 @@ class GenerateTest(DataDirTestCase):
 
 class WorkspaceTest(unittest.TestCase):
     def test_project_folder(self):
-        place = cv.Workspace()
-        self.assertEqual(place.cvs_dir, cv.ROOT / "cvs")
-        self.assertEqual(place.pdf_dir, cv.ROOT / "PDF")
-        self.assertEqual(place.html_dir, cv.HERE / "html")
+        place = Workspace()
+        self.assertEqual(place.cvs_dir, ROOT / "cvs")
+        self.assertEqual(place.pdf_dir, ROOT / "PDF")
+        self.assertEqual(place.html_dir, SRC / "html")
         self.assertFalse(place.demo)
         self.assertIsNone(place.translator_memory)
 
     def test_messages_show_short_paths(self):
-        self.assertEqual(cv.short_path(cv.ROOT / "PDF" / "Jane Doe"), cv.Path("PDF", "Jane Doe"))
-        self.assertEqual(cv.short_path("/somewhere/else/cvs"), cv.Path("/somewhere/else/cvs"))
+        self.assertEqual(short_path(ROOT / "PDF" / "Jane Doe"), Path("PDF", "Jane Doe"))
+        self.assertEqual(short_path("/somewhere/else/cvs"), Path("/somewhere/else/cvs"))
 
 
 if __name__ == "__main__":

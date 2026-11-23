@@ -2,7 +2,11 @@
 import tomllib
 import unittest
 
-from support import DataDirTestCase, cv, editor, example_content
+from support import DataDirTestCase, editor, example_content
+from cv_editor.language import KNOWN_LANGUAGES, base_language, language_config, languages
+from cv_editor.storage import check_cv_name, load, load_settings, profiles
+from cv_editor.styles import STYLES
+from cv_editor.workspace import workspace
 
 
 class TomlTest(unittest.TestCase):
@@ -37,12 +41,12 @@ class TomlTest(unittest.TestCase):
 class NamesTest(unittest.TestCase):
     def test_cv_names(self):
         for good in ("Jane Doe", "Jane Doe – Marketing", "Zoë O'Brien (2)", "a" * 80):
-            self.assertEqual(cv.check_cv_name(good), good)
-        self.assertEqual(cv.check_cv_name("  Jane   Doe "), "Jane Doe")
-        self.assertEqual(cv.check_cv_name("Jane\nDoe"), "Jane Doe")  # line breaks become spaces
+            self.assertEqual(check_cv_name(good), good)
+        self.assertEqual(check_cv_name("  Jane   Doe "), "Jane Doe")
+        self.assertEqual(check_cv_name("Jane\nDoe"), "Jane Doe")  # line breaks become spaces
         for bad in ("", "   ", ".hidden", "..", "a/b", "a\\b", "../cvs", "a:b", "a*b", 'a"b', "a<b>", "a|b", "a\x01b", "a" * 81):
             with self.assertRaises(ValueError, msg=bad):
-                cv.check_cv_name(bad)
+                check_cv_name(bad)
 
     def test_language_codes(self):
         for good in ("en", "it", "fil", "en-ireland", "en-bigtech", "de-2025"):
@@ -52,9 +56,9 @@ class NamesTest(unittest.TestCase):
                 editor.check_code(bad)
 
     def test_language_config(self):
-        self.assertEqual(cv.language_config("en")["content"], "content_en.toml")
-        self.assertEqual(cv.language_config("en-ireland")["name"], "English (Ireland)")
-        self.assertEqual(cv.base_language("en-ireland"), "en")
+        self.assertEqual(language_config("en")["content"], "content_en.toml")
+        self.assertEqual(language_config("en-ireland")["name"], "English (Ireland)")
+        self.assertEqual(base_language("en-ireland"), "en")
 
 
 class ProfilesTest(DataDirTestCase):
@@ -62,10 +66,10 @@ class ProfilesTest(DataDirTestCase):
         name = editor.new_profile({"first_name": "Jane", "last_name": "Doe", "language": "it"})["profile"]
         self.assertEqual(name, "Jane Doe")
         profile = editor.get_profile(name)
-        self.assertEqual(list(cv.languages(profile)), ["it"])
-        data = cv.load(profile, "content_it.toml")
+        self.assertEqual(list(languages(profile)), ["it"])
+        data = load(profile, "content_it.toml")
         self.assertEqual(data["person"]["first_name"], "Jane")
-        self.assertEqual(data["labels"]["experience"], cv.KNOWN_LANGUAGES["it"]["labels"]["experience"])
+        self.assertEqual(data["labels"]["experience"], KNOWN_LANGUAGES["it"]["labels"]["experience"])
         # a second CV with the same name gets another one
         self.assertEqual(editor.new_profile({"first_name": "Jane", "last_name": "Doe"})["profile"], "Jane Doe (2)")
         self.assertEqual([x["name"] for x in editor.list_profiles()["profiles"]], ["Jane Doe", "Jane Doe (2)"])
@@ -73,7 +77,7 @@ class ProfilesTest(DataDirTestCase):
     def test_new_cv_rejects_bad_names(self):
         with self.assertRaises(RuntimeError):
             editor.new_profile({"first_name": "../../etc", "last_name": "x"})
-        self.assertEqual(cv.profiles(), [])
+        self.assertEqual(profiles(), [])
 
     def test_missing_cv(self):
         with self.assertRaises(RuntimeError):
@@ -97,9 +101,9 @@ class ProfilesTest(DataDirTestCase):
         italian["cv_language"] = {"name": "Italiano"}
         editor.save({"profile": profile.name, "languages": {"en": editor.read_data(profile)["languages"]["en"]["data"],
                                                              "it": italian}})
-        self.assertEqual(list(cv.languages(profile)), ["it", "en"])  # Italian and English first
+        self.assertEqual(list(languages(profile)), ["it", "en"])  # Italian and English first
         editor.save({"profile": profile.name, "languages": {"en": italian}, "delete": ["it"]})
-        self.assertEqual(list(cv.languages(profile)), ["en"])
+        self.assertEqual(list(languages(profile)), ["en"])
 
     def test_save_needs_a_language(self):
         profile = self.import_example()
@@ -114,21 +118,21 @@ class ProfilesTest(DataDirTestCase):
                      "settings": {"styles": {"modern": {"color": "burgundy"}, "swiss": {"color": "not a colour"}},
                                   "photos": {"me.jpg": {"x": 30, "y": 70, "zoom": 2, "shape": "circle"},
                                              "../evil.jpg": {"x": 1}}}})
-        settings = cv.load_settings(profile)
+        settings = load_settings(profile)
         self.assertEqual(settings["styles"]["modern"]["color"], "burgundy")
-        self.assertEqual(settings["styles"]["swiss"]["color"], cv.STYLES["swiss"]["color"])  # the style's own
-        self.assertEqual(set(settings["styles"]), set(cv.STYLES))
+        self.assertEqual(settings["styles"]["swiss"]["color"], STYLES["swiss"]["color"])  # the style's own
+        self.assertEqual(set(settings["styles"]), set(STYLES))
         self.assertEqual(settings["photos"], {"me.jpg": {"x": 30, "y": 70, "zoom": 2, "shape": "circle"}})
 
     def test_duplicate_and_delete(self):
         profile = self.import_example()
         copy = editor.duplicate_profile({"profile": profile.name, "name": "Alex – Marketing"})["profile"]
         self.assertEqual(copy, "Alex – Marketing")
-        self.assertEqual(cv.load(editor.get_profile(copy), "content_en.toml"), cv.load(profile, "content_en.toml"))
-        self.assertEqual(cv.load_settings(editor.get_profile(copy)), cv.load_settings(profile))
+        self.assertEqual(load(editor.get_profile(copy), "content_en.toml"), load(profile, "content_en.toml"))
+        self.assertEqual(load_settings(editor.get_profile(copy)), load_settings(profile))
         left = editor.delete_profile({"profile": copy})["profiles"]
         self.assertEqual([x["name"] for x in left], [profile.name])
-        self.assertFalse((cv.workspace().cvs_dir / copy).exists())
+        self.assertFalse((workspace().cvs_dir / copy).exists())
 
 
 if __name__ == "__main__":

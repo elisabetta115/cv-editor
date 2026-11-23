@@ -16,7 +16,12 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from support import cv, example_content
+from support import example_content
+from cv_editor.content import FIXED_SECTIONS, SIDEBAR_SUGGESTED, prepare
+from cv_editor.photos import photo_frame
+from cv_editor.render import document
+from cv_editor.styles import COLORS, STYLES
+from cv_editor.workspace import STYLES_DIR
 
 REFERENCE = Path(__file__).parent / "reference" / "render.json"
 PREVIEW_BASE = "/html/Alex%20Morgan/"
@@ -29,8 +34,8 @@ def with_sidebar(data):
     data = copy.deepcopy(data)
     extras = [s for s in data.get("sections", []) if "builtin" not in s]
     order = []
-    for key in cv.FIXED_SECTIONS:
-        order.append({"builtin": key, **({"column": "side"} if key in cv.SIDEBAR_SUGGESTED else {})})
+    for key in FIXED_SECTIONS:
+        order.append({"builtin": key, **({"column": "side"} if key in SIDEBAR_SUGGESTED else {})})
         order += [s for s in extras if s.get("after") == key]
     order += [s for s in extras if s not in order]
     data["sections"] = order
@@ -58,7 +63,7 @@ def with_everything(data):
 def versions():
     """name -> (content, photo, frame, signature)"""
     plain = example_content()
-    frame = cv.photo_frame({"x": 40, "y": 30, "zoom": 1.5, "shape": "circle"})
+    frame = photo_frame({"x": 40, "y": 30, "zoom": 1.5, "shape": "circle"})
     return {
         "plain": (plain, None, None, None),
         "sidebar": (with_sidebar(plain), None, None, None),
@@ -71,18 +76,18 @@ def render_all():
     """page name -> HTML of every page checked."""
     pages = {}
     for name, (data, photo, frame, signature) in versions().items():
-        prepared = cv.prepare(copy.deepcopy(data), "content_en.toml", "en")
-        for style in cv.STYLES:
-            pages[f"{name}/{style}"] = cv.document(prepared, "en", style, photo, preview_base=PREVIEW_BASE,
+        prepared = prepare(copy.deepcopy(data), "content_en.toml", "en")
+        for style in STYLES:
+            pages[f"{name}/{style}"] = document(prepared, "en", style, photo, preview_base=PREVIEW_BASE,
                                                    frame=frame, signature=signature)
         if name == "everything":
             # the page printed to PDF: stylesheets from the folder on this computer, written as STYLES/
-            for style in cv.STYLES:
-                page = cv.document(prepared, "en", style, photo, frame=frame, signature=signature)
-                pages[f"print/{style}"] = page.replace(cv.STYLES_DIR.as_uri() + "/", "STYLES/")
-    prepared = cv.prepare(example_content(), "content_en.toml", "en")
-    for color in cv.COLORS:
-        pages[f"color/modern/{color}"] = cv.document(prepared, "en", "modern", None, preview_base=PREVIEW_BASE, color=color)
+            for style in STYLES:
+                page = document(prepared, "en", style, photo, frame=frame, signature=signature)
+                pages[f"print/{style}"] = page.replace(STYLES_DIR.as_uri() + "/", "STYLES/")
+    prepared = prepare(example_content(), "content_en.toml", "en")
+    for color in COLORS:
+        pages[f"color/modern/{color}"] = document(prepared, "en", "modern", None, preview_base=PREVIEW_BASE, color=color)
     return pages
 
 
@@ -128,7 +133,7 @@ class RenderTest(unittest.TestCase):
         self.assertIn("Demo Company", pages["plain/formal"])       # the last job, shown...
         for hidden in ("hidden-detail", "hidden-row", "Demo Company"):  # ...and a detail, a row and that job hidden
             self.assertNotIn(hidden, everything)
-        self.assertEqual(len({fingerprint(pages[f"color/modern/{c}"]) for c in cv.COLORS}), len(cv.COLORS))
+        self.assertEqual(len({fingerprint(pages[f"color/modern/{c}"]) for c in COLORS}), len(COLORS))
 
 
 if __name__ == "__main__":

@@ -4,7 +4,8 @@ import os
 import unittest
 from unittest import mock
 
-from support import DataDirTestCase, cv, example_content, translator
+from support import DataDirTestCase, example_content, translator
+from cv_editor.language import KNOWN_LANGUAGES
 
 
 def fake_engine(lines, kinds, r):
@@ -58,7 +59,7 @@ class TranslateCvTest(unittest.TestCase):
         self.assertEqual(out["experience"][0]["description"][0],
                          "LED THE REDESIGN OF THE [MOBILE APP](https://example.com/app) USED BY 2 MILLION PEOPLE.")
         # section titles known for Italian come from the editor, not from the translator
-        self.assertEqual(out["labels"]["experience"], cv.KNOWN_LANGUAGES["it"]["labels"]["experience"])
+        self.assertEqual(out["labels"]["experience"], KNOWN_LANGUAGES["it"]["labels"]["experience"])
 
     def test_paragraphs_are_kept(self):
         data = example_content()

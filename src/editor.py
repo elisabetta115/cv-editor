@@ -35,14 +35,25 @@ from datetime import date, datetime, time
 from pathlib import Path
 from urllib.parse import parse_qs, quote, unquote, urlparse
 
-import generate_cv as cv
+from cv_editor.contacts import CONTACT_TYPES, ICONS
+from cv_editor.content import FIXED_SECTIONS, SIDEBAR_SUGGESTED, normalize, prepare
+from cv_editor.language import KNOWN_LANGUAGES, VERSION_CODE, base_language, language_config, languages
+from cv_editor.pdf import find_chrome, print_pdf
+from cv_editor.photos import (
+    CONVERT_FIRST_EXTENSIONS, MAX_ZOOM, PHOTO_EXTENSIONS, PHOTO_NAME, SHAPES, can_zoom, find_photos, framed_photo,
+    photo_frame, prepare_photos, signature_file, signature_src,
+)
+from cv_editor.render import document, has_sidebar, render_page
+from cv_editor.storage import Profile, check_cv_name, load, load_settings, profiles as all_profiles
+from cv_editor.styles import COLORS, STYLE_GROUPS, STYLES
+from cv_editor.workspace import Workspace, use_workspace, workspace
 import translator
 
-HERE = cv.HERE
+HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 PORT = 8765
 TOKEN = secrets.token_urlsafe(24)
-CODE_FILES = [HERE / "editor.py", HERE / "generate_cv.py", HERE / "translator.py"]
+CODE_FILES = [HERE / "editor.py", HERE / "generate_cv.py", HERE / "translator.py", *sorted((HERE / "cv_editor").glob("*.py"))]
 CODE_VERSION = [f.stat().st_mtime_ns for f in CODE_FILES]  # to notice when the code is updated while running
 UPDATED_PAGE = """<!doctype html><meta charset="utf-8"><title>CV Editor</title>
 <body style="font: 16px system-ui, sans-serif; margin: 15vh auto; max-width: 34em; line-height: 1.5">
@@ -55,7 +66,7 @@ MAX_PHOTO_BYTES = 15_000_000
 
 # Folders the browser may read (nothing else)
 def static_folders():
-    return {"/styles/": HERE / "styles", "/fonts/": HERE / "fonts", "/html/": cv.workspace().html_dir}
+    return {"/styles/": HERE / "styles", "/fonts/": HERE / "fonts", "/html/": workspace().html_dir}
 
 
 # ---------------------------------------------------------------------
@@ -66,7 +77,7 @@ FILE_ORDER = ["cv_language", "labels", "person", "details", "contacts", "experie
 FILE_TITLES = {
     "cv_language": "LANGUAGE OF THIS CV", "labels": "SECTION TITLES AND LABELS",
     "person": "NAME, HEADLINE AND INTRODUCTION", "details": "PERSONAL DETAILS",
-    "contacts": "CONTACTS  (type: " + " | ".join(cv.CONTACT_TYPES) + ";  icon: another icon, none = no icon)",
+    "contacts": "CONTACTS  (type: " + " | ".join(CONTACT_TYPES) + ";  icon: another icon, none = no icon)",
     "experience": "EXPERIENCE", "education": "EDUCATION", "languages": "LANGUAGES", "skills": "SKILLS",
     "interests": "INTERESTS  (an empty line = new paragraph)",
     "sections": "SECTIONS, in the order they appear in the CV  (builtin = a fixed section above; hidden = not shown;"
@@ -131,7 +142,7 @@ def _table(lines, name, d, array=False):
 
 def write_toml(data, language):
     rule = "# " + "-" * 69
-    name = (data.get("cv_language") or {}).get("name") or cv.language_config(language)["name"]
+    name = (data.get("cv_language") or {}).get("name") or language_config(language)["name"]
     header = [f"CURRICULUM — CONTENT IN {name.upper()}", ""] + FILE_HEADER
     lines = [rule] + [f"#  {r}" if r else "#" for r in header] + [rule]
     keys = [k for k in FILE_ORDER if k in data] + [k for k in data if k not in FILE_ORDER]
@@ -186,22 +197,22 @@ def clean_cv(data):
 def save_settings(profile, settings):
     """Writes settings.toml: the colour chosen for each style and the framing of each photo."""
     lines = ["# Styles of this CV: chosen in the editor (python3 src/editor.py).",
-             "#   color   = " + " | ".join(cv.COLORS),
+             "#   color   = " + " | ".join(COLORS),
              "# Photos: how each one is framed, in every style.",
              "#   x, y    = 0-100 (0 = left / top edge of the photo, 100 = right / bottom edge)",
-             f"#   zoom    = 1 (the whole photo) to {cv.MAX_ZOOM}",
-             "#   shape   = " + " | ".join(cv.SHAPES) + "   (without it: the shape of each style)",
+             f"#   zoom    = 1 (the whole photo) to {MAX_ZOOM}",
+             "#   shape   = " + " | ".join(SHAPES) + "   (without it: the shape of each style)",
              ""]
     settings = settings if isinstance(settings, dict) else {}
     styles = settings.get("styles") if isinstance(settings.get("styles"), dict) else {}
-    for style, conf in cv.STYLES.items():
+    for style, conf in STYLES.items():
         x = styles.get(style) if isinstance(styles.get(style), dict) else {}
-        color = x.get("color") if x.get("color") in cv.COLORS else conf["color"]
+        color = x.get("color") if x.get("color") in COLORS else conf["color"]
         lines += [f"[styles.{style}]", f'color = "{color}"', ""]
     photos = settings.get("photos") if isinstance(settings.get("photos"), dict) else {}
     for name, value in sorted(photos.items()):
-        frame = cv.photo_frame(value)
-        if frame and isinstance(name, str) and cv.PHOTO_NAME.fullmatch(name):
+        frame = photo_frame(value)
+        if frame and isinstance(name, str) and PHOTO_NAME.fullmatch(name):
             lines += [f"[photos.{_key(name)}]"]
             lines += [f"{k} = {frame[k]:g}" for k in ("x", "y", "zoom") if k in frame]
             lines += [f'shape = "{frame["shape"]}"'] if "shape" in frame else []
@@ -212,7 +223,7 @@ def save_settings(profile, settings):
 
 def check_code(language):
     """A language (en) or another version in a language (en-ireland)."""
-    if not isinstance(language, str) or not cv.VERSION_CODE.fullmatch(language):
+    if not isinstance(language, str) or not VERSION_CODE.fullmatch(language):
         raise RuntimeError(f"Invalid language code: {language!r} (2 or 3 lowercase letters, e.g. es, fr, de).")
     return language
 
@@ -224,7 +235,7 @@ def save_language(profile, language, data):
     if clean_cv(tomllib.loads(text)) != data:  # check: the file reads back identical
         raise RuntimeError("The file check failed: nothing was saved.")
     profile.dir.mkdir(parents=True, exist_ok=True)
-    path = profile.dir / cv.language_config(language)["content"]
+    path = profile.dir / language_config(language)["content"]
     temporary = path.with_suffix(".toml.tmp")
     temporary.write_text(text, encoding="utf-8")
     os.replace(temporary, path)
@@ -235,7 +246,7 @@ def save_language(profile, language, data):
 # ---------------------------------------------------------------------
 def get_profile(name, must_exist=True):
     try:
-        profile = cv.Profile(name)
+        profile = Profile(name)
     except ValueError as e:
         raise RuntimeError(str(e))
     if must_exist and not profile.exists():
@@ -245,9 +256,9 @@ def get_profile(name, must_exist=True):
 
 def free_name(name):
     """The name itself, or "Name (2)", "Name (3)"... if a CV with that name already exists."""
-    base = cv.check_cv_name(name)
+    base = check_cv_name(name)
     candidate, n = base, 2
-    while (cv.workspace().cvs_dir / candidate).exists():
+    while (workspace().cvs_dir / candidate).exists():
         candidate = f"{base} ({n})"
         n += 1
     return candidate
@@ -255,30 +266,30 @@ def free_name(name):
 
 def remove_profile_files(profile):
     """Deletes a CV: its folder in cvs/, its PDFs and its generated pages."""
-    place = cv.workspace()
+    place = workspace()
     for folder, parent in ((profile.dir, place.cvs_dir), (profile.pdf_dir, place.pdf_dir), (profile.html_dir, place.html_dir)):
         if folder.is_dir() and folder.resolve().parent == parent.resolve():
             shutil.rmtree(folder)
 
 
 def empty_cv(language, first_name="", last_name=""):
-    known = cv.KNOWN_LANGUAGES.get(cv.base_language(language), {})
-    labels = known.get("labels") or cv.KNOWN_LANGUAGES["en"]["labels"]
-    return {"cv_language": {"name": cv.language_config(language)["name"]}, "labels": dict(labels),
+    known = KNOWN_LANGUAGES.get(base_language(language), {})
+    labels = known.get("labels") or KNOWN_LANGUAGES["en"]["labels"]
+    return {"cv_language": {"name": language_config(language)["name"]}, "labels": dict(labels),
             "person": {"first_name": first_name, "last_name": last_name, "headline": "", "profile": "", "about_me": ""},
             "details": [], "contacts": [], "experience": [], "education": [], "languages": [],
             "skills": {"digital": [], "soft": []}, "interests": {"text": ""}, "privacy": {"text": ""}}
 
 
 def list_profiles():
-    return {"profiles": [{"name": x.name, "languages": list(cv.languages(x))} for x in cv.profiles()]}
+    return {"profiles": [{"name": x.name, "languages": list(languages(x))} for x in all_profiles()]}
 
 
 def new_profile(r):
     first, last = str(r.get("first_name") or "").strip(), str(r.get("last_name") or "").strip()
     language = check_code(r.get("language") or "en")
     try:
-        profile = cv.Profile(free_name(f"{first} {last}"))
+        profile = Profile(free_name(f"{first} {last}"))
     except ValueError:
         raise RuntimeError("Write a first and last name without special characters such as / \\ : * ? \" < > |.")
     save_language(profile, language, empty_cv(language, first, last))
@@ -296,12 +307,12 @@ def duplicate_profile(r):
     """r = {"profile", "name", "languages": [codes] (empty: all), "photos": bool}: a copy of a CV, as saved,
     under a new name ("Name (2)"... if it is taken), to change without touching the original."""
     source = get_profile(r.get("profile"))
-    langs = cv.languages(source)
+    langs = languages(source)
     wanted = r.get("languages") or list(langs)
     if not isinstance(wanted, list) or not wanted or any(code not in langs for code in wanted):
         raise RuntimeError("Choose at least one language of the CV to copy.")
     try:
-        target = cv.Profile(free_name(str(r.get("name") or "").strip() or source.name))
+        target = Profile(free_name(str(r.get("name") or "").strip() or source.name))
     except ValueError:
         raise RuntimeError("Write a name without special characters such as / \\ : * ? \" < > |.")
     try:
@@ -310,9 +321,9 @@ def duplicate_profile(r):
             shutil.copy2(source.dir / langs[code]["content"], target.dir / langs[code]["content"])
         if source.settings_file.is_file():
             shutil.copy2(source.settings_file, target.settings_file)
-        if cv.signature_file(source):
-            shutil.copy2(cv.signature_file(source), target.dir / cv.signature_file(source).name)
-        for f in cv.find_photos(source) if r.get("photos", True) else []:
+        if signature_file(source):
+            shutil.copy2(signature_file(source), target.dir / signature_file(source).name)
+        for f in find_photos(source) if r.get("photos", True) else []:
             target.photo_dir.mkdir(exist_ok=True)
             shutil.copy2(f, target.photo_dir / f.name)
     except Exception:
@@ -343,9 +354,9 @@ def suggested_name(data):
 def write_photo(profile, name, content):
     name = Path(unquote(str(name or ""))).name
     ext = Path(name).suffix.lower()
-    if ext in cv.CONVERT_FIRST_EXTENSIONS:
+    if ext in CONVERT_FIRST_EXTENSIONS:
         raise RuntimeError(f"{name}: browsers cannot read this format. Save it as JPG or PNG first.")
-    if ext not in cv.PHOTO_EXTENSIONS or name.startswith("."):
+    if ext not in PHOTO_EXTENSIONS or name.startswith("."):
         raise RuntimeError(f"{name}: this does not look like a photo (JPG, PNG and WEBP work).")
     if len(content) > MAX_PHOTO_BYTES:
         raise RuntimeError(f"{name}: the photo is too large.")
@@ -398,7 +409,7 @@ def import_cvs(found, mode):
     imported one gets another name. Every CV is written under a new name first, and the old one is replaced
     only when all of them were written: a failed import leaves the CVs as they were."""
     if mode == "check":
-        return {"cvs": [{"name": x["name"], "exists": (cv.workspace().cvs_dir / x["name"]).exists()} for x in found]}
+        return {"cvs": [{"name": x["name"], "exists": (workspace().cvs_dir / x["name"]).exists()} for x in found]}
     written = []
     try:
         for x in found:
@@ -410,7 +421,7 @@ def import_cvs(found, mode):
     names = []
     for name, profile in written:
         if mode == "replace" and profile.name != name and name not in names:
-            old = cv.Profile(name)
+            old = Profile(name)
             remove_profile_files(old)
             profile.dir.rename(old.dir)
             profile = old
@@ -420,11 +431,11 @@ def import_cvs(found, mode):
 
 def write_new_cv(x):
     """Writes an imported CV in a new folder (its own name, or "Name (2)"...). Content is normalised and rewritten."""
-    profile = cv.Profile(free_name(x["name"]))
+    profile = Profile(free_name(x["name"]))
     try:
         for code, content in x["languages"].items():
-            content = cv.normalize(content, code)
-            content["cv_language"] = {"name": cv.language_config(code, content["cv_language"])["name"]}
+            content = normalize(content, code)
+            content["cv_language"] = {"name": language_config(code, content["cv_language"])["name"]}
             save_language(profile, code, content)
         save_settings(profile, x["settings"])
         for photo_name, content in x["photos"]:
@@ -453,11 +464,11 @@ def export_zip(profiles, with_photos=True):
     with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED, strict_timestamps=False) as z:
         for profile in profiles:
             folder = f"cvs/{profile.name}/"
-            files = [profile.dir / conf["content"] for conf in cv.languages(profile).values()]
-            for f in files + [profile.settings_file, cv.signature_file(profile)]:
+            files = [profile.dir / conf["content"] for conf in languages(profile).values()]
+            for f in files + [profile.settings_file, signature_file(profile)]:
                 if f and f.is_file():
                     z.write(f, folder + f.name)
-            for f in cv.find_photos(profile) if with_photos else []:  # the originals: photos are already compressed
+            for f in find_photos(profile) if with_photos else []:  # the originals: photos are already compressed
                 z.write(f, folder + "photos/" + f.name, zipfile.ZIP_STORED)
     return buffer.getvalue()
 
@@ -531,7 +542,7 @@ def read_zip(body):
             except RuntimeError:
                 pass  # not valid: the default colours
         photos = [(p[-1], read(p, MAX_PHOTO_BYTES, "photo")) for p in sorted(files)
-                  if p[:-1] == folder + ("photos",) and Path(p[-1]).suffix.lower() in cv.PHOTO_EXTENSIONS]
+                  if p[:-1] == folder + ("photos",) and Path(p[-1]).suffix.lower() in PHOTO_EXTENSIONS]
         name = suggested_name({"name": folder[-1] if folder else "", "languages": langs})
         signature = next(((p[-1], read(p, MAX_PHOTO_BYTES, "signature")) for p in sorted(files)
                           if p[:-1] == folder and SIGNATURE_FILE.fullmatch(p[-1])), None)
@@ -543,16 +554,16 @@ def read_zip(body):
 #  Actions called by the editor
 # ---------------------------------------------------------------------
 def refresh_photos(profile):
-    photos = cv.find_photos(profile)
-    paths = cv.prepare_photos(profile, photos)
-    cv.workspace().photo_src[profile.name] = {f.name: src for f, src in paths.items()}
+    photos = find_photos(profile)
+    paths = prepare_photos(profile, photos)
+    workspace().photo_src[profile.name] = {f.name: src for f, src in paths.items()}
     base = "/html/" + quote(profile.name) + "/"
     return [{"name": f.name, "src": base + paths[f]} for f in photos]
 
 
 def delete_language(profile, language):
     """Removes the content file of a language, its PDFs and its HTML pages."""
-    conf = cv.languages(profile).get(check_code(language))
+    conf = languages(profile).get(check_code(language))
     if not conf:
         return
     (profile.dir / conf["content"]).unlink(missing_ok=True)
@@ -569,9 +580,9 @@ def delete_language(profile, language):
 
 def read_data(profile):
     langs = {}
-    for code, conf in cv.languages(profile).items():
-        data = cv.normalize(cv.load(profile, conf["content"]), code)
-        prepared = cv.prepare(data, conf["content"], code)
+    for code, conf in languages(profile).items():
+        data = normalize(load(profile, conf["content"]), code)
+        prepared = prepare(data, conf["content"], code)
         # section order: {"builtin", "hidden", "side"} for the fixed sections,
         # the index in "sections" for the extra ones
         order = [{"builtin": x["key"], "hidden": x["hidden"], "side": x["side"]} if x["kind"] == "builtin"
@@ -580,44 +591,44 @@ def read_data(profile):
         langs[code] = {"name": conf["name"], "data": data, "order": order}
     return {"profile": profile.name, "languages": langs, "photos": refresh_photos(profile), "signature": signature_url(profile),
             "styles": [{"id": k, "name": v["name"], "group": v["group"], "color": v["color"], "side": v["side"],
-                        "tags": v["tags"], "description": v["description"]} for k, v in cv.STYLES.items()],
-            "style_groups": cv.STYLE_GROUPS,
-            "fixed_sections": cv.FIXED_SECTIONS,
-            "sidebar_suggested": cv.SIDEBAR_SUGGESTED,
-            "colors": cv.COLORS, "settings": cv.load_settings(profile), "can_zoom": cv.can_zoom(),
-            "icons": {k: v for k, v in cv.ICONS.items() if k != "link"},  # the icons a contact can have
+                        "tags": v["tags"], "description": v["description"]} for k, v in STYLES.items()],
+            "style_groups": STYLE_GROUPS,
+            "fixed_sections": FIXED_SECTIONS,
+            "sidebar_suggested": SIDEBAR_SUGGESTED,
+            "colors": COLORS, "settings": load_settings(profile), "can_zoom": can_zoom(),
+            "icons": {k: v for k, v in ICONS.items() if k != "link"},  # the icons a contact can have
             "templates": [{"code": k, "name": v["name"], "labels": v.get("labels")}
-                          for k, v in cv.KNOWN_LANGUAGES.items()]}
+                          for k, v in KNOWN_LANGUAGES.items()]}
 
 
 def view(r):
     """What the editor shows: CV, language, style, colour and photo (content not saved yet included)."""
     profile = get_profile(r.get("profile"))
     language, style = check_code(r.get("language")), r.get("style")
-    if style not in cv.STYLES:
+    if style not in STYLES:
         raise RuntimeError(f"Unknown style: {style!r}")
-    prepared = cv.prepare(clean_cv(r.get("data") or {}), cv.language_config(language)["content"], language)
-    if profile.name not in cv.workspace().photo_src:
+    prepared = prepare(clean_cv(r.get("data") or {}), language_config(language)["content"], language)
+    if profile.name not in workspace().photo_src:
         refresh_photos(profile)
     photo = r.get("photo") or ""
-    color = r.get("color") if r.get("color") in cv.COLORS else None
-    src = cv.workspace().photo_src[profile.name].get(photo)
-    frame = cv.photo_frame(r.get("frame")) if src else None  # how the photo is framed (not saved yet included)
-    signature = cv.signature_src(profile)  # shown only when the content asks for it ([signature] show = true)
-    return profile, language, style, prepared, cv.framed_photo(profile, src, frame), photo, color, frame, signature
+    color = r.get("color") if r.get("color") in COLORS else None
+    src = workspace().photo_src[profile.name].get(photo)
+    frame = photo_frame(r.get("frame")) if src else None  # how the photo is framed (not saved yet included)
+    signature = signature_src(profile)  # shown only when the content asks for it ([signature] show = true)
+    return profile, language, style, prepared, framed_photo(profile, src, frame), photo, color, frame, signature
 
 
 def preview(r):
     profile, language, style, prepared, src, _, color, frame, signature = view(r)
     base = "/html/" + quote(profile.name) + "/"
-    return {"document": cv.document(prepared, language, style, src, preview_base=base, color=color, frame=frame, signature=signature),
-            "page": cv.render_page(prepared, style, src, frame, signature), "sidebar": cv.has_sidebar(prepared)}
+    return {"document": document(prepared, language, style, src, preview_base=base, color=color, frame=frame, signature=signature),
+            "page": render_page(prepared, style, src, frame, signature), "sidebar": has_sidebar(prepared)}
 
 
 def pdf_name(person, language):
     """The name of a downloaded PDF: CV_<first name>_<last name>_<LANGUAGE>.pdf, e.g. CV_Jane_Doe_EN.pdf
     (other versions in a language too: the person who receives it does not need to know)."""
-    parts = ["CV", str(person.get("first_name") or ""), str(person.get("last_name") or ""), cv.base_language(language).upper()]
+    parts = ["CV", str(person.get("first_name") or ""), str(person.get("last_name") or ""), base_language(language).upper()]
     name = "_".join(x for x in (re.sub(r'[\\/:*?"<>|\x00-\x1f]+', "", p).strip() for p in parts) if x)
     return re.sub(r"\s+", "_", name) + ".pdf"
 
@@ -630,8 +641,8 @@ def make_pdf(r):
     tag = secrets.token_hex(6)
     page, pdf = profile.html_dir / f"_view_{tag}.html", profile.html_dir / f"_view_{tag}.pdf"
     try:
-        page.write_text(cv.document(prepared, language, style, src, color=color, frame=frame, signature=signature), encoding="utf-8")
-        cv.print_pdf(cv.find_chrome(), page, pdf)
+        page.write_text(document(prepared, language, style, src, color=color, frame=frame, signature=signature), encoding="utf-8")
+        print_pdf(find_chrome(), page, pdf)
         return name, pdf.read_bytes()
     finally:
         page.unlink(missing_ok=True)
@@ -664,7 +675,7 @@ def add_photo(profile_name, name, content):
 
 def delete_photo(r):
     profile = get_profile(r.get("profile"))
-    names = {f.name: f for f in cv.find_photos(profile)}
+    names = {f.name: f for f in find_photos(profile)}
     if r.get("name") not in names:
         raise RuntimeError("Photo not found.")
     names[r["name"]].unlink()
@@ -736,15 +747,15 @@ def write_signature(profile, name, content):
     """Saves the signature of a CV (in place of the one it had): an image (PNG, JPG...) or a PDF (its first page).
     With Pillow it is cut out of its background; without it, an image is kept as it is."""
     ext = Path(unquote(str(name or ""))).suffix.lower()
-    if ext not in cv.PHOTO_EXTENSIONS | {".pdf"}:
+    if ext not in PHOTO_EXTENSIONS | {".pdf"}:
         raise RuntimeError("Choose an image (PNG, JPG) or a PDF of your signature.")
     if len(content) > MAX_PHOTO_BYTES:
         raise RuntimeError("The file is too large.")
     if ext == ".pdf":
-        if not cv.can_zoom():
+        if not can_zoom():
             raise RuntimeError("To use a PDF the editor needs Pillow (pip install pillow). Or save the signature as PNG or JPG.")
         content, ext = pdf_to_png(content), ".png"
-    if cv.can_zoom():
+    if can_zoom():
         content, ext = cut_out_signature(content), ".png"
     profile.dir.mkdir(parents=True, exist_ok=True)
     for old in profile.dir.glob("signature.*"):
@@ -754,7 +765,7 @@ def write_signature(profile, name, content):
 
 def signature_url(profile):
     """The address of the signature for the editor, None when the CV has none."""
-    src = cv.signature_src(profile)
+    src = signature_src(profile)
     return "/html/" + quote(profile.name) + "/" + src if src else None
 
 
@@ -842,17 +853,17 @@ class Handler(BaseHTTPRequestHandler):
                     return self._json(translator.status())
                 with LOCK:
                     if path == "/api/cvs":
-                        return self._json({**list_profiles(), "demo": cv.workspace().demo})
+                        return self._json({**list_profiles(), "demo": workspace().demo})
                     if path == "/api/templates":  # known languages, for a first CV
                         return self._json({"templates": [{"code": k, "name": v["name"], "labels": v.get("labels")}
-                                                         for k, v in cv.KNOWN_LANGUAGES.items()]})
+                                                         for k, v in KNOWN_LANGUAGES.items()]})
                     if path == "/api/example":  # the example CV, to try the editor
                         return self._json(json.loads((ROOT / "examples" / "example-cv.json").read_text(encoding="utf-8")))
                     if path == "/api/data":
                         return self._json(read_data(get_profile(name)))
                     photos = (query.get("photos") or ["1"])[0] != "0"
                     if path == "/api/export-zip":  # one CV, or every CV when no name is given
-                        profiles = [get_profile(name)] if name else cv.profiles()
+                        profiles = [get_profile(name)] if name else all_profiles()
                         if not profiles:
                             raise RuntimeError("There is no CV to export.")
                         return self._send(200, export_zip(profiles, photos), "application/zip",
@@ -947,11 +958,11 @@ def main():
     demo_dir = None
     if args.demo:
         demo_dir = tempfile.mkdtemp(prefix="cv-editor-demo-")
-        cv.use_workspace(cv.Workspace(demo_dir, demo=True))  # a translator key added in the demo is forgotten with it
+        use_workspace(Workspace(demo_dir, demo=True))  # a translator key added in the demo is forgotten with it
         if args.port == PORT:
             args.port = PORT + 1  # next to a normal editor that may be open
     elif args.data:
-        cv.use_workspace(cv.Workspace(args.data))
+        use_workspace(Workspace(args.data))
 
     try:
         server = ThreadingHTTPServer(("127.0.0.1", args.port), Handler)
@@ -966,7 +977,7 @@ def main():
         if hasattr(signal, sig):
             signal.signal(getattr(signal, sig), lambda *_: sys.exit(0))
     address = f"http://127.0.0.1:{server.server_address[1]}/"
-    print(f"CV editor running at {address}" + ("  (DEMO: empty, nothing is kept)" if cv.workspace().demo else ""))
+    print(f"CV editor running at {address}" + ("  (DEMO: empty, nothing is kept)" if workspace().demo else ""))
     print("To close it, close this window (or press Ctrl+C).")
     if not args.no_browser:
         threading.Timer(0.5, webbrowser.open, [address]).start()

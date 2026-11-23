@@ -1,14 +1,17 @@
 """Text in the CV: **bold**, *italic*, links, and the links of the contacts. Nothing unsafe reaches the page."""
 import unittest
 
-from support import cv
+import support  # noqa: F401
+from cv_editor.contacts import contact_link
+from cv_editor.render import description
+from cv_editor.text import paragraphs, rich, t, web_address
 
 
 class TextTest(unittest.TestCase):
     def test_bold_italic_and_escaping(self):
-        self.assertEqual(cv.t("**bold** and *italic*"), "<strong>bold</strong> and <em>italic</em>")
-        self.assertEqual(cv.t("<script>alert(1)</script> & co"), "&lt;script&gt;alert(1)&lt;/script&gt; &amp; co")
-        self.assertEqual(cv.t("[my site](https://example.com)"), "[my site](https://example.com)")  # no links in t()
+        self.assertEqual(t("**bold** and *italic*"), "<strong>bold</strong> and <em>italic</em>")
+        self.assertEqual(t("<script>alert(1)</script> & co"), "&lt;script&gt;alert(1)&lt;/script&gt; &amp; co")
+        self.assertEqual(t("[my site](https://example.com)"), "[my site](https://example.com)")  # no links in t()
 
     def test_links(self):
         cases = {
@@ -23,20 +26,20 @@ class TextTest(unittest.TestCase):
             "[a](https://x.com/(paren))": '<a class="text-link" href="https://x.com/(paren)">a</a>',
         }
         for text, expected in cases.items():
-            self.assertEqual(cv.rich(text), expected, text)
+            self.assertEqual(rich(text), expected, text)
 
     def test_unsafe_links_stay_text(self):
         for text in ("[x](javascript:alert(1))", "[x](JaVaScRiPt:alert(1))", "[data](data:text/html,hi)"):
-            self.assertEqual(cv.rich(text), cv.t(text), text)
-            self.assertNotIn("<a", cv.rich(text))
-        quoted = cv.rich('[a](https://x.com/a"onmouseover="alert(1))')
+            self.assertEqual(rich(text), t(text), text)
+            self.assertNotIn("<a", rich(text))
+        quoted = rich('[a](https://x.com/a"onmouseover="alert(1))')
         self.assertNotIn('"onmouseover', quoted)
 
     def test_web_address(self):
         cases = {"https://a.com": "https://a.com", "example.com": "https://example.com", "mailto:a@b.c": "mailto:a@b.c",
                  "localhost:8080": "https://localhost:8080", "javascript:x": "", "JaVaScRiPt:x": "", "ftp://x": "", "": ""}
         for link, expected in cases.items():
-            self.assertEqual(cv.web_address(link), expected, link)
+            self.assertEqual(web_address(link), expected, link)
 
     def test_contact_links(self):
         cases = [
@@ -53,13 +56,13 @@ class TextTest(unittest.TestCase):
             ({"type": "web", "text": "x", "link": "javascript:alert(1)"}, ""),
         ]
         for contact, expected in cases:
-            self.assertEqual(cv.contact_link(contact), expected, contact)
+            self.assertEqual(contact_link(contact), expected, contact)
 
     def test_paragraphs_and_descriptions(self):
-        self.assertEqual(cv.paragraphs("one\ntwo\n\n  three  "), "<p>one two</p><p>three</p>")
-        self.assertEqual(cv.description("single line"), '<ul class="desc"><li>single line</li></ul>')
-        self.assertEqual(cv.description(["a", "", "  ", "b"]), '<ul class="desc"><li>a</li><li>b</li></ul>')
-        self.assertEqual(cv.description([]), "")
+        self.assertEqual(paragraphs("one\ntwo\n\n  three  "), "<p>one two</p><p>three</p>")
+        self.assertEqual(description("single line"), '<ul class="desc"><li>single line</li></ul>')
+        self.assertEqual(description(["a", "", "  ", "b"]), '<ul class="desc"><li>a</li><li>b</li></ul>')
+        self.assertEqual(description([]), "")
 
 
 if __name__ == "__main__":
