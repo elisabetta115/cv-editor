@@ -62,25 +62,26 @@ def with_everything(data):
 
 
 def versions():
-    """name -> (content, photo, frame, signature)"""
+    """name -> (content, photo, frame, signature, adjustments)"""
     plain = example_content()
     frame = photo_frame({"x": 40, "y": 30, "zoom": 1.5, "shape": "circle"})
     return {
-        "plain": (plain, None, None, None),
-        "sidebar": (with_sidebar(plain), None, None, None),
-        "photo": (plain, PHOTO, frame, None),
-        "everything": (with_everything(plain), PHOTO, frame, SIGNATURE),
+        "plain": (plain, None, None, None, None),
+        "sidebar": (with_sidebar(plain), None, None, None, None),
+        "photo": (plain, PHOTO, frame, None, None),
+        "everything": (with_everything(plain), PHOTO, frame, SIGNATURE, None),
+        "adjusted": (with_sidebar(plain), PHOTO, frame, None, {"text": 90, "spacing": 70, "lines": 95, "split": True}),
     }
 
 
 def render_all():
     """page name -> HTML of every page checked."""
     pages = {}
-    for name, (data, photo, frame, signature) in versions().items():
+    for name, (data, photo, frame, signature, adjust) in versions().items():
         prepared = prepare(copy.deepcopy(data), "content_en.toml", "en")
         for style in STYLES:
             pages[f"{name}/{style}"] = document(prepared, "en", style, photo, preview_base=PREVIEW_BASE,
-                                                   frame=frame, signature=signature)
+                                                   frame=frame, signature=signature, adjust=adjust)
         if name == "everything":
             # the page printed to PDF: stylesheets from the folder on this computer, written as STYLES/
             for style in STYLES:

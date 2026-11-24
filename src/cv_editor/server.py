@@ -18,7 +18,7 @@ from urllib.parse import parse_qs, quote, unquote, urlparse
 from . import translator
 from .actions import (
     add_photo, add_signature, delete_photo, delete_profile, delete_signature, duplicate_profile, example,
-    list_profiles, make_pdf, new_profile, preview, read_data, save, templates,
+    list_profiles, make_pdf, new_profile, page_count, preview, read_data, save, templates,
 )
 from .storage import get_profile, profiles as all_profiles
 from .transfer import export_zip, import_cv, import_zip
@@ -127,6 +127,7 @@ ROUTES = {
     # what the editor shows: no CV file is written
     ("POST", "/api/preview"): Route(json_body(preview), lock=False),
     ("POST", "/api/pdf"): Route(pdf, lock=False),
+    ("POST", "/api/pages"): Route(json_body(page_count), lock=False),               # how many pages: the Adjust panel
     # changes to the CVs
     ("POST", "/api/save"): Route(json_body(save)),
     ("POST", "/api/cvs/new"): Route(json_body(new_profile)),
@@ -159,7 +160,10 @@ class Handler(BaseHTTPRequestHandler):
         for k, v in extra_headers:
             self.send_header(k, v)
         self.end_headers()
-        self.wfile.write(body)
+        try:
+            self.wfile.write(body)
+        except (BrokenPipeError, ConnectionResetError):
+            pass  # the page was closed or reloaded before the answer arrived: nobody is waiting for it
 
     def _json(self, data, status=200, extra_headers=()):
         self._send(status, json.dumps(data, ensure_ascii=False).encode(), "application/json; charset=utf-8", extra_headers)

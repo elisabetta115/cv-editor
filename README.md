@@ -54,7 +54,7 @@ It starts empty, in a temporary folder that is deleted when you close it.
   **Copy** and **+ New language**, and on the right **Find**, **PDF** and **Save**.
 - **Left, the sections**: click one to edit it in the middle; drag them to change their order.
 - **Middle, the section you edit**, with *previous* and *next* at the bottom.
-- **Right, the preview**, with the design bar above it: **Style**, **Colour**, **Sidebar**, **Photo**,
+- **Right, the preview**, with the design bar above it: **Style**, **Colour**, **Adjust**, **Sidebar**, **Photo**,
   **Frame**, *Live* / *Pages* and full screen.
 
 ## CVs: one per person
@@ -164,6 +164,14 @@ it. Below:
   *timeline*, *academic*, *ats*…), or pick a group: *Classic & formal*, *Clean & modern*, *Bold & creative*,
   *Themed*. Click a style to see it in the preview (the list stays open next to it, to compare), or browse with
   the arrow keys; Enter chooses, Esc closes. **Colour** picks one of 16 palettes; each style remembers its colour.
+- **Adjust**: fits the style on screen to your CV, to have it on fewer pages or give it more air. **Text size**
+  (80–120 %), **Spacing** between sections and entries (50–150 %) and **Line spacing** of the text (85–115 %),
+  with the number of pages the PDF has, counted again as you move them. **Long entries may continue on the next
+  page**: normally a job or a degree that does not fit at the bottom of a page moves to the next one whole,
+  leaving a gap; with this it continues there (each bullet point stays whole). Each style keeps its own
+  adjustments, saved with the CV like its colour; **Reset** brings the style back as it is designed, and a dot on
+  **Adjust** shows that the style on screen is adjusted. The *Notebook* style keeps its ruled lines: only its text
+  size changes.
 - **Languages**: switch language at the top. **+ New language** creates the CV in a new language by copying the
   content of a language you already have: you translate the text, section titles are already translated for
   Italian, English, Spanish, French, German, Portuguese and Dutch. Tick **Translate it automatically** and the
@@ -329,6 +337,11 @@ src/
 - **Styles** share one page structure (`render_page` in `src/cv_editor/render.py`): `.cv-header`, an optional
   `.sidebar`, `.main-column`, `.privacy`. `src/styles/base.css` styles every block; each style's stylesheet
   only changes what makes it different, for both `.has-sidebar` and `.no-sidebar` pages.
+- **Adjust** multiplies what a stylesheet sets by the adjustments of that style (`ADJUSTMENTS` and `adjust_css` in
+  `src/cv_editor/styles.py`): the font size of `html` by `var(--adj-text, 1)`, every line height of 1.2 or more by
+  `var(--adj-lines, 1)`, and the space above sections, between entries and between the parts of a section by
+  `var(--adj-space, 1)`, written e.g. `margin-top: calc(6mm * var(--adj-space, 1))`. At 100 % nothing is added to
+  the page, so every style prints exactly as designed; `tests/test_adjust.py` checks that every stylesheet does it.
 - **Adding a style** is adding one file, `src/styles/<id>.css`: the comment at its top describes it and the
   editor lists it on its next start. Lines `@name`, `@group` (classic | modern | creative | themed), `@color`
   (the palette it starts with), `@side right` (sidebar on the right), `@tags` (words for the search, separated

@@ -19,7 +19,7 @@
   --font-body: 'Work Sans', 'Helvetica Neue', Arial, sans-serif;
 }
 @page { @bottom-right { font-family: 'Work Sans', sans-serif; } }
-body { line-height: 1.45; }
+body { line-height: calc(1.45 * var(--adj-lines, 1)); }
 .page.banner { padding: 0 16mm; }
 .page.banner.has-sidebar { display: block; }
 /* Work Sans has no bold: semi-bold everywhere */
@@ -58,17 +58,17 @@ body { line-height: 1.45; }
 .banner .sidebar .languages .level::before { content: none; }
 
 /* ---------- Section titles: accent colour, short bar on the left ---------- */
-.banner .cv-section { margin-top: 7mm; }
+.banner .cv-section { margin-top: calc(7mm * var(--adj-space, 1)); }
 .banner .cv-section > h2 {
   position: relative; margin-bottom: 3mm; padding: 0 0 0 3.6mm; border: 0; break-inside: avoid;
-  font-size: 1.12rem; font-weight: 600; line-height: 1.2; letter-spacing: .005em; text-transform: none; color: var(--accent);
+  font-size: 1.12rem; font-weight: 600; line-height: calc(1.2 * var(--adj-lines, 1)); letter-spacing: .005em; text-transform: none; color: var(--accent);
 }
 /* the bar is drawn, not a border: a title pushed to the next page leaves no trace of it behind */
 .banner .cv-section > h2::before { content: ""; position: absolute; left: 0; top: .1em; bottom: .1em; width: 1mm; background: var(--soft); }
 .banner .sidebar .cv-section > h2 { margin-bottom: 2.4mm; font-size: 1rem; color: var(--accent); }
 
 /* ---------- Entries ---------- */
-.banner .entry + .entry { margin-top: 4mm; }
+.banner .entry + .entry { margin-top: calc(4mm * var(--adj-space, 1)); }
 .banner .entry-title { font-size: 1.04rem; }
 .banner .dates { font-size: .88rem; color: var(--accent-2); }
 .banner .org { font-style: normal; color: var(--accent-2); }

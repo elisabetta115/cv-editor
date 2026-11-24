@@ -21,7 +21,7 @@
   --side-accent: var(--ink);
 }
 @page { @bottom-right { font-family: 'Inter', sans-serif; font-weight: 600; color: #0b0b0b; } }
-body { line-height: 1.42; }
+body { line-height: calc(1.42 * var(--adj-lines, 1)); }
 .page.swiss { padding: 14mm 16mm 0; }
 .swiss.has-sidebar { --label-w: 33mm; }
 
@@ -33,7 +33,7 @@ body { line-height: 1.42; }
 .swiss .name span { display: block; }
 .swiss .header-photo { grid-row: 1; grid-column: 3; width: var(--sq); height: var(--sq); border-radius: 0; }
 .swiss .cv-header::after { content: ""; grid-row: 1; grid-column: 4; width: var(--sq); height: var(--sq); background: var(--accent-2); }
-.swiss .headline { grid-row: 2; grid-column: 1; margin: 6mm 0 0; padding-right: 5mm; font-size: 1rem; font-weight: 600; line-height: 1.3; letter-spacing: -.01em; text-transform: none; color: var(--accent-2); }
+.swiss .headline { grid-row: 2; grid-column: 1; margin: 6mm 0 0; padding-right: 5mm; font-size: 1rem; font-weight: 600; line-height: calc(1.3 * var(--adj-lines, 1)); letter-spacing: -.01em; text-transform: none; color: var(--accent-2); }
 .swiss .cv-header .contacts { grid-row: 2; grid-column: 2 / -1; display: grid; grid-template-columns: repeat(2, max-content); gap: .8mm 8mm; margin-top: 6mm; font-size: .92rem; }
 .swiss .cv-header .details { grid-row: 3; grid-column: 2 / -1; margin-top: 1.6mm; font-size: .92rem; color: var(--ink); }
 .swiss .cv-header .details strong { font-weight: 600; }
@@ -42,18 +42,18 @@ body { line-height: 1.42; }
 
 /* ---------- Sections: heavy rule, title in the left third ---------- */
 /* the rule belongs to the title (and the first row of the body), so it never stays alone at the foot of a page */
-.swiss .cv-section + .cv-section { margin-top: 6.5mm; }
+.swiss .cv-section + .cv-section { margin-top: calc(6.5mm * var(--adj-space, 1)); }
 .swiss .main-column .cv-section { display: grid; grid-template-columns: var(--label-w) minmax(0, 1fr); }
 .swiss .cv-section > h2, .swiss .main-column .cv-section > .section-body { padding-top: 2.4mm; border-top: 1.2mm solid var(--ink); }
 .swiss .sidebar > .sec-details { padding-top: 0; }
-.swiss .cv-section > h2 { margin: 0 0 2.6mm; padding-right: 4mm; border-bottom: 0; font-size: 1rem; font-weight: 600; line-height: 1.3; letter-spacing: -.01em; text-transform: none; color: var(--ink); }
+.swiss .cv-section > h2 { margin: 0 0 2.6mm; padding-right: 4mm; border-bottom: 0; font-size: 1rem; font-weight: 600; line-height: calc(1.3 * var(--adj-lines, 1)); letter-spacing: -.01em; text-transform: none; color: var(--ink); }
 /* beside its body (same grid row) the title cannot be left alone: no need to avoid breaks after it,
    which would make Chrome push the whole row (and the rows before it) to the next page */
 .swiss .main-column .cv-section > h2 { margin: 0; break-after: auto; }
 .swiss .sidebar .cv-section > h2 { color: var(--ink); }
 
 /* ---------- Entries: bold tabular dates, no ornament ---------- */
-.swiss .entry + .entry { margin-top: 4mm; }
+.swiss .entry + .entry { margin-top: calc(4mm * var(--adj-space, 1)); }
 .swiss .entry-title { font-size: 1rem; font-weight: 600; letter-spacing: -.005em; }
 .swiss .dates { font-size: .95rem; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
 .swiss .org { font-style: normal; color: var(--muted); }

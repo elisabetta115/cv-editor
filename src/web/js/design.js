@@ -25,7 +25,8 @@ function updateBar() {
     if (c) $("#color-dot").style.background = `linear-gradient(135deg, ${c.dark} 0 50%, ${c.light} 50% 100%)`;
     for (const b of document.querySelectorAll("#colors button")) b.setAttribute("aria-pressed", String(b.dataset.c === color));
   }
-  for (const [id, panel] of [["btn-color", "color-panel"], ["btn-photo", "photo-panel"], ["btn-frame", "frame-panel"], ["style-btn", "style-panel"], ["btn-cv", "cv-panel"]])
+  if (S.settings) $("#btn-adjust").classList.toggle("adjusted", !!S.settings.styles[S.style]?.adjust);
+  for (const [id, panel] of [["btn-color", "color-panel"], ["btn-adjust", "adjust-panel"], ["btn-photo", "photo-panel"], ["btn-frame", "frame-panel"], ["style-btn", "style-panel"], ["btn-cv", "cv-panel"]])
     $("#" + id).setAttribute("aria-expanded", String(!$("#" + panel).hidden));
   const save = $("#btn-save");
   save.classList.toggle("primary", unsaved());
@@ -106,7 +107,7 @@ function renderStyleGrid() {
 // the CV in one style, scaled down; the same content and the same colour as that style would use
 async function drawThumb(box) {
   const id = box.dataset.style;
-  const req = { ...viewRequest(), style: id, color: S.settings.styles[id]?.color };
+  const req = { ...viewRequest(), style: id, color: S.settings.styles[id]?.color, adjust: S.settings.styles[id]?.adjust || null };
   const key = JSON.stringify(req);
   if (thumbs.get(id)?.key !== key) {
     try { thumbs.set(id, { key, doc: (await api("/api/preview", req)).document }); } catch { return; }

@@ -4,7 +4,7 @@ import html
 from .contacts import ICONS, contact_text, icon
 from .language import base_language
 from .photos import SHAPES
-from .styles import STYLES, color_css
+from .styles import STYLES, adjust_css, color_css
 from .text import paragraphs, rich, t, web_address
 from .workspace import STYLES_DIR
 
@@ -202,9 +202,10 @@ def render_page(cv, style, photo, frame=None, signature=None):
 </div>"""
 
 
-def document(cv, language, style, photo, preview_base=None, color=None, frame=None, signature=None):
+def document(cv, language, style, photo, preview_base=None, color=None, frame=None, signature=None, adjust=None):
     """The complete HTML page, saved in html/<person>/. With preview_base it is meant
-    for the editor: relative paths start from that address and links open in a new tab."""
+    for the editor: relative paths start from that address and links open in a new tab.
+    adjust: the style fitted to this CV (the Adjust panel), None = as designed."""
     p = cv["person"]
     color = color or STYLES[style]["color"]
     base = f'<base href="{html.escape(preview_base)}" target="_blank">\n' if preview_base else ""
@@ -219,7 +220,7 @@ def document(cv, language, style, photo, preview_base=None, color=None, frame=No
 <link rel="stylesheet" href="{styles}fonts.css">
 <link rel="stylesheet" href="{styles}base.css">
 <link rel="stylesheet" href="{styles}{style}.css">
-<style>{color_css(style, color, has_sidebar(cv))}</style>
+<style>{color_css(style, color, has_sidebar(cv))}{adjust_css(adjust)}</style>
 </head>
 {body}
 {render_page(cv, style, photo, frame, signature)}

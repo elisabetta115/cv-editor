@@ -17,7 +17,7 @@
   --date-w: 30mm;
 }
 @page { @bottom-right { font-family: 'Lato', sans-serif; } }
-body { line-height: 1.5; }
+body { line-height: calc(1.5 * var(--adj-lines, 1)); }
 .page.minimal { padding: 16mm 20mm 0; }
 
 /* ---------- Centred header (photo above the name) ---------- */
@@ -32,13 +32,13 @@ body { line-height: 1.5; }
 .minimal .cv-header .details strong { font-weight: 700; }
 
 /* ---------- Sections: title with a thin rule ---------- */
-.minimal .cv-section { margin-top: 7mm; }
+.minimal .cv-section { margin-top: calc(7mm * var(--adj-space, 1)); }
 .minimal .cv-section > h2 { display: flex; align-items: center; gap: 4mm; margin-bottom: 3.5mm; padding: 0; border: 0; font-size: .78rem; letter-spacing: .3em; }
 .minimal .cv-section > h2::after { content: ""; flex: 1; border-top: .3mm solid var(--rule); }
 
 /* ---------- Entries: dates on the left, text on the right ---------- */
 .minimal .main-column .entry { display: grid; grid-template-columns: var(--date-w) 1fr; column-gap: 7mm; }
-.minimal .main-column .entry + .entry { margin-top: 4mm; }
+.minimal .main-column .entry + .entry { margin-top: calc(4mm * var(--adj-space, 1)); }
 .minimal .main-column .entry-head { display: contents; }
 .minimal .main-column .dates { grid-column: 1; grid-row: 1; padding-top: .15em; white-space: normal; font-size: .86rem; }
 .minimal .main-column .entry > :not(.entry-head), .minimal .main-column .entry-title { grid-column: 2; }

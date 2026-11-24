@@ -9,7 +9,7 @@ import { watchDrops } from "./cvs.js";
 function viewRequest() {
   sync(S.language);
   const st = S.settings?.styles[S.style] || {};
-  return { profile: S.profile, language: S.language, style: S.style, color: st.color, photo: S.photo,
+  return { profile: S.profile, language: S.language, style: S.style, color: st.color, adjust: st.adjust || null, photo: S.photo,
            frame: S.photo ? S.settings?.photos?.[S.photo] || null : null, data: L().data };
 }
 async function fetchPdf(inline) {
@@ -86,7 +86,8 @@ async function loadPreview() {
     const req = viewRequest();
     const r = await api("/api/preview", req);
     if (n !== request) return;
-    const frame = $("#cv"), key = [S.profile, S.style, S.language, req.color, r.sidebar].join("|");
+    // a new colour, adjustment or sidebar changes the page's stylesheet: the whole page is loaded again
+    const frame = $("#cv"), key = [S.profile, S.style, S.language, req.color, JSON.stringify(req.adjust), r.sidebar].join("|");
     if (loaded === key) {
       if (ready) frame.contentDocument.body.innerHTML = r.page; else pending = r.page;
     } else {

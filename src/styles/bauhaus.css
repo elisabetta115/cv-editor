@@ -59,7 +59,7 @@
 .bauhaus .cv-header .details { margin-top: 2.4mm; }
 
 /* ---------- Section titles: circle, square, triangle in turn ---------- */
-.bauhaus .cv-section { margin-top: 7mm; }
+.bauhaus .cv-section { margin-top: calc(7mm * var(--adj-space, 1)); }
 .bauhaus .sidebar-photo + .cv-section, .bauhaus .main-column > .cv-section:first-child { margin-top: 0; }
 .bauhaus .cv-section > h2 {
   break-inside: avoid;
@@ -72,7 +72,7 @@
 .bauhaus .sidebar .cv-section > h2 { font-size: 1rem; border-bottom-width: .8mm; color: var(--ink); }
 
 /* ---------- Entries ---------- */
-.bauhaus .entry + .entry { margin-top: 4mm; }
+.bauhaus .entry + .entry { margin-top: calc(4mm * var(--adj-space, 1)); }
 .bauhaus .entry-title { font-size: 1.06rem; }
 .bauhaus .dates { font-family: var(--font-head); font-size: .9rem; font-weight: 600; letter-spacing: .04em; color: var(--mid); }
 .bauhaus .sidebar .dates { color: var(--mid); }

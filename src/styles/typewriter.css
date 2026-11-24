@@ -21,7 +21,7 @@
   --side-accent: var(--ink);
 }
 @page { background: #f7f2e7; @bottom-right { content: "- " counter(page) " / " counter(pages) " -"; font-family: 'Courier Prime', monospace; color: #5d554c; } }
-body { line-height: 1.42; }
+body { line-height: calc(1.42 * var(--adj-lines, 1)); }
 .page.typewriter { padding: 15mm 15mm 0; }
 
 /* ---------- Header: typed name, stamp, tilted photo ---------- */
@@ -50,13 +50,13 @@ body { line-height: 1.42; }
 }
 
 /* ---------- Section titles: § and capitals over a dashed line ---------- */
-.typewriter .cv-section + .cv-section { margin-top: 6.5mm; }
+.typewriter .cv-section + .cv-section { margin-top: calc(6.5mm * var(--adj-space, 1)); }
 .typewriter .cv-section > h2 { margin-bottom: 3mm; padding-bottom: 1.2mm; border-bottom: .35mm dashed var(--ink); font-size: 1.05rem; font-weight: 700; letter-spacing: .14em; color: var(--ink); }
 .typewriter .cv-section > h2::before { content: "§"; margin-right: 2.4mm; letter-spacing: 0; color: var(--accent-2); }
 .typewriter .sidebar .cv-section > h2 { font-size: .98rem; border-color: var(--ink); }
 
 /* ---------- Entries: underlined organisations, "-" bullets, [tags] ---------- */
-.typewriter .entry + .entry { margin-top: 4mm; }
+.typewriter .entry + .entry { margin-top: calc(4mm * var(--adj-space, 1)); }
 .typewriter .entry-title { font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
 .typewriter .dates { font-size: .92rem; color: var(--ink); }
 .typewriter .org { font-style: normal; color: var(--ink); }

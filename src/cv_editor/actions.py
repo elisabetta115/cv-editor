@@ -8,7 +8,7 @@ from urllib.parse import quote, unquote
 from .contacts import CONTACT_GROUPS, ICONS
 from .content import empty_cv, normalize, prepare
 from .language import KNOWN_LANGUAGES, base_language, language_config, languages
-from .pdf import find_chrome, print_pdf
+from .pdf import find_chrome, pages_in, print_pdf
 from .photos import (
     can_zoom, find_photos, framed_photo, photo_frame, prepare_photos, signature_file, signature_src, write_photo,
     write_signature,
@@ -19,7 +19,7 @@ from .storage import (
     Profile, check_code, clean_cv, delete_language, free_name, get_profile, load, load_settings,
     profiles as all_profiles, remove_profile_files, save_language, save_settings,
 )
-from .styles import COLORS, STYLE_GROUPS, STYLES
+from .styles import COLORS, STYLE_GROUPS, STYLES, adjust_values
 from .workspace import ROOT, workspace
 
 
@@ -119,7 +119,7 @@ def example():
 
 
 def view(r):
-    """What the editor shows: CV, language, style, colour and photo (content not saved yet included)."""
+    """What the editor shows: CV, language, style, colour, adjustments and photo (content not saved yet included)."""
     profile = get_profile(r.get("profile"))
     language, style = check_code(r.get("language")), r.get("style")
     if style not in STYLES:
@@ -132,13 +132,15 @@ def view(r):
     src = workspace().photo_src[profile.name].get(photo)
     frame = photo_frame(r.get("frame")) if src else None  # how the photo is framed (not saved yet included)
     signature = signature_src(profile)  # shown only when the content asks for it ([signature] show = true)
-    return profile, language, style, prepared, framed_photo(profile, src, frame), photo, color, frame, signature
+    adjust = adjust_values(r.get("adjust"))  # the style fitted to this CV (the Adjust panel, not saved yet included)
+    return profile, language, style, prepared, framed_photo(profile, src, frame), photo, color, frame, signature, adjust
 
 
 def preview(r):
-    profile, language, style, prepared, src, _, color, frame, signature = view(r)
+    profile, language, style, prepared, src, _, color, frame, signature, adjust = view(r)
     base = "/html/" + quote(profile.name) + "/"
-    return {"document": document(prepared, language, style, src, preview_base=base, color=color, frame=frame, signature=signature),
+    return {"document": document(prepared, language, style, src, preview_base=base, color=color, frame=frame,
+                                 signature=signature, adjust=adjust),
             "page": render_page(prepared, style, src, frame, signature), "sidebar": has_sidebar(prepared)}
 
 
@@ -152,18 +154,25 @@ def pdf_name(person, language):
 
 def make_pdf(r):
     """The PDF of exactly what the editor shows. Returns (file name, PDF bytes)."""
-    profile, language, style, prepared, src, _, color, frame, signature = view(r)
+    profile, language, style, prepared, src, _, color, frame, signature, adjust = view(r)
     name = pdf_name(prepared["person"], language)
     profile.html_dir.mkdir(parents=True, exist_ok=True)
     tag = secrets.token_hex(6)
     page, pdf = profile.html_dir / f"_view_{tag}.html", profile.html_dir / f"_view_{tag}.pdf"
     try:
-        page.write_text(document(prepared, language, style, src, color=color, frame=frame, signature=signature), encoding="utf-8")
+        page.write_text(document(prepared, language, style, src, color=color, frame=frame, signature=signature,
+                                 adjust=adjust), encoding="utf-8")
         print_pdf(find_chrome(), page, pdf)
         return name, pdf.read_bytes()
     finally:
         page.unlink(missing_ok=True)
         pdf.unlink(missing_ok=True)
+
+
+def page_count(r):
+    """How many pages the PDF of what the editor shows has (the Adjust panel shows it as you change things)."""
+    _, content = make_pdf(r)
+    return {"pages": pages_in(content)}
 
 
 def save(r):

@@ -27,7 +27,7 @@
 .timeline .cv-header .contacts .icon-wrap { color: var(--accent); }
 
 /* ---------- Section titles ---------- */
-.timeline .cv-section { margin-top: 7mm; }
+.timeline .cv-section { margin-top: calc(7mm * var(--adj-space, 1)); }
 .timeline .cv-section > h2 { display: flex; align-items: center; gap: 3mm; padding: 0; border: 0; font-size: .95rem; letter-spacing: .12em; margin-bottom: 3.5mm; }
 .timeline .cv-section > h2::after { content: ""; flex: 1; height: .3mm; background: var(--rule); }
 

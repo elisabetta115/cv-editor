@@ -21,7 +21,7 @@
   --side-accent: #000;
 }
 @page { @bottom-right { font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #000; } }
-body { line-height: 1.4; }
+body { line-height: calc(1.4 * var(--adj-lines, 1)); }
 .page.brutalist { padding: 14mm 15mm 0 14mm; }
 /* Space Grotesk has no italic: emphasis is a highlighter mark instead of a fake slant */
 .brutalist em { font-style: normal; padding: 0 .6mm; background: color-mix(in srgb, var(--pop) 45%, #fff); }
@@ -49,7 +49,7 @@ body { line-height: 1.4; }
    corners cut out): a real box-shadow at the foot of a printed page would spill onto the next one. */
 .brutalist .cv-section {
   --pad: 5mm;
-  position: relative; margin-top: 7mm; padding: 3mm var(--pad) 4.6mm; background: #fff;
+  position: relative; margin-top: calc(7mm * var(--adj-space, 1)); padding: 3mm var(--pad) 4.6mm; background: #fff;
   border: var(--b) solid #000; border-right-width: calc(var(--b) + var(--sh)); border-bottom-width: calc(var(--b) + var(--sh));
   -webkit-box-decoration-break: clone; box-decoration-break: clone;
 }
@@ -62,13 +62,13 @@ body { line-height: 1.4; }
    box on the next page */
 .brutalist .cv-section > h2 {
   width: fit-content; margin: -3mm 0 3.4mm calc(-1 * var(--pad)); padding: 1.3mm 3.2mm 1.4mm var(--pad); border: 0; background: #000;
-  font-size: .92rem; line-height: 1.2; font-weight: 700; letter-spacing: .12em; color: #fff;
+  font-size: .92rem; line-height: calc(1.2 * var(--adj-lines, 1)); font-weight: 700; letter-spacing: .12em; color: #fff;
 }
 .brutalist .sidebar .cv-section > h2 { color: #fff; }
 .brutalist .cv-section.sec-details { padding-top: 4mm; }
 
 /* ---------- Entries ---------- */
-.brutalist .entry + .entry { margin-top: 3.4mm; padding-top: 3.2mm; border-top: .35mm solid #000; }
+.brutalist .entry + .entry { margin-top: calc(3.4mm * var(--adj-space, 1)); padding-top: calc(3.2mm * var(--adj-space, 1)); border-top: .35mm solid #000; }
 .brutalist .entry-title { font-size: 1.08rem; font-weight: 700; letter-spacing: -.01em; }
 .brutalist .dates { padding: .1mm 1.6mm; background: var(--pop); border: .35mm solid #000; font-size: .82rem; font-weight: 700; color: #000; }
 .brutalist .sidebar .dates { display: inline-block; margin-top: .6mm; color: #000; }

@@ -60,7 +60,7 @@
 .scrapbook .cv-header .details { font-size: .9rem; }
 
 /* ---------- Section titles: torn paper labels with a piece of tape ---------- */
-.scrapbook .cv-section { margin-top: 7mm; }
+.scrapbook .cv-section { margin-top: calc(7mm * var(--adj-space, 1)); }
 .scrapbook .cv-section > h2 {
   position: relative; width: fit-content; max-width: 100%; margin-bottom: 3.4mm; padding: 1.3mm 5.5mm 1.1mm 5mm; border: 0;
   rotate: -1.2deg; transform-origin: 100% 0; font-size: .98rem; font-weight: 600; letter-spacing: .08em; color: var(--accent);
@@ -73,7 +73,7 @@
 .scrapbook .cv-section:nth-child(even) > h2::before { rotate: 12deg; }
 
 /* ---------- Entries ---------- */
-.scrapbook .entry + .entry { margin-top: 3.8mm; }
+.scrapbook .entry + .entry { margin-top: calc(3.8mm * var(--adj-space, 1)); }
 .scrapbook .entry-title { font-size: 1.03rem; font-weight: 600; }
 .scrapbook .dates { display: inline-block; rotate: -2.5deg; font-family: var(--font-hand); font-size: 1.4rem; font-weight: 700; line-height: 1; color: var(--accent-2); }
 .scrapbook .org { font-style: normal; color: var(--accent-2); }

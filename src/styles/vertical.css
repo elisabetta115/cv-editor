@@ -73,18 +73,18 @@
 .vertical.has-sidebar:not(:has(.headline)) .main-column, .vertical.has-sidebar:not(:has(.headline)) .sidebar { margin-top: 16mm; }
 
 /* ---------- Section titles: capitals and a long accent rule ---------- */
-.vertical .cv-section { margin-top: 7mm; }
+.vertical .cv-section { margin-top: calc(7mm * var(--adj-space, 1)); }
 .vertical .sidebar-photo + .cv-section { margin-top: 0; }
 .vertical .cv-section > h2 {
   break-inside: avoid;
   display: flex; align-items: center; gap: 3mm; margin-bottom: 3mm; padding: 0; border: 0;
-  font-size: 1.3rem; font-weight: 500; line-height: 1.2; letter-spacing: .1em; color: var(--dark);
+  font-size: 1.3rem; font-weight: 500; line-height: calc(1.2 * var(--adj-lines, 1)); letter-spacing: .1em; color: var(--dark);
 }
 .vertical .cv-section > h2::after { content: ""; flex: 1; height: .7mm; background: var(--mid); }
 .vertical .sidebar .cv-section > h2 { font-size: 1.12rem; }
 
 /* ---------- Entries ---------- */
-.vertical .entry + .entry { margin-top: 4mm; }
+.vertical .entry + .entry { margin-top: calc(4mm * var(--adj-space, 1)); }
 .vertical .entry-title { font-size: 1.06rem; }
 .vertical .dates { font-family: var(--font-head); font-size: .98rem; letter-spacing: .04em; color: var(--mid); }
 .vertical .sidebar .dates { color: var(--mid); }

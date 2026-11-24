@@ -65,7 +65,7 @@
 .spotlight.has-sidebar > .privacy { grid-column: 2; margin-left: 10mm; }
 
 /* ---------- Section titles: Syne with a short thick bar ---------- */
-.spotlight .cv-section { margin-top: 7mm; }
+.spotlight .cv-section { margin-top: calc(7mm * var(--adj-space, 1)); }
 .spotlight .cv-section > h2 {
   break-inside: avoid;
   display: flex; align-items: center; gap: 2.6mm; padding: 0; border: 0; margin-bottom: 3.2mm;
@@ -76,7 +76,7 @@
 .spotlight .sidebar .cv-section > h2::before { width: 5mm; background: var(--mid); }
 
 /* ---------- Entries ---------- */
-.spotlight .entry + .entry { margin-top: 4mm; }
+.spotlight .entry + .entry { margin-top: calc(4mm * var(--adj-space, 1)); }
 .spotlight .entry-title { font-size: 1.06rem; }
 .spotlight .dates { font-family: var(--font-head); font-size: .86rem; font-weight: 700; color: var(--mid); }
 .spotlight .sidebar .dates { color: var(--mid); }

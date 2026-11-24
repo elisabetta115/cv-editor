@@ -23,8 +23,8 @@
   --side-accent: var(--ink);
 }
 @page { @bottom-right { font-family: 'Inter', sans-serif; font-weight: 600; color: #333; } }
-body { line-height: 1.42; }
-html { font-size: 9.6pt; }
+body { line-height: calc(1.42 * var(--adj-lines, 1)); }
+html { font-size: calc(9.6pt * var(--adj-text, 1)); }
 .page.poster { padding: 0 15mm; }
 
 /* ---------- Header: name, photo, strip ---------- */
@@ -60,7 +60,7 @@ html { font-size: 9.6pt; }
 .poster .cv-header .details strong { color: var(--ink); }
 
 /* ---------- Section titles: big condensed capitals on a thick block ---------- */
-.poster .cv-section { margin-top: 6.5mm; }
+.poster .cv-section { margin-top: calc(6.5mm * var(--adj-space, 1)); }
 .poster .sidebar-photo + .cv-section, .poster .main-column > .cv-section:first-child { margin-top: 0; }
 .poster .cv-section > h2 {
   break-inside: avoid;
@@ -71,7 +71,7 @@ html { font-size: 9.6pt; }
 .poster .sidebar .cv-section > h2 { font-size: 1.6rem; color: var(--ink); }
 
 /* ---------- Entries ---------- */
-.poster .entry + .entry { margin-top: 3.6mm; }
+.poster .entry + .entry { margin-top: calc(3.6mm * var(--adj-space, 1)); }
 .poster .entry-title { font-size: 1.08rem; font-weight: 800; letter-spacing: -.01em; }
 .poster .dates { font-family: var(--font-head); font-size: 1.3rem; line-height: 1; letter-spacing: .04em; color: var(--mid); }
 .poster .sidebar .dates { color: var(--mid); }

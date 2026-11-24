@@ -24,8 +24,8 @@
   --side-accent: var(--dark);
 }
 @page { @bottom-right { font-family: 'Rubik', sans-serif; font-weight: 500; color: var(--p-mid, #777); } }
-html { font-size: 9.5pt; }
-body { line-height: 1.45; }
+html { font-size: calc(9.5pt * var(--adj-text, 1)); }
+body { line-height: calc(1.45 * var(--adj-lines, 1)); }
 .page.infographic { padding: 0 16mm; }
 
 /* ---------- Header: tinted band, donut-ring photo, badge row ---------- */
@@ -42,7 +42,7 @@ body { line-height: 1.45; }
   font-size: .86rem; font-weight: 500; letter-spacing: .12em; color: #fff;
 }
 /* contacts: round icon badges in a row, text below */
-.infographic .cv-header .contacts { gap: 3mm 4mm; margin-top: 5mm; font-size: .8rem; line-height: 1.25; }
+.infographic .cv-header .contacts { gap: 3mm 4mm; margin-top: 5mm; font-size: .8rem; line-height: calc(1.25 * var(--adj-lines, 1)); }
 .infographic .cv-header .contacts li { flex-direction: column; gap: 1.2mm; text-align: center; }
 .infographic .contacts .icon-wrap { width: 8.4mm; height: 8.4mm; border-radius: 50%; background: var(--dark); color: #fff; }
 .infographic .contacts .icon { width: 4.2mm; height: 4.2mm; }
@@ -52,7 +52,7 @@ body { line-height: 1.45; }
 
 /* ---------- Section titles: big numbered circles ---------- */
 .infographic .main-column { counter-reset: sec; }
-.infographic .cv-section { position: relative; margin-top: 7mm; }
+.infographic .cv-section { position: relative; margin-top: calc(7mm * var(--adj-space, 1)); }
 .infographic .sidebar-photo + .cv-section { margin-top: 0; }
 .infographic .cv-section > h2 {
   display: flex; align-items: center; gap: 3.4mm; margin-bottom: 3mm; padding: 0; border: 0; break-inside: avoid;
@@ -77,7 +77,7 @@ body { line-height: 1.45; }
 }
 .infographic .entry:nth-child(3n+1)::before { background: var(--dark); }
 .infographic .entry:nth-child(3n)::before { background: var(--light); }
-.infographic .entry + .entry { margin-top: 4mm; }
+.infographic .entry + .entry { margin-top: calc(4mm * var(--adj-space, 1)); }
 .infographic .entry-title { font-size: 1.04rem; font-weight: 700; }
 .infographic .dates { padding: .3mm 2.2mm; border-radius: 1mm; background: var(--mid); font-size: .8rem; font-weight: 700; color: #fff; }
 .infographic .entry:nth-child(3n+1) .dates { background: var(--dark); }

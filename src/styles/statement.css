@@ -18,7 +18,7 @@
   --side-gap: 9mm;
 }
 @page { @bottom-right { font-family: 'Work Sans', sans-serif; } }
-body { line-height: 1.45; }
+body { line-height: calc(1.45 * var(--adj-lines, 1)); }
 .page.statement { padding: 14mm 16mm 0; }
 
 /* ---------- Compact header: name and headline on one line, contacts in a row ---------- */
@@ -34,7 +34,7 @@ body { line-height: 1.45; }
 
 /* ---------- The statement: the profile in the main column ---------- */
 .statement .main-column .sec-profile { position: relative; padding: 0 0 7mm 17mm; border-bottom: .3mm solid var(--rule); }
-.statement .main-column .sec-profile + .cv-section { margin-top: 8mm; }
+.statement .main-column .sec-profile + .cv-section { margin-top: calc(8mm * var(--adj-space, 1)); }
 .statement .main-column .sec-profile::before {
   content: "\201C"; position: absolute; left: -1mm; top: -4mm;
   font-family: var(--font-name); font-size: 7.5rem; line-height: 1; color: var(--accent-2);
@@ -42,18 +42,18 @@ body { line-height: 1.45; }
 .statement .main-column .sec-profile > h2 { margin-bottom: 1.8mm; font-size: .7rem; letter-spacing: .22em; color: var(--muted); }
 .statement .main-column .sec-profile > h2::before { display: none; }
 .statement .main-column .sec-profile .section-body > p {
-  font-family: var(--font-name); font-size: 1.5rem; line-height: 1.32; text-align: left; hyphens: manual; color: var(--ink);
+  font-family: var(--font-name); font-size: 1.5rem; line-height: calc(1.32 * var(--adj-lines, 1)); text-align: left; hyphens: manual; color: var(--ink);
 }
 .statement .main-column .sec-profile .section-body > p + p { margin-top: 3mm; }
 .statement .main-column .sec-profile strong { font-weight: 400; color: var(--accent-2); }
 
 /* ---------- Section titles: small capitals after a coloured dot ---------- */
-.statement .cv-section + .cv-section { margin-top: 7mm; }
+.statement .cv-section + .cv-section { margin-top: calc(7mm * var(--adj-space, 1)); }
 .statement .cv-section > h2 { display: flex; align-items: center; gap: 2.6mm; margin-bottom: 3mm; padding: 0; border: 0; font-size: .84rem; font-weight: 600; letter-spacing: .16em; color: var(--ink); }
 .statement .cv-section > h2::before { content: ""; flex: none; width: 2.3mm; height: 2.3mm; border-radius: 50%; background: var(--accent-2); }
 
 /* ---------- Entries ---------- */
-.statement .entry + .entry { margin-top: 4mm; }
+.statement .entry + .entry { margin-top: calc(4mm * var(--adj-space, 1)); }
 .statement .entry-title { font-size: 1.04rem; font-weight: 600; }
 .statement .dates { font-size: .86rem; color: var(--muted); }
 .statement .org { font-style: normal; color: var(--accent-2); }
@@ -71,5 +71,5 @@ body { line-height: 1.45; }
 .statement .sidebar { padding: 6mm 5.5mm 7mm; background: var(--tint); }
 .statement .sidebar .contacts li { gap: 2.2mm; font-size: .88rem; }
 .statement .sidebar .cv-section > h2 { color: var(--accent); }
-.statement .sidebar .sec-profile .section-body > p { font-family: var(--font-name); font-size: 1.08rem; line-height: 1.35; }
+.statement .sidebar .sec-profile .section-body > p { font-family: var(--font-name); font-size: 1.08rem; line-height: calc(1.35 * var(--adj-lines, 1)); }
 .statement .privacy { border-top-color: var(--rule); }

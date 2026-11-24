@@ -20,7 +20,7 @@
   --side-gap: 9mm;
 }
 @page { @bottom-right { font-family: 'Poppins', sans-serif; } }
-body { line-height: 1.5; }
+body { line-height: calc(1.5 * var(--adj-lines, 1)); }
 .page.badge { padding: 0 16mm; }
 
 /* ---------- Header: band, photo on its edge, everything centred ---------- */
@@ -51,19 +51,19 @@ body { line-height: 1.5; }
 .badge .cv-header:not(:has(.header-photo)) .contacts { margin-top: 6mm; }
 
 /* ---------- Section titles: centred, a small circle above ---------- */
-.badge .cv-section { margin-top: 7.5mm; }
+.badge .cv-section { margin-top: calc(7.5mm * var(--adj-space, 1)); }
 .badge .sidebar-photo + .cv-section { margin-top: 0; }
 .badge .cv-section > h2 {
   margin-bottom: 3.4mm; padding: 0; border: 0; text-align: center; break-inside: avoid;
   font-size: .95rem; font-weight: 600; letter-spacing: .22em; color: var(--accent);
 }
 .badge .cv-section > h2::before { content: ""; display: block; width: 3mm; height: 3mm; margin: 0 auto 1.6mm; border-radius: 50%; border: .7mm solid var(--soft); }
-.badge .sidebar .cv-section { margin-top: 6mm; }
+.badge .sidebar .cv-section { margin-top: calc(6mm * var(--adj-space, 1)); }
 .badge .sidebar > .cv-section:first-child, .badge .sidebar-photo + .cv-section { margin-top: 0; }
 .badge .sidebar .cv-section > h2 { margin-bottom: 2.6mm; font-size: .86rem; letter-spacing: .18em; }
 
 /* ---------- Entries ---------- */
-.badge .entry + .entry { margin-top: 4mm; }
+.badge .entry + .entry { margin-top: calc(4mm * var(--adj-space, 1)); }
 .badge .entry-title { font-size: 1.04rem; font-weight: 600; }
 .badge .dates { font-size: .86rem; color: var(--accent-2); }
 .badge .org { font-style: normal; color: var(--accent-2); }

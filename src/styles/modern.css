@@ -73,7 +73,7 @@
 .modern.no-sidebar > .privacy { margin: 8mm 16mm 0; }
 
 /* ---------- Sections ---------- */
-.modern .cv-section { margin-top: 7mm; }
+.modern .cv-section { margin-top: calc(7mm * var(--adj-space, 1)); }
 .modern .cv-section > h2 { margin-bottom: 3mm; font-size: .92rem; }
 .modern .main-column .cv-section > h2 { display: flex; align-items: center; gap: 2.6mm; padding: 0; border: 0; color: var(--dark); }
 .modern .main-column .cv-section > h2::before { content: ""; flex: none; width: 2.4mm; height: 2.4mm; border-radius: .5mm; background: var(--light); }
@@ -99,7 +99,7 @@
 .modern .bullets li::before, .modern ul.desc li::before { background: var(--light); }
 
 /* ---------- Main column ---------- */
-.modern .entry + .entry { margin-top: 4mm; }
+.modern .entry + .entry { margin-top: calc(4mm * var(--adj-space, 1)); }
 .modern .org { font-style: normal; font-weight: 600; color: var(--mid); }
 .modern .org .location { font-weight: 400; color: var(--muted); }
 .modern .org .location:not(:first-child)::before { content: " · "; }

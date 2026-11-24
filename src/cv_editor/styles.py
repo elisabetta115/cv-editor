@@ -74,6 +74,41 @@ def load_styles():
 STYLES = load_styles()
 
 
+# The Adjust panel: a style fitted to a CV, in % of the style's own design (100 = as designed), and whether a long
+# entry may continue on the next page. Each style keeps its own (settings.toml, [styles.<id>]). The stylesheets
+# multiply what they set by these: calc(6mm * var(--adj-space, 1)).
+ADJUSTMENTS = {                          # name: (smallest, largest, CSS variable)
+    "text": (80, 120, "--adj-text"),     # text size
+    "spacing": (50, 150, "--adj-space"), # space between sections and between entries
+    "lines": (85, 115, "--adj-lines"),   # line spacing of the text (names and headings keep theirs)
+}
+
+
+def adjust_values(value):
+    """The adjustments of a style, checked and rounded: only those that differ from the style's design."""
+    value = value if isinstance(value, dict) else {}
+    out = {}
+    for name, (low, high, _) in ADJUSTMENTS.items():
+        v = value.get(name)
+        if isinstance(v, (int, float)) and not isinstance(v, bool):
+            v = round(min(high, max(low, v)))
+            if v != 100:
+                out[name] = v
+    if value.get("split") is True:
+        out["split"] = True
+    return out
+
+
+def adjust_css(adjust):
+    """The CSS of the adjustments; nothing at all for a style as designed."""
+    adjust = adjust_values(adjust)
+    css = "".join(f"{var}:{adjust[name] / 100:g};" for name, (_, _, var) in ADJUSTMENTS.items() if name in adjust)
+    css = f":root{{{css}}}" if css else ""
+    if adjust.get("split"):  # a long entry may continue on the next page: its bullet points stay whole
+        css += ".entry{break-inside:auto}.entry-head,.entry .org{break-after:avoid}"
+    return css
+
+
 def color_css(style, color, show_side=False):
     """The colour variables of the chosen palette, and rules for the printed page."""
     conf = STYLES[style]

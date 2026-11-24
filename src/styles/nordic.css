@@ -18,7 +18,7 @@
   --side-gap: 13mm;
 }
 @page { @bottom-right { font-family: 'Manrope', sans-serif; color: #8a9297; } }
-body { line-height: 1.62; }
+body { line-height: calc(1.62 * var(--adj-lines, 1)); }
 .page.nordic { padding: 12mm 17mm 0; }
 
 /* ---------- Header: rounded tinted block ---------- */
@@ -34,7 +34,7 @@ body { line-height: 1.62; }
 .nordic .cv-header .details strong, .nordic .sidebar .details strong { font-weight: 600; color: var(--ink); }
 
 /* ---------- Sections: no rules, sentence case, a soft dot ---------- */
-.nordic .cv-section { margin-top: 9mm; }
+.nordic .cv-section { margin-top: calc(9mm * var(--adj-space, 1)); }
 .nordic .sidebar-photo + .cv-section { margin-top: 0; }
 .nordic .cv-section > h2 {
   display: flex; align-items: center; gap: 2.6mm; margin-bottom: 3.6mm; padding: 0; border: 0;
@@ -46,9 +46,9 @@ body { line-height: 1.62; }
 .nordic .main-column .section-body > p { text-align: left; hyphens: manual; }
 
 /* ---------- Entries ---------- */
-.nordic .entry + .entry { margin-top: 5.2mm; }
+.nordic .entry + .entry { margin-top: calc(5.2mm * var(--adj-space, 1)); }
 .nordic .entry-head { align-items: center; }
-.nordic .entry-title { font-size: 1.06rem; font-weight: 600; line-height: 1.35; color: var(--ink); }
+.nordic .entry-title { font-size: 1.06rem; font-weight: 600; line-height: calc(1.35 * var(--adj-lines, 1)); color: var(--ink); }
 .nordic .dates { padding: .2mm 2.6mm; border-radius: 4mm; background: var(--pill); font-size: .8rem; font-weight: 600; color: var(--accent); }
 .nordic .org { font-style: normal; color: var(--accent-2); }
 .nordic .org .location { color: var(--muted); }

@@ -9,7 +9,7 @@ import tomllib
 from .language import VERSION_CODE, language_config, languages
 from .photos import MAX_ZOOM, PHOTO_NAME, SHAPES, photo_frame
 from .schema import FILE_ORDER, FILE_TITLES, HIDEABLE_LINES
-from .styles import COLORS, STYLES
+from .styles import ADJUSTMENTS, COLORS, STYLES, adjust_values
 from .workspace import workspace
 
 
@@ -58,7 +58,8 @@ def profiles():
 
 
 def load_settings(profile):
-    """settings.toml, written by the editor: the colour chosen for each style and the framing of each photo."""
+    """settings.toml, written by the editor: the colour and adjustments chosen for each style, and the framing
+    of each photo."""
     data = {}
     if profile.settings_file.exists():
         try:
@@ -71,6 +72,8 @@ def load_settings(profile):
         x = stored.get(style) if isinstance(stored.get(style), dict) else {}
         color = x.get("color") if x.get("color") in COLORS else conf["color"]
         out[style] = {"color": color}
+        if adjust := adjust_values(x):
+            out[style]["adjust"] = adjust
     photos = data.get("photos") if isinstance(data.get("photos"), dict) else {}
     frames = {name: frame for name, v in photos.items() if PHOTO_NAME.fullmatch(name) and (frame := photo_frame(v))}
     return {"styles": out, "photos": frames}
@@ -199,9 +202,12 @@ def clean_cv(data):
 
 
 def save_settings(profile, settings):
-    """Writes settings.toml: the colour chosen for each style and the framing of each photo."""
+    """Writes settings.toml: the colour and adjustments chosen for each style and the framing of each photo."""
     lines = ["# Styles of this CV: chosen in the editor (python3 src/editor.py).",
              "#   color   = " + " | ".join(COLORS),
+             "#   text, spacing, lines = the style fitted to this CV, in % (" + ", ".join(
+                 f"{low}-{high}" for low, high, _ in ADJUSTMENTS.values()) + "; 100 = as designed, not written)",
+             "#   split   = true: a long entry may continue on the next page",
              "# Photos: how each one is framed, in every style.",
              "#   x, y    = 0-100 (0 = left / top edge of the photo, 100 = right / bottom edge)",
              f"#   zoom    = 1 (the whole photo) to {MAX_ZOOM}",
@@ -212,7 +218,11 @@ def save_settings(profile, settings):
     for style, conf in STYLES.items():
         x = styles.get(style) if isinstance(styles.get(style), dict) else {}
         color = x.get("color") if x.get("color") in COLORS else conf["color"]
-        lines += [f"[styles.{style}]", f'color = "{color}"', ""]
+        # from the editor: {"color", "adjust": {...}}; from a settings.toml (an imported .zip): text = 95... in the table
+        adjust = adjust_values(x["adjust"] if isinstance(x.get("adjust"), dict) else x)
+        lines += [f"[styles.{style}]", f'color = "{color}"']
+        lines += [f"{k} = {str(v).lower()}" for k, v in adjust.items()]
+        lines += [""]
     photos = settings.get("photos") if isinstance(settings.get("photos"), dict) else {}
     for name, value in sorted(photos.items()):
         frame = photo_frame(value)

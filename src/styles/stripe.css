@@ -45,7 +45,7 @@
 .stripe .cv-header .details strong { font-weight: 700; }
 
 /* ---------- Section titles: condensed capitals ---------- */
-.stripe .cv-section { margin-top: 7mm; }
+.stripe .cv-section { margin-top: calc(7mm * var(--adj-space, 1)); }
 .stripe .sidebar-photo + .cv-section { margin-top: 0; }
 .stripe .cv-section > h2 { margin-bottom: 2.6mm; padding: 0; border: 0; font-size: 1.42rem; font-weight: 500; line-height: 1.15; letter-spacing: .05em; color: var(--accent); }
 .stripe .sidebar .cv-section > h2 { font-size: 1.18rem; }
@@ -54,7 +54,7 @@
 .stripe .main-column .cv-section > h2::before { content: ""; position: absolute; left: -14mm; top: .5em; width: 10mm; height: 1.3mm; background: var(--stripe-color); }
 
 /* ---------- Entries: dates in condensed type ---------- */
-.stripe .entry + .entry { margin-top: 4mm; }
+.stripe .entry + .entry { margin-top: calc(4mm * var(--adj-space, 1)); }
 .stripe .entry-title { font-size: 1.06rem; }
 .stripe .dates { font-family: var(--font-head); font-size: .98rem; letter-spacing: .04em; color: var(--accent-2); }
 .stripe .org { font-style: normal; font-weight: 600; color: var(--muted); }

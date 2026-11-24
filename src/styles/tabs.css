@@ -20,7 +20,7 @@
   --side-gap: 7mm;
 }
 @page { @bottom-right { font-family: 'Rubik', sans-serif; } }
-body { line-height: 1.45; }
+body { line-height: calc(1.45 * var(--adj-lines, 1)); }
 .page.tabs { padding: 13mm 15mm 0; }
 
 /* ---------- Header: name, headline tab and photo on the line, contacts panel below ---------- */
@@ -44,7 +44,7 @@ body { line-height: 1.45; }
 .tabs.has-sidebar .cv-header { border-bottom: .8mm solid var(--accent); }
 
 /* ---------- Sections: a tab on a line, a panel below ---------- */
-.tabs .cv-section { margin-top: 6mm; }
+.tabs .cv-section { margin-top: calc(6mm * var(--adj-space, 1)); }
 .tabs .sidebar-photo + .cv-section { margin-top: 0; }
 /* short text sections stay whole rather than leave one line in a panel on the next page */
 .tabs .sec-profile, .tabs .sec-about_me, .tabs .sec-interests { break-inside: avoid; }
@@ -66,7 +66,7 @@ body { line-height: 1.45; }
 .tabs .sidebar .cv-section > .section-body { padding: 3mm 3.6mm 3.4mm; }
 
 /* ---------- Entries ---------- */
-.tabs .entry + .entry { margin-top: 3.8mm; }
+.tabs .entry + .entry { margin-top: calc(3.8mm * var(--adj-space, 1)); }
 .tabs .entry-title { font-size: 1.04rem; font-weight: 500; }
 .tabs .dates { font-size: .84rem; font-weight: 500; color: var(--accent-2); }
 .tabs .org { font-style: normal; color: var(--accent-2); }

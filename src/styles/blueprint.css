@@ -89,11 +89,11 @@
 }
 
 /* ---------- Section titles: boxed labels followed by a ruler ---------- */
-.blueprint .cv-section { margin-top: 6.5mm; overflow: clip; }
+.blueprint .cv-section { margin-top: calc(6.5mm * var(--adj-space, 1)); overflow: clip; }
 .blueprint .cv-section > h2 {
   position: relative; width: fit-content; max-width: calc(100% - 8mm); margin-bottom: 3.2mm; padding: .8mm 2.8mm .6mm;
   border: .35mm solid var(--accent); background: var(--label-bg);
-  font-size: 1.12rem; line-height: 1.2; letter-spacing: .16em;
+  font-size: 1.12rem; line-height: calc(1.2 * var(--adj-lines, 1)); letter-spacing: .16em;
 }
 .blueprint .cv-section > h2::after {
   content: ""; position: absolute; left: 100%; top: 50%; width: 300mm; height: 2.2mm; margin: -1.1mm 0 0 .35mm;
@@ -104,7 +104,7 @@
 }
 
 /* ---------- Entries ---------- */
-.blueprint .entry + .entry { margin-top: 3.8mm; }
+.blueprint .entry + .entry { margin-top: calc(3.8mm * var(--adj-space, 1)); }
 .blueprint .entry-head { gap: 2.5mm; }
 .blueprint .entry-title { font-size: 1.04rem; font-weight: 600; }
 /* a dashed leader between the title and the dates */

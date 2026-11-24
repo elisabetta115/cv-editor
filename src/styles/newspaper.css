@@ -21,7 +21,7 @@
   --side-accent: var(--ink);
 }
 @page { @bottom-right { font-family: 'Merriweather', Georgia, serif; color: #555; } }
-body { line-height: 1.5; }
+body { line-height: calc(1.5 * var(--adj-lines, 1)); }
 .page.newspaper { padding: 10mm 14mm 0; }
 
 /* ---------- Masthead: rules, name (with the photo as an "ear"), dateline ---------- */
@@ -44,14 +44,14 @@ body { line-height: 1.5; }
 .newspaper .cv-header .contacts, .newspaper .cv-header .details { display: contents; }
 .newspaper .cv-header .contacts li { order: 6; }
 .newspaper .cv-header .details li { order: 7; color: var(--muted); }
-.newspaper .cv-header li { gap: 1.2mm; margin: .4mm 0; font-size: .84rem; line-height: 1.3; }
+.newspaper .cv-header li { gap: 1.2mm; margin: .4mm 0; font-size: .84rem; line-height: calc(1.3 * var(--adj-lines, 1)); }
 .newspaper .cv-header .details strong { font-weight: 700; color: var(--ink); }
 .newspaper .contacts .icon-wrap { color: var(--ink); }
 .newspaper .contacts .icon { width: 2.9mm; height: 2.9mm; stroke-width: 2.2; }
 
 /* ---------- Section titles: heavy rule above, hairline below ---------- */
-.newspaper .cv-section + .cv-section { margin-top: 5.5mm; }
-.newspaper .cv-section > h2 { margin-bottom: 2.6mm; padding: 1.1mm 0 1mm; border-top: .8mm solid var(--ink); border-bottom: .25mm solid var(--ink); font-size: 1.25rem; font-weight: 700; line-height: 1.2; letter-spacing: 0; text-transform: none; color: var(--ink); }
+.newspaper .cv-section + .cv-section { margin-top: calc(5.5mm * var(--adj-space, 1)); }
+.newspaper .cv-section > h2 { margin-bottom: 2.6mm; padding: 1.1mm 0 1mm; border-top: .8mm solid var(--ink); border-bottom: .25mm solid var(--ink); font-size: 1.25rem; font-weight: 700; line-height: calc(1.2 * var(--adj-lines, 1)); letter-spacing: 0; text-transform: none; color: var(--ink); }
 .newspaper .sidebar .cv-section > h2 { font-size: 1.1rem; border-color: var(--ink); }
 
 /* ---------- Without the sidebar: two newspaper columns with a column rule ---------- */
@@ -64,11 +64,11 @@ body { line-height: 1.5; }
 .newspaper.no-sidebar .main-column .bullets.cols { columns: auto; }
 .newspaper.no-sidebar .main-column .skill-group { display: block; }
 .newspaper.no-sidebar .main-column .skill-group > h3 { margin-bottom: .8mm; }
-.newspaper .main-column > .sec-profile:first-child .section-body > p { font-size: 1.12rem; line-height: 1.55; font-style: italic; }
+.newspaper .main-column > .sec-profile:first-child .section-body > p { font-size: 1.12rem; line-height: calc(1.55 * var(--adj-lines, 1)); font-style: italic; }
 
 /* ---------- Entries: headline, byline, justified text ---------- */
-.newspaper .entry + .entry { margin-top: 3.8mm; }
-.newspaper .entry-title { font-family: var(--font-head); font-size: 1.12rem; font-weight: 700; line-height: 1.22; }
+.newspaper .entry + .entry { margin-top: calc(3.8mm * var(--adj-space, 1)); }
+.newspaper .entry-title { font-family: var(--font-head); font-size: 1.12rem; font-weight: 700; line-height: calc(1.22 * var(--adj-lines, 1)); }
 .newspaper .dates { font-size: .8rem; font-style: italic; color: var(--muted); }
 .newspaper .org { margin-top: .3mm; font-size: .84rem; font-style: italic; color: var(--accent); }
 .newspaper .org .location { color: var(--muted); }

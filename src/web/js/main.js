@@ -8,6 +8,7 @@ import "./fields.js";
 import "./cards.js";
 import "./nav.js";
 import "./design.js";
+import "./adjust.js";
 import "./links.js";
 import "./names.js";
 import "./find.js";

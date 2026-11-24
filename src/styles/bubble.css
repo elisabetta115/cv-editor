@@ -24,7 +24,7 @@
   --side-accent: var(--dark);
 }
 @page { @bottom-right { font-family: 'Nunito', sans-serif; font-weight: 700; color: var(--p-mid, #777); } }
-body { line-height: 1.42; }
+body { line-height: calc(1.42 * var(--adj-lines, 1)); }
 .page.bubble { padding: 14mm 15mm 0; }
 
 /* ---------- Header: ringed round photo, floating bubbles ---------- */
@@ -52,11 +52,11 @@ body { line-height: 1.42; }
 .bubble .cv-header .details strong { font-weight: 800; }
 
 /* ---------- Section titles: filled pills ---------- */
-.bubble .cv-section { margin-top: 7mm; }
+.bubble .cv-section { margin-top: calc(7mm * var(--adj-space, 1)); }
 .bubble .sidebar-photo + .cv-section { margin-top: 0; }
 .bubble .cv-section > h2 {
   position: relative; width: fit-content; margin-bottom: 3.2mm; padding: 1.2mm 5.4mm 1.3mm; border: 0; border-radius: 6mm; background: var(--mid);
-  font-size: 1.2rem; font-weight: 800; line-height: 1.25; letter-spacing: .03em; text-transform: none; color: #fff;
+  font-size: 1.2rem; font-weight: 800; line-height: calc(1.25 * var(--adj-lines, 1)); letter-spacing: .03em; text-transform: none; color: #fff;
 }
 .bubble .sidebar .cv-section > h2 { font-size: 1.08rem; background: var(--dark); color: #fff; }
 /* two little bubbles trailing each pill */
@@ -68,7 +68,7 @@ body { line-height: 1.42; }
 
 /* ---------- Entries: very rounded tinted bubbles ---------- */
 .bubble .entry { padding: 3.2mm 4.6mm 3.4mm; border-radius: 5.5mm; background: var(--bubble); }
-.bubble .entry + .entry { margin-top: 2.6mm; }
+.bubble .entry + .entry { margin-top: calc(2.6mm * var(--adj-space, 1)); }
 .bubble .entry-title { font-size: 1.06rem; font-weight: 800; color: var(--dark); }
 .bubble .dates { padding: .2mm 2.6mm; border-radius: 4mm; background: #fff; font-size: .84rem; font-weight: 800; color: var(--mid); }
 .bubble .sidebar .dates { display: inline-block; margin-top: .6mm; color: var(--mid); }

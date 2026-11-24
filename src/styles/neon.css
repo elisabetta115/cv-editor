@@ -33,7 +33,7 @@
   --side-rule: var(--rule);
 }
 @page { background: #101217; @bottom-right { font-family: 'Inter', sans-serif; color: #8b93a1; } }
-body { line-height: 1.45; }
+body { line-height: calc(1.45 * var(--adj-lines, 1)); }
 .page.neon { padding: 14mm 15mm 0; color: var(--ink); }
 .neon strong { font-weight: 600; color: #fff; }
 
@@ -57,11 +57,11 @@ body { line-height: 1.45; }
 .neon .cv-header .details strong { color: var(--ink); }
 
 /* ---------- Section titles: glowing capitals and a tube that fades out ---------- */
-.neon .cv-section { margin-top: 4.4mm; }
+.neon .cv-section { margin-top: calc(4.4mm * var(--adj-space, 1)); }
 /* the padding keeps the glow inside the title (it would show at the bottom of the previous page) */
 .neon .cv-section > h2 {
   display: flex; align-items: center; gap: 4mm; margin-bottom: 3.4mm; padding: 2.6mm 0 0; border: 0;
-  font-family: var(--font-head); font-size: 1.05rem; font-weight: 400; letter-spacing: .3em; line-height: 1.3;
+  font-family: var(--font-head); font-size: 1.05rem; font-weight: 400; letter-spacing: .3em; line-height: calc(1.3 * var(--adj-lines, 1));
   color: var(--tube); text-shadow: var(--neon-text);
 }
 .neon .cv-section > h2::after {
@@ -71,7 +71,7 @@ body { line-height: 1.45; }
 }
 
 /* ---------- Entries ---------- */
-.neon .entry + .entry { margin-top: 4mm; }
+.neon .entry + .entry { margin-top: calc(4mm * var(--adj-space, 1)); }
 .neon .entry-title { font-size: 1.03rem; font-weight: 600; color: #f3f5f8; }
 .neon .dates { font-family: var(--font-head); font-size: .9rem; letter-spacing: .1em; color: var(--bright); }
 .neon .org { font-style: normal; color: var(--bright); }

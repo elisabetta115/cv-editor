@@ -21,7 +21,7 @@
   --side-gap: 9mm;
 }
 @page { @bottom-right { font-family: 'Josefin Sans', sans-serif; letter-spacing: .15em; } }
-body { line-height: 1.45; }
+body { line-height: calc(1.45 * var(--adj-lines, 1)); }
 .page.artdeco { padding: 11mm 16mm 0; }
 
 /* ---------- Symmetric header: sunburst, name, stepped lines, headline ---------- */
@@ -83,7 +83,7 @@ body { line-height: 1.45; }
 .artdeco .contacts .icon-wrap { color: var(--accent-2); }
 
 /* ---------- Section titles: centred between double lines ending in diamonds ---------- */
-.artdeco .cv-section + .cv-section { margin-top: 7mm; }
+.artdeco .cv-section + .cv-section { margin-top: calc(7mm * var(--adj-space, 1)); }
 .artdeco .cv-section > h2 { display: flex; align-items: center; gap: 3mm; margin-bottom: 3.5mm; padding: 0; border: 0; font-family: var(--font-head); font-size: .95rem; font-weight: 600; letter-spacing: .3em; text-align: center; color: var(--accent); }
 .artdeco .cv-section > h2::before, .artdeco .cv-section > h2::after { content: ""; flex: 1; min-width: 7mm; height: 2.6mm; }
 /* a dark and a light line, ending in a diamond next to the title */
@@ -104,8 +104,8 @@ body { line-height: 1.45; }
 .artdeco .sidebar .cv-section > h2 { font-size: .86rem; letter-spacing: .24em; gap: 2.2mm; color: var(--accent); }
 
 /* ---------- Entries: left-aligned for reading ---------- */
-.artdeco .entry + .entry { margin-top: 4mm; }
-.artdeco .entry-title { font-family: var(--font-head); font-size: 1.05rem; font-weight: 600; letter-spacing: .02em; line-height: 1.3; color: var(--ink); }
+.artdeco .entry + .entry { margin-top: calc(4mm * var(--adj-space, 1)); }
+.artdeco .entry-title { font-family: var(--font-head); font-size: 1.05rem; font-weight: 600; letter-spacing: .02em; line-height: calc(1.3 * var(--adj-lines, 1)); color: var(--ink); }
 .artdeco .dates { font-family: var(--font-head); font-size: .84rem; font-weight: 600; letter-spacing: .12em; color: var(--accent-2); }
 .artdeco .org { color: var(--accent-2); }
 .artdeco .org .location { color: var(--muted); }
@@ -122,5 +122,5 @@ body { line-height: 1.45; }
 /* ---------- Sidebar: tinted panel with a double-line frame ---------- */
 .artdeco .sidebar { padding: 7mm 5.5mm; background: var(--tint); border: 1.1mm double var(--accent); outline: .3mm solid var(--metal); outline-offset: -2.4mm; }
 .artdeco .sidebar .contacts li { gap: 2.2mm; }
-.artdeco .sidebar .cv-section + .cv-section { margin-top: 6mm; }
+.artdeco .sidebar .cv-section + .cv-section { margin-top: calc(6mm * var(--adj-space, 1)); }
 .artdeco .privacy { border-top-color: var(--metal); text-align: center; }

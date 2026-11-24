@@ -24,7 +24,7 @@
   --side-gap: 7mm;
 }
 @page { @bottom-right { font-family: 'IBM Plex Mono', monospace; } }
-body { line-height: 1.38; }
+body { line-height: calc(1.38 * var(--adj-lines, 1)); }
 .page.ledger { padding: 13mm 14mm 0; }
 .ledger.has-sidebar { --side-w: 54mm; --date-w: 24mm; --loc-w: 21mm; }
 
@@ -41,9 +41,9 @@ body { line-height: 1.38; }
   content: "fx"; flex: none; align-self: stretch; display: grid; place-items: center; width: 9mm; margin-right: 2.4mm;
   border-right: .25mm solid var(--grid); background: var(--head-bg); font-style: italic; color: var(--accent-2);
 }
-.ledger .headline { padding-right: 2mm; line-height: 1.9; }
+.ledger .headline { padding-right: 2mm; line-height: calc(1.9 * var(--adj-lines, 1)); }
 .ledger .cv-header .contacts, .ledger .cv-header .details { display: contents; }
-.ledger .cv-header li { min-width: 0; padding: 1mm 2.2mm; border-bottom: .25mm solid var(--grid); font-size: .86rem; line-height: 1.3; }
+.ledger .cv-header li { min-width: 0; padding: 1mm 2.2mm; border-bottom: .25mm solid var(--grid); font-size: .86rem; line-height: calc(1.3 * var(--adj-lines, 1)); }
 .ledger .cv-header li:nth-child(odd) { border-right: .25mm solid var(--grid); }
 .ledger .cv-header .contacts li:nth-child(-n+2) { border-top: .5mm solid var(--accent); }
 .ledger .cv-header:not(:has(.contacts)) .details li:nth-child(-n+2) { border-top: .5mm solid var(--accent); }
@@ -58,7 +58,7 @@ body { line-height: 1.38; }
 .ledger .header-photo { width: 33mm; height: auto; min-height: 38mm; border: .25mm solid var(--grid); border-radius: 0; padding: 1mm; background: #fff; }
 
 /* ---------- Section = table: tinted header row between dark rules ---------- */
-.ledger .cv-section + .cv-section { margin-top: 5.5mm; }
+.ledger .cv-section + .cv-section { margin-top: calc(5.5mm * var(--adj-space, 1)); }
 .ledger .cv-section > h2 {
   margin: 0; padding: 1.1mm 2.2mm; background: var(--head-bg); border-top: .5mm solid var(--accent); border-bottom: .5mm solid var(--accent);
   font-size: .8rem; font-weight: 700; letter-spacing: .12em; color: var(--accent);
@@ -86,7 +86,7 @@ body { line-height: 1.38; }
 .ledger .main-column .location { grid-column: 3; grid-row: 1 / span 2; padding: 0 2.2mm; text-align: right; }
 .ledger .main-column .org .location::before { content: none; }
 .ledger .main-column .entry > .desc, .ledger .main-column .entry > .extra { grid-column: 2; padding: 0 2.6mm; }
-.ledger .dates { font-family: var(--font-mono); font-size: .84rem; color: var(--accent-2); line-height: 1.55; white-space: normal; }
+.ledger .dates { font-family: var(--font-mono); font-size: .84rem; color: var(--accent-2); line-height: calc(1.55 * var(--adj-lines, 1)); white-space: normal; }
 .ledger .entry-title { font-size: 1rem; font-weight: 600; }
 .ledger .org { font-style: normal; color: var(--accent-2); }
 .ledger .org-name { font-weight: 600; font-size: .92rem; }

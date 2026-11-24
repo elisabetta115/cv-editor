@@ -20,7 +20,7 @@
   --side-gap: 8mm;
 }
 @page { @bottom-right { font-family: 'Inter', sans-serif; } }
-body { line-height: 1.45; }
+body { line-height: calc(1.45 * var(--adj-lines, 1)); }
 .page.consultant { padding: 15mm 16mm 0; }
 
 /* ---------- Business-card header ---------- */
@@ -46,14 +46,14 @@ body { line-height: 1.45; }
 .consultant .cv-header:not(:has(.contacts)) .headline { grid-column: 2; grid-row: 1 / span 2; align-self: center; margin: 0; padding: 2mm 0 2mm 7mm; border-left: .35mm solid var(--accent-2); text-align: right; }
 
 /* ---------- Section titles: hairline starting with a thick accent segment ---------- */
-.consultant .cv-section + .cv-section { margin-top: 6.5mm; }
+.consultant .cv-section + .cv-section { margin-top: calc(6.5mm * var(--adj-space, 1)); }
 .consultant .cv-section > h2 {
   margin-bottom: 3.2mm; padding-bottom: 1.8mm; border: 0; font-size: .78rem; font-weight: 600; letter-spacing: .16em; color: var(--ink);
   background: linear-gradient(var(--accent-2), var(--accent-2)) left bottom / 11mm .9mm no-repeat, linear-gradient(var(--rule), var(--rule)) left bottom / 100% .25mm no-repeat;
 }
 
 /* ---------- Entries: organisation first, then the role, dates on the right ---------- */
-.consultant .entry + .entry { margin-top: 4.2mm; }
+.consultant .entry + .entry { margin-top: calc(4.2mm * var(--adj-space, 1)); }
 .consultant .entry { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 5mm; }
 .consultant .entry-head { display: contents; }
 .consultant .entry > .org { grid-row: 1; grid-column: 1; font-family: var(--font-name); font-style: normal; color: var(--ink); }

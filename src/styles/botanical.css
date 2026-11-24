@@ -23,7 +23,7 @@
   --flower: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 12'%3E%3Cpath d='M6 6H22M38 6H54' stroke='black' stroke-width='.5'/%3E%3Cg fill='black'%3E%3Ccircle cx='3.5' cy='6' r='.9'/%3E%3Ccircle cx='56.5' cy='6' r='.9'/%3E%3Ccircle cx='30' cy='2.9' r='2'/%3E%3Ccircle cx='33' cy='5.1' r='2'/%3E%3Ccircle cx='31.9' cy='8.6' r='2'/%3E%3Ccircle cx='28.1' cy='8.6' r='2'/%3E%3Ccircle cx='27' cy='5.1' r='2'/%3E%3Cpath d='M24 6q-2.5-3-5-1.6q2.5 3 5 1.6zM36 6q2.5-3 5-1.6q-2.5 3-5 1.6z'/%3E%3C/g%3E%3C/svg%3E");
 }
 @page { @bottom-right { font-family: 'Lora', serif; font-style: italic; color: #7d8a82; } }
-body { line-height: 1.48; }
+body { line-height: calc(1.48 * var(--adj-lines, 1)); }
 .page.botanical { padding: 15mm 17mm 0; }
 .botanical strong { font-weight: 600; }
 
@@ -47,14 +47,14 @@ body { line-height: 1.48; }
 .botanical .cv-header .details strong { font-weight: 600; }
 
 /* ---------- Sections: a flower between them, a sprig after each title ---------- */
-.botanical .cv-section { margin-top: 5mm; }
+.botanical .cv-section { margin-top: calc(5mm * var(--adj-space, 1)); }
 .botanical .main-column > .cv-section + .cv-section::before {
   content: ""; display: block; width: 26mm; height: 5.2mm; margin: 0 auto 3.4mm; background: var(--leaf); break-after: avoid;
   -webkit-mask: var(--flower) no-repeat center / contain; mask: var(--flower) no-repeat center / contain;
 }
 .botanical .cv-section > h2 {
   display: flex; align-items: center; gap: 3mm; margin-bottom: 2.8mm; padding: 0; border: 0;
-  font-size: 1.5rem; font-weight: 400; font-style: italic; line-height: 1.2; letter-spacing: 0; text-transform: none; color: var(--accent);
+  font-size: 1.5rem; font-weight: 400; font-style: italic; line-height: calc(1.2 * var(--adj-lines, 1)); letter-spacing: 0; text-transform: none; color: var(--accent);
 }
 .botanical .cv-section > h2::after {
   content: ""; flex: none; width: 17mm; height: 4.3mm; margin-top: .6mm; background: var(--leaf);
@@ -62,7 +62,7 @@ body { line-height: 1.48; }
 }
 
 /* ---------- Entries ---------- */
-.botanical .entry + .entry { margin-top: 3.8mm; }
+.botanical .entry + .entry { margin-top: calc(3.8mm * var(--adj-space, 1)); }
 .botanical .entry-title { font-size: 1.05rem; font-weight: 600; }
 .botanical .dates { font-style: italic; font-size: .9rem; color: var(--accent-2); }
 .botanical .org { color: var(--accent-2); }
@@ -94,7 +94,7 @@ body { line-height: 1.48; }
   box-shadow: 0 0 0 1.3mm #fff, 0 0 0 1.6mm var(--leaf);
 }
 .botanical .sidebar:has(.sidebar-photo) { padding-top: 10mm; }
-.botanical .sidebar .cv-section { margin-top: 6mm; }
+.botanical .sidebar .cv-section { margin-top: calc(6mm * var(--adj-space, 1)); }
 .botanical .sidebar > .cv-section:first-child, .botanical .sidebar-photo + .cv-section { margin-top: 0; }
 .botanical .sidebar .cv-section > h2 { justify-content: center; font-size: 1.32rem; }
 .botanical .sidebar .cv-section > h2::after { content: none; }

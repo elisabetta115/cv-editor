@@ -25,7 +25,7 @@
   --side-accent: var(--dark);
 }
 @page { @bottom-right { font-family: 'Barlow Condensed', sans-serif; font-size: 9pt; font-weight: 600; color: var(--p-mid, #777); } }
-html { font-size: 9.6pt; }
+html { font-size: calc(9.6pt * var(--adj-text, 1)); }
 .page.hexagon { padding: 0 16mm; }
 
 /* ---------- Header: honeycomb fading in from the right ---------- */
@@ -52,7 +52,7 @@ html { font-size: 9.6pt; }
 .hexagon .cv-header .details { margin-top: 2mm; }
 
 /* ---------- Section titles with a hexagon badge ---------- */
-.hexagon .cv-section { margin-top: 7mm; }
+.hexagon .cv-section { margin-top: calc(7mm * var(--adj-space, 1)); }
 .hexagon .sidebar-photo + .cv-section { margin-top: 0; }
 .hexagon .cv-section > h2 {
   break-inside: avoid;
@@ -64,7 +64,7 @@ html { font-size: 9.6pt; }
 .hexagon .sidebar .cv-section > h2 { font-size: 1.3rem; }
 
 /* ---------- Entries ---------- */
-.hexagon .entry + .entry { margin-top: 3.8mm; }
+.hexagon .entry + .entry { margin-top: calc(3.8mm * var(--adj-space, 1)); }
 .hexagon .entry-title { font-size: 1.04rem; font-weight: 600; }
 .hexagon .dates { font-family: var(--font-head); font-size: 1.08rem; font-weight: 600; letter-spacing: .04em; color: var(--mid); }
 .hexagon .sidebar .dates { color: var(--mid); }

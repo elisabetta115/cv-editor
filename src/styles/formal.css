@@ -25,10 +25,10 @@
 .formal .cv-header .details li + li::before { content: "·"; margin: 0 2.2mm; color: var(--rule); }
 
 /* sections: title on the left, content on the right */
-.formal .main-column .cv-section { display: grid; grid-template-columns: 31mm 1fr; column-gap: 6mm; margin-top: 5mm; padding-top: 5mm; border-top: .25mm solid var(--rule); }
+.formal .main-column .cv-section { display: grid; grid-template-columns: 31mm 1fr; column-gap: 6mm; margin-top: calc(5mm * var(--adj-space, 1)); padding-top: 5mm; border-top: .25mm solid var(--rule); }
 .formal .main-column > .cv-section:first-child { border-top: 0; }
 .formal .main-column .cv-section > h2 { margin: 0; padding: .5mm 0 0; border: 0; font-size: .84rem; }
-.formal .entry + .entry { margin-top: 4mm; }
+.formal .entry + .entry { margin-top: calc(4mm * var(--adj-space, 1)); }
 .formal .entry-title { font-size: 1.07rem; }
 .formal .dates { font-size: .9rem; }
 .formal .bullets li::before, .formal ul.desc li::before { background: var(--accent-2); }

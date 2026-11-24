@@ -46,4 +46,9 @@ def print_pdf(chrome, source, target):
 
 
 def count_pages(pdf):
-    return len(re.findall(rb"/Type\s*/Page(?![a-zA-Z])", pdf.read_bytes()))
+    return pages_in(pdf.read_bytes())
+
+
+def pages_in(content):
+    """The number of pages of a PDF made by Chrome (its bytes)."""
+    return len(re.findall(rb"/Type\s*/Page(?![a-zA-Z])", content))

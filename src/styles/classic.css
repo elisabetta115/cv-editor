@@ -15,7 +15,7 @@
   --side-w: 54mm;
 }
 @page { @bottom-right { font-family: 'Source Serif 4', Georgia, serif; } }
-body { line-height: 1.45; }
+body { line-height: calc(1.45 * var(--adj-lines, 1)); }
 .page.classic { padding: 16mm 18mm 0; }
 
 /* ---------- Centred header ---------- */

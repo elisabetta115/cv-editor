@@ -25,7 +25,7 @@
   --side-gap: 9mm;
 }
 @page { background: #f5e4c6; @bottom-right { font-family: 'Work Sans', sans-serif; color: #8a7058; } }
-body { line-height: 1.45; }
+body { line-height: calc(1.45 * var(--adj-lines, 1)); }
 .page.retro { padding: 0 15mm; }
 .retro strong { font-weight: 600; }
 
@@ -47,7 +47,7 @@ body { line-height: 1.45; }
 .retro .cv-header .details strong { font-weight: 600; }
 
 /* ---------- Section titles: heavy serif and a striped pill ---------- */
-.retro .cv-section { margin-top: 7mm; }
+.retro .cv-section { margin-top: calc(7mm * var(--adj-space, 1)); }
 .retro .cv-section > h2 {
   display: flex; align-items: center; gap: 4mm; margin-bottom: 3.2mm; padding: 0; border: 0;
   font-family: var(--font-head); font-size: 1.4rem; font-weight: 900; line-height: 1.15; letter-spacing: 0; text-transform: none; color: var(--s1);
@@ -58,7 +58,7 @@ body { line-height: 1.45; }
 }
 
 /* ---------- Entries ---------- */
-.retro .entry + .entry { margin-top: 4mm; }
+.retro .entry + .entry { margin-top: calc(4mm * var(--adj-space, 1)); }
 .retro .entry-head { align-items: center; }
 .retro .entry-title { font-size: 1.04rem; font-weight: 600; color: var(--ink); }
 .retro .dates {

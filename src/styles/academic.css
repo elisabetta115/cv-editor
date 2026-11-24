@@ -19,7 +19,7 @@
   --indent: 6mm;
 }
 @page { @bottom-right { font-family: 'EB Garamond', Garamond, serif; font-size: 9pt; color: #4d4d4d; } }
-body { line-height: 1.36; font-variant-numeric: oldstyle-nums proportional-nums; }
+body { line-height: calc(1.36 * var(--adj-lines, 1)); font-variant-numeric: oldstyle-nums proportional-nums; }
 .page.academic { padding: 15mm 17mm 0; }
 
 /* ---------- Centred header, small photo in the top right corner ---------- */
@@ -38,13 +38,13 @@ body { line-height: 1.36; font-variant-numeric: oldstyle-nums proportional-nums;
 .academic .cv-header .details li + li::before { content: ""; display: inline-block; width: .2mm; height: .95em; margin: 0 2.6mm; vertical-align: -.12em; background: var(--ink); }
 
 /* ---------- Section titles: small capitals on a hairline ---------- */
-.academic .cv-section + .cv-section { margin-top: 5mm; }
+.academic .cv-section + .cv-section { margin-top: calc(5mm * var(--adj-space, 1)); }
 .academic .cv-section > h2 { margin-bottom: 2.4mm; padding-bottom: .5mm; border-bottom: .25mm solid var(--accent); font-size: 1.2rem; font-weight: 400; font-variant: small-caps; letter-spacing: .07em; text-transform: none; color: var(--ink); }
 .academic .sidebar .cv-section > h2 { font-size: 1.1rem; border-color: var(--accent); color: var(--ink); }
 
 /* ---------- Entries: bold title, italic institution, dates flush right ---------- */
-.academic .entry + .entry { margin-top: 2.8mm; }
-.academic .entry-title { font-size: 1rem; font-weight: 600; line-height: 1.3; }
+.academic .entry + .entry { margin-top: calc(2.8mm * var(--adj-space, 1)); }
+.academic .entry-title { font-size: 1rem; font-weight: 600; line-height: calc(1.3 * var(--adj-lines, 1)); }
 .academic .dates { font-size: 1rem; color: var(--ink); font-variant-numeric: oldstyle-nums proportional-nums; }
 .academic .org { color: var(--ink); }
 .academic .entry .desc, .academic .entry .extra { margin-left: var(--indent); }

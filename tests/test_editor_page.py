@@ -49,6 +49,8 @@ class EditorPageTest(DataDirTestCase):
         groups = re.findall(r'<optgroup label="([^"]+)"', page)
         self.assertEqual(groups[:len(CONTACT_GROUPS)], [g for g, _ in CONTACT_GROUPS])
         self.assertIn('<option value="stackoverflow">Stack Overflow</option>', page)
+        self.assertRegex(page, r'(?s)id="btn-adjust"[^>]*>.*?<span class="label">Adjust</span>')              # the Adjust button, and its panel
+        self.assertIn('id="adjust-panel"', page)
         self.assertNotIn("<h1>Welcome to CV Editor</h1>", page)
 
     def test_without_cvs(self):

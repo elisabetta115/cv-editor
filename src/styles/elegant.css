@@ -15,7 +15,7 @@
   --side-w: 56mm;
 }
 @page { @bottom-right { font-family: 'Source Serif 4', Georgia, serif; } }
-body { line-height: 1.45; }
+body { line-height: calc(1.45 * var(--adj-lines, 1)); }
 .page.elegant { padding: 0 17mm; }
 
 /* ---------- Header: full-width coloured band ---------- */
@@ -31,9 +31,9 @@ body { line-height: 1.45; }
 .elegant .cv-header .details strong { color: #fff; }
 
 /* ---------- Sections ---------- */
-.elegant .cv-section { margin-top: 6.5mm; }
+.elegant .cv-section { margin-top: calc(6.5mm * var(--adj-space, 1)); }
 .elegant .cv-section > h2 { padding-bottom: 1.2mm; border-bottom: .35mm solid var(--soft); font-family: 'Source Serif 4', Georgia, serif; font-size: 1rem; font-weight: 600; letter-spacing: .14em; }
-.elegant .entry + .entry { margin-top: 3.8mm; }
+.elegant .entry + .entry { margin-top: calc(3.8mm * var(--adj-space, 1)); }
 .elegant .entry-title { font-size: 1.08rem; font-weight: 600; }
 .elegant .dates { font-style: italic; font-size: .92rem; }
 .elegant .org { font-family: 'Source Sans 3', sans-serif; font-size: .9rem; font-weight: 600; font-style: normal; letter-spacing: .03em; }

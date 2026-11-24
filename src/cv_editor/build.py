@@ -36,7 +36,7 @@ def generate(profile, language=None, style=None, photo=None, html_only=False, lo
         for style_id in STYLES:
             if style and style_id not in style:
                 continue
-            color = settings[style_id]["color"]
+            color, adjust = settings[style_id]["color"], settings[style_id].get("adjust")
             for f in photo_versions:
                 version = photo_label(f, conf) if f else conf["no_photo"]
                 name = f"CV_{p.get('first_name', '')}_{p.get('last_name', '')}_{code.upper()}_{conf['styles'][style_id]}_{version}"
@@ -47,8 +47,8 @@ def generate(profile, language=None, style=None, photo=None, html_only=False, lo
                 source = profile.html_dir / f"{name}.html"
                 frame = frames.get(f.name) if f else None
                 src = framed_photo(profile, photo_src.get(f), frame)
-                source.write_text(document(cv, code, style_id, src, color=color, frame=frame, signature=signature),
-                                  encoding="utf-8")
+                source.write_text(document(cv, code, style_id, src, color=color, frame=frame, signature=signature,
+                                           adjust=adjust), encoding="utf-8")
                 if not chrome:
                     log(f"  ✓ {short_path(source)}")
                     continue

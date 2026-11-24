@@ -59,12 +59,12 @@
 
 /* ---------- Section titles: parallelogram label + diagonal stripes ---------- */
 /* the small top padding keeps the skewed label off the page edge when a section starts a page */
-.diagonal .cv-section { margin-top: 6.2mm; padding-top: .8mm; overflow-x: clip; }
+.diagonal .cv-section { margin-top: calc(6.2mm * var(--adj-space, 1)); padding-top: .8mm; overflow-x: clip; }
 .diagonal .sidebar-photo + .cv-section { margin-top: 0; }
 .diagonal .cv-section > h2 {
   break-inside: avoid;
   position: relative; isolation: isolate; width: fit-content; margin: 0 0 3.4mm 1mm; padding: 1.1mm 4mm 1mm;
-  border: 0; font-size: .9rem; font-weight: 700; line-height: 1.25; letter-spacing: .14em; color: #fff;
+  border: 0; font-size: .9rem; font-weight: 700; line-height: calc(1.25 * var(--adj-lines, 1)); letter-spacing: .14em; color: #fff;
 }
 .diagonal .cv-section > h2::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--dark); transform: skewX(calc(-1 * var(--slant))); }
 .diagonal .cv-section > h2::after {
@@ -75,7 +75,7 @@
 .diagonal .sidebar .cv-section > h2::before { background: var(--mid); }
 
 /* ---------- Entries ---------- */
-.diagonal .entry + .entry { margin-top: 4mm; }
+.diagonal .entry + .entry { margin-top: calc(4mm * var(--adj-space, 1)); }
 .diagonal .entry-title { font-family: var(--font-head); font-size: .98rem; font-weight: 700; color: var(--dark); }
 .diagonal .dates { font-family: var(--font-head); font-size: .8rem; font-weight: 700; font-style: italic; color: var(--mid); }
 .diagonal .sidebar .dates { color: var(--mid); }

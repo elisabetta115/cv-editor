@@ -47,7 +47,7 @@
 .metro .cv-header .contacts::after { content: ""; flex: 6 1 0; }
 .metro .cv-header .contacts li {
   flex: 1 1 auto; flex-direction: column; align-items: flex-start; justify-content: space-between; gap: 2.6mm;
-  min-height: 13.5mm; padding: 2mm 3mm 1.8mm 2.6mm; line-height: 1.2;
+  min-height: 13.5mm; padding: 2mm 3mm 1.8mm 2.6mm; line-height: calc(1.2 * var(--adj-lines, 1));
 }
 .metro .cv-header .contacts .icon { width: 3.8mm; height: 3.8mm; }
 .metro .cv-header .details { margin-top: 2.4mm; font-size: .9rem; }
@@ -62,7 +62,7 @@
 .metro.has-sidebar > .privacy { margin-left: calc(66mm + 10mm); margin-right: 14mm; }
 
 /* ---------- Section titles: big, light, lowercase ---------- */
-.metro .cv-section { margin-top: 7mm; }
+.metro .cv-section { margin-top: calc(7mm * var(--adj-space, 1)); }
 .metro .sidebar-photo + .cv-section { margin-top: 0; }
 .metro .cv-section > h2 {
   margin-bottom: 2.8mm; padding: 0; border: 0;
@@ -71,7 +71,7 @@
 .metro .sidebar .cv-section > h2 { margin-bottom: 2.4mm; font-size: 1.7rem; color: var(--accent); }
 
 /* ---------- Sidebar: contact tiles stacked ---------- */
-.metro .sidebar .contacts li { gap: 2.4mm; width: auto; padding: 1.9mm 2.6mm; font-size: .88rem; line-height: 1.2; }
+.metro .sidebar .contacts li { gap: 2.4mm; width: auto; padding: 1.9mm 2.6mm; font-size: .88rem; line-height: calc(1.2 * var(--adj-lines, 1)); }
 /* tiles keep the column width: a long address wraps, a very long e-mail breaks inside its tile */
 .metro .sidebar .contacts .contact-text { white-space: normal; min-width: 0; overflow-wrap: anywhere; }
 .metro .sidebar .contacts li + li { margin-top: .8mm; }
@@ -82,7 +82,7 @@
 .metro .sidebar .tags li { background: #fff; }
 
 /* ---------- Entries, tiles ---------- */
-.metro .entry + .entry { margin-top: 4mm; }
+.metro .entry + .entry { margin-top: calc(4mm * var(--adj-space, 1)); }
 .metro .entry-title { font-size: 1.04rem; font-weight: 700; }
 .metro .dates { font-size: .88rem; font-weight: 600; color: var(--accent-2); font-variant-numeric: lining-nums tabular-nums; }
 .metro .org { font-style: normal; font-weight: 600; color: var(--accent-2); }

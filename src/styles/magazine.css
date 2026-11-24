@@ -19,7 +19,7 @@
   --side-gap: 10mm;
 }
 @page { @bottom-right { font-family: 'Lato', sans-serif; } }
-body { line-height: 1.45; }
+body { line-height: calc(1.45 * var(--adj-lines, 1)); }
 .page.magazine { padding: 14mm 15mm 0; }
 
 /* ---------- Header: stacked name, deck, tall portrait ---------- */
@@ -28,7 +28,7 @@ body { line-height: 1.45; }
 .magazine .name { font-weight: 400; font-size: 5.7rem; line-height: .9; letter-spacing: -.005em; color: var(--ink); }
 .magazine .name span { display: block; }
 .magazine .last-name { color: var(--accent-2); }
-.magazine .headline { margin-top: 5mm; font-family: var(--font-deck); font-size: 1.45rem; font-weight: 400; font-style: italic; line-height: 1.25; letter-spacing: 0; text-transform: none; color: var(--ink); }
+.magazine .headline { margin-top: 5mm; font-family: var(--font-deck); font-size: 1.45rem; font-weight: 400; font-style: italic; line-height: calc(1.25 * var(--adj-lines, 1)); letter-spacing: 0; text-transform: none; color: var(--ink); }
 .magazine .headline::before { content: ""; display: block; width: 14mm; height: .7mm; margin-bottom: 3mm; background: var(--accent-2); }
 .magazine .cv-header .contacts { gap: 1.4mm 5.5mm; margin-top: 5mm; font-size: .88rem; }
 .magazine .cv-header .details { font-size: .88rem; }
@@ -36,7 +36,7 @@ body { line-height: 1.45; }
 
 /* ---------- Section titles: a big number and letter-spaced capitals ---------- */
 .magazine .main-column { counter-reset: sec; }
-.magazine .cv-section + .cv-section { margin-top: 7mm; }
+.magazine .cv-section + .cv-section { margin-top: calc(7mm * var(--adj-space, 1)); }
 .magazine .cv-section > h2 { display: flex; align-items: baseline; gap: 3mm; margin-bottom: 3mm; padding: 0; border: 0; font-size: .8rem; font-weight: 700; letter-spacing: .3em; color: var(--ink); }
 .magazine .main-column .cv-section > h2 { counter-increment: sec; }
 .magazine .main-column .cv-section > h2::before {
@@ -47,13 +47,13 @@ body { line-height: 1.45; }
 
 /* ---------- Profile: larger text with a three-line drop cap ---------- */
 .magazine .main-column .sec-profile .section-body { display: flow-root; }
-.magazine .main-column .sec-profile .section-body > p { font-size: 1.08rem; line-height: 1.5; text-align: left; }
+.magazine .main-column .sec-profile .section-body > p { font-size: 1.08rem; line-height: calc(1.5 * var(--adj-lines, 1)); text-align: left; }
 .magazine .main-column .sec-profile .section-body > p:first-child::first-letter {
   float: left; margin: .06em .1em 0 0; font-family: var(--font-name); font-size: 4.6em; line-height: .78; color: var(--accent-2);
 }
 
 /* ---------- Entries ---------- */
-.magazine .entry + .entry { margin-top: 4mm; }
+.magazine .entry + .entry { margin-top: calc(4mm * var(--adj-space, 1)); }
 .magazine .entry-title { font-size: 1.07rem; font-weight: 900; }
 .magazine .dates { font-size: .76rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-2); }
 .magazine .org { font-family: var(--font-deck); font-size: 1.02rem; font-style: italic; color: var(--accent); }

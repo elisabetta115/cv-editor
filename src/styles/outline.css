@@ -24,8 +24,8 @@
   --side-accent: var(--dark);
 }
 @page { @bottom-right { font-family: 'Sora', sans-serif; color: var(--p-mid, #777); } }
-html { font-size: 9.6pt; }
-body { line-height: 1.48; }
+html { font-size: calc(9.6pt * var(--adj-text, 1)); }
+body { line-height: calc(1.48 * var(--adj-lines, 1)); }
 .page.outline { padding: 16mm 16mm 0; }
 
 /* ---------- Header: hollow name ---------- */
@@ -50,7 +50,7 @@ body { line-height: 1.48; }
 .outline .cv-header .details { margin-top: 2.4mm; }
 
 /* ---------- Section titles: outlined capitals ---------- */
-.outline .cv-section { margin-top: 7.4mm; }
+.outline .cv-section { margin-top: calc(7.4mm * var(--adj-space, 1)); }
 .outline .sidebar-photo + .cv-section, .outline .main-column > .cv-section:first-child { margin-top: 0; }
 .outline .cv-section > h2 {
   break-inside: avoid;
@@ -61,7 +61,7 @@ body { line-height: 1.48; }
 
 /* ---------- Entries: each in a thin rounded frame ---------- */
 .outline .entry { padding: 2.6mm 4.2mm 2.8mm; border: var(--hair) solid var(--frame); border-radius: 3.2mm; }
-.outline .entry + .entry { margin-top: 2.6mm; }
+.outline .entry + .entry { margin-top: calc(2.6mm * var(--adj-space, 1)); }
 .outline .entry-title { font-family: var(--font-head); font-size: 1.04rem; font-weight: 600; color: var(--dark); }
 .outline .dates { font-family: var(--font-head); font-size: .84rem; font-weight: 600; color: var(--mid); }
 .outline .sidebar .dates { color: var(--mid); }

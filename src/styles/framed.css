@@ -36,7 +36,7 @@
   @bottom-right { content: none; }
 }
 @page :first { margin-top: 60px; }
-body { line-height: 1.48; }
+body { line-height: calc(1.48 * var(--adj-lines, 1)); }
 .page.framed { padding: 4mm 19mm 0; }
 .page.framed::before { content: ""; position: absolute; inset: 26px; border: 3px double var(--frame); pointer-events: none; }
 @media print {
@@ -71,14 +71,14 @@ body { line-height: 1.48; }
 .framed .contacts .icon { width: 3.2mm; height: 3.2mm; stroke-width: 1.7; }
 
 /* ---------- Section titles: large italic with a short tapered flourish ---------- */
-.framed .cv-section + .cv-section { margin-top: 6mm; }
+.framed .cv-section + .cv-section { margin-top: calc(6mm * var(--adj-space, 1)); }
 .framed .cv-section > h2 { display: flex; align-items: center; gap: 3mm; margin-bottom: 2.6mm; padding: 0; border: 0; font-family: var(--font-head); font-size: 1.6rem; font-weight: 500; font-style: italic; line-height: 1.15; letter-spacing: .01em; text-transform: none; color: var(--accent); }
 .framed .cv-section > h2::after { content: ""; flex: none; width: 18mm; height: 1.3mm; margin-top: .6mm; background: var(--accent-2); clip-path: polygon(0 0, 8% 35%, 100% 50%, 8% 65%, 0 100%, 3% 50%); }
 .framed .sidebar .cv-section > h2 { font-size: 1.4rem; color: var(--accent); }
 .framed .sidebar .cv-section > h2::after { width: 12mm; }
 
 /* ---------- Entries ---------- */
-.framed .entry + .entry { margin-top: 3.8mm; }
+.framed .entry + .entry { margin-top: calc(3.8mm * var(--adj-space, 1)); }
 .framed .entry-title { font-size: 1rem; font-weight: 600; }
 .framed .dates { font-family: var(--font-head); font-size: 1.16rem; font-weight: 600; letter-spacing: .03em; color: var(--accent-2); }
 .framed .org { color: var(--accent-2); }

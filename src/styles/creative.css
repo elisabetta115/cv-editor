@@ -27,7 +27,7 @@
 }
 /* the same background colour in the margins of every page */
 @page { background: #edf1f5; @bottom-right { font-family: 'Lato', sans-serif; } }
-body { line-height: 1.4; }
+body { line-height: calc(1.4 * var(--adj-lines, 1)); }
 .page.creative { padding: 13mm 12mm 0 13mm; }
 
 /* decorative shapes in the background of the first page */
@@ -58,7 +58,7 @@ body { line-height: 1.4; }
 .creative .cv-header .details strong, .creative .sidebar .details strong { font-weight: 900; }
 
 /* ---------- Section titles ---------- */
-.creative .cv-section { margin-top: 7.5mm; }
+.creative .cv-section { margin-top: calc(7.5mm * var(--adj-space, 1)); }
 .creative .cv-section > h2 { margin-bottom: 3.5mm; padding-bottom: 1.8mm; border-color: var(--rule); font-size: 1.1rem; letter-spacing: .3em; color: var(--ink); }
 .creative .sidebar .cv-section { break-inside: avoid; }
 
@@ -82,13 +82,13 @@ body { line-height: 1.4; }
 .creative .main-column .entries { position: relative; padding-left: 5.5mm; }
 .creative .main-column .entries::before { content: ""; position: absolute; left: 1.35mm; top: 2mm; bottom: 1mm; width: .5mm; background: var(--line); }
 .creative .main-column .entry { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 3mm; }
-.creative .main-column .entry + .entry { margin-top: 4.2mm; }
+.creative .main-column .entry + .entry { margin-top: calc(4.2mm * var(--adj-space, 1)); }
 .creative .main-column .entry::before {
   content: ""; position: absolute; left: -5.5mm; top: .55em; width: 3.2mm; height: 3.2mm; border-radius: 50%;
   background: var(--light); border: .7mm solid var(--bg); box-shadow: 0 0 0 .3mm var(--light);
 }
 .creative .main-column .entry-head { display: contents; }
-.creative .main-column .org { grid-row: 1; grid-column: 1; font-size: 1.15rem; font-weight: 700; font-style: normal; line-height: 1.25; color: var(--mid); }
+.creative .main-column .org { grid-row: 1; grid-column: 1; font-size: 1.15rem; font-weight: 700; font-style: normal; line-height: calc(1.25 * var(--adj-lines, 1)); color: var(--mid); }
 .creative .main-column .entry .dates {
   grid-row: 1; grid-column: 2; align-self: baseline; padding: .5mm 2.3mm; border-radius: 1.2mm;
   background: var(--light); color: var(--on-light); font-size: .78rem; font-weight: 900;

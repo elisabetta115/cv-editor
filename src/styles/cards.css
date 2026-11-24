@@ -22,7 +22,7 @@
   --side-gap: 5mm;
 }
 @page { background: #edf1f5; @bottom-right { font-family: 'DM Sans', sans-serif; } }
-body { line-height: 1.45; }
+body { line-height: calc(1.45 * var(--adj-lines, 1)); }
 .page.cards { padding: 10mm 11mm 0; }
 
 /* ---------- Cards ---------- */
@@ -43,7 +43,7 @@ body { line-height: 1.45; }
 .cards .cv-header .details strong, .cards .sidebar .details strong { font-weight: 700; color: var(--ink); }
 
 /* ---------- Section cards ---------- */
-.cards .cv-section { margin-top: 4mm; padding: 4.6mm 6mm 5mm; }
+.cards .cv-section { margin-top: calc(4mm * var(--adj-space, 1)); padding: 4.6mm 6mm 5mm; }
 .cards .sidebar .cv-section { padding: 4.5mm 5mm 5mm; }
 .cards .sidebar-photo + .cv-section { margin-top: 0; }
 /* short text sections stay whole rather than leave one line in a card on the next page */
@@ -59,7 +59,7 @@ body { line-height: 1.45; }
 .cards .sidebar .sec-contacts + .sec-details { margin-top: 0; padding-top: 1.4mm; border-top-left-radius: 0; border-top-right-radius: 0; clip-path: inset(0 -4mm -4mm -4mm); }
 
 /* ---------- Entries ---------- */
-.cards .entry + .entry { margin-top: 4mm; padding-top: 4mm; border-top: .3mm solid var(--rule); }
+.cards .entry + .entry { margin-top: calc(4mm * var(--adj-space, 1)); padding-top: calc(4mm * var(--adj-space, 1)); border-top: .3mm solid var(--rule); }
 .cards .entry-title { font-size: 1.04rem; font-weight: 700; }
 .cards .dates { font-size: .86rem; font-weight: 500; color: var(--accent-2); }
 .cards .org { font-style: normal; font-weight: 500; color: var(--accent-2); }

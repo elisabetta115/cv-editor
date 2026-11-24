@@ -21,7 +21,7 @@
   --badge: color-mix(in srgb, var(--soft) 22%, #fff);
 }
 @page { @bottom-right { font-family: 'IBM Plex Sans', sans-serif; } }
-body { line-height: 1.45; }
+body { line-height: calc(1.45 * var(--adj-lines, 1)); }
 .page.corporate { padding: 0 14mm 0 16mm; }
 
 /* ---------- Header: dark block | mid-colour block ---------- */
@@ -43,15 +43,15 @@ body { line-height: 1.45; }
 .corporate .cv-header .details strong { color: #fff; }
 .corporate .cv-header .contacts {
   grid-column: 4; grid-row: 1 / -1; align-self: center;
-  display: flex; flex-direction: column; gap: 2.1mm; margin: 0; font-size: .9rem; line-height: 1.25;
+  display: flex; flex-direction: column; gap: 2.1mm; margin: 0; font-size: .9rem; line-height: calc(1.25 * var(--adj-lines, 1));
 }
 .corporate .cv-header .contacts li { gap: 2.4mm; }
 .corporate .cv-header .contacts .icon-wrap { color: rgba(255, 255, 255, .85); }
 /* with the sidebar the contacts are in the sidebar: the headline moves to the mid-colour block */
-.corporate.has-sidebar .headline { grid-column: 4; grid-row: 1 / -1; align-self: center; margin: 0; font-size: .9rem; line-height: 1.5; color: #fff; }
+.corporate.has-sidebar .headline { grid-column: 4; grid-row: 1 / -1; align-self: center; margin: 0; font-size: .9rem; line-height: calc(1.5 * var(--adj-lines, 1)); color: #fff; }
 
 /* ---------- Section titles: thick underline under the text, hairline to the end ---------- */
-.corporate .cv-section { margin-top: 6.5mm; }
+.corporate .cv-section { margin-top: calc(6.5mm * var(--adj-space, 1)); }
 .corporate .sidebar-photo + .cv-section { margin-top: 0; }
 .corporate .cv-section > h2 {
   position: relative; width: fit-content; max-width: 100%; margin: 0 0 -.3mm; padding: 0 0 1.3mm;
@@ -60,7 +60,7 @@ body { line-height: 1.45; }
 .corporate .cv-section > h2 + .section-body { padding-top: 3.2mm; border-top: .3mm solid var(--rule); }
 
 /* ---------- Entries ---------- */
-.corporate .entry + .entry { margin-top: 4mm; }
+.corporate .entry + .entry { margin-top: calc(4mm * var(--adj-space, 1)); }
 .corporate .entry-head { align-items: flex-start; }
 .corporate .entry-title { font-size: 1.04rem; font-weight: 600; }
 .corporate .dates {

@@ -25,7 +25,7 @@
   --side-gap: 7mm;
 }
 @page { @bottom-right { content: "[" counter(page) "/" counter(pages) "]"; font-family: 'IBM Plex Mono', monospace; color: #8a939c; } }
-body { line-height: 1.45; }
+body { line-height: calc(1.45 * var(--adj-lines, 1)); }
 .page.terminal { padding: 12mm 13mm 0 12mm; }
 .terminal strong { font-weight: 600; }
 
@@ -50,7 +50,7 @@ body { line-height: 1.45; }
 .terminal .header-photo {
   width: 30mm; height: 36mm; border-radius: 1.5mm; border: .35mm solid color-mix(in srgb, var(--prompt) 55%, transparent);
 }
-.terminal .name { font-weight: 600; font-size: 2.15rem; line-height: 1.2; letter-spacing: -.01em; color: #fff; }
+.terminal .name { font-weight: 600; font-size: 2.15rem; line-height: calc(1.2 * var(--adj-lines, 1)); letter-spacing: -.01em; color: #fff; }
 .terminal .name::before { content: "$ "; color: var(--prompt); }
 /* the cursor */
 .terminal .name::after { content: ""; display: inline-block; width: .55em; height: .95em; margin-left: .25em; vertical-align: -.12em; background: var(--prompt); }
@@ -62,7 +62,7 @@ body { line-height: 1.45; }
 .terminal .cv-header .details strong { font-weight: 400; color: var(--prompt); }
 
 /* ---------- Section titles: markdown headings ---------- */
-.terminal .cv-section { margin-top: 6.5mm; }
+.terminal .cv-section { margin-top: calc(6.5mm * var(--adj-space, 1)); }
 .terminal .cv-section > h2 {
   display: flex; align-items: baseline; gap: 2.2mm; margin-bottom: 2.6mm; padding: 0; border: 0;
   font-size: 1.12rem; font-weight: 600; letter-spacing: 0; text-transform: lowercase; color: var(--accent);
@@ -74,7 +74,7 @@ body { line-height: 1.45; }
 .terminal .main-column .section-body > p { text-align: left; hyphens: manual; }
 
 /* ---------- Entries ---------- */
-.terminal .entry + .entry { margin-top: 3.8mm; }
+.terminal .entry + .entry { margin-top: calc(3.8mm * var(--adj-space, 1)); }
 .terminal .entry-title { font-size: 1.02rem; font-weight: 600; }
 .terminal .dates { font-size: .9rem; font-style: italic; color: var(--muted); }
 .terminal .dates::before { content: "// "; font-style: normal; }
@@ -111,7 +111,7 @@ body { line-height: 1.45; }
 
 /* ---------- Sidebar: a file-tree panel ---------- */
 .terminal .sidebar { padding: 5mm 4.2mm 5.5mm; border-radius: 2mm; background: var(--panel); border: .3mm solid #e3e7eb; }
-.terminal .sidebar .cv-section { margin-top: 5mm; break-inside: avoid; }
+.terminal .sidebar .cv-section { margin-top: calc(5mm * var(--adj-space, 1)); break-inside: avoid; }
 .terminal .sidebar > .cv-section:first-child, .terminal .sidebar-photo + .cv-section { margin-top: 0; }
 .terminal .sidebar .cv-section > h2 { align-items: center; gap: 2.2mm; margin-bottom: 1.6mm; font-size: 1rem; }
 /* a folder that is open: a small chevron and a slash after the name */
