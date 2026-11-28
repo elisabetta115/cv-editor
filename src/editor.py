@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-#!/usr/bin/env python3
 """
 CV editor: opens in the browser.
 
     python3 editor.py              # open the editor
     python3 editor.py --install    # add "CV Editor" to the applications menu (Linux)
+
+On Windows and macOS, double-clicking "Start CV Editor - Windows.bat" or "Start CV Editor - Mac.command" in the
+project folder runs this file.
 
 Edit the content on the left and see the CV update live on the right.
 "Save" writes the cvs/<name>/content_<code>.toml files; "PDF" downloads the version on screen.
@@ -22,12 +24,20 @@ import webbrowser
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 
+if sys.version_info < (3, 11):
+    sys.exit(f"CV Editor needs Python 3.11 or newer (this is {sys.version.split()[0]}): https://www.python.org/downloads/")
+
 from cv_editor.server import PORT, Handler, already_running
 from cv_editor.workspace import SRC, Workspace, use_workspace, workspace
 
 
 def install():
     """Adds "CV Editor" to the applications menu (Linux)."""
+    if sys.platform in ("win32", "darwin"):
+        launcher = "Start CV Editor - Windows.bat" if sys.platform == "win32" else "Start CV Editor - Mac.command"
+        print(f'On this computer, double-click "{launcher}" in the project folder ({SRC.parent}) to open the editor.\n'
+              "To keep it at hand, make a shortcut to that file: see the README, under Install.")
+        return
     folder = Path.home() / ".local/share/applications"
     folder.mkdir(parents=True, exist_ok=True)
     file = folder / "cv-editor.desktop"
@@ -74,7 +84,7 @@ def main():
             return
         server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)  # port taken by something else: use another one
     # closing the terminal window ends the editor cleanly (the demo folder is deleted)
-    for sig in ("SIGTERM", "SIGHUP"):
+    for sig in ("SIGTERM", "SIGHUP", "SIGBREAK"):  # SIGBREAK: Windows
         if hasattr(signal, sig):
             signal.signal(getattr(signal, sig), lambda *_: sys.exit(0))
     address = f"http://127.0.0.1:{server.server_address[1]}/"

@@ -15,28 +15,38 @@ computer. Use **Export** to keep a backup or to move a CV to another computer.
 
 ## Quick start
 
-You need Python 3.11+ and Chrome or Chromium. Then:
+You need **Python 3.11 or newer** (free from [python.org/downloads](https://www.python.org/downloads/)) and
+**Chrome**, Chromium or Edge (Edge is already on every Windows computer). Nothing else to install, no account:
+the editor runs on your computer only.
 
-```bash
-git clone https://github.com/elisabetta115/cv-editor.git
-cd cv-editor
-python3 src/editor.py
-```
+1. **Download** the project: **Code → Download ZIP** on GitHub, then unzip it (on Windows: right-click the
+   `.zip` → **Extract All…**). Or clone it: `git clone https://github.com/elisabetta115/cv-editor.git`
+2. **Open the editor**, from the project folder:
+   - **Windows**: double-click **Start CV Editor - Windows**.
+   - **Mac**: double-click **Start CV Editor - Mac.command**.
+   - **Linux**, or any computer from a terminal: `python3 src/editor.py`
 
-(Without git: **Code → Download ZIP** on GitHub, unzip it and run `python3 src/editor.py` in the folder.)
-Nothing else to install, no account: the editor runs on your computer only. See *Install* below for the
-applications-menu shortcut and the optional extras.
+The first time, Windows or macOS may warn you, because the file comes from the internet and its author is not
+registered with Microsoft or Apple:
+
+- **Windows** ("Windows protected your PC"): click **More info**, then **Run anyway**.
+- **macOS** ("cannot be opened" or "could not verify"): click **Done**, open **System Settings → Privacy &
+  Security**, scroll down and click **Open Anyway** next to the file's name (on macOS 14 or older: right-click the
+  file, **Open**, then **Open** again).
+
+It asks only once. See *Install* below for a shortcut to the editor and the optional extras.
 
 ## Open the editor
 
-Look for **CV Editor** among your applications (see *Install* below), or run from the project folder:
+Double-click the file for your computer in the project folder (see *Quick start*), look for **CV Editor** among
+your applications (see *Install* below), or run from the project folder:
 
 ```bash
 python3 src/editor.py
 ```
 
 Your browser opens with the content on the left and the CV on the right.
-Keep the small terminal window open while you work: closing it closes the editor.
+Keep the small window that opens with it (the terminal) open while you work: closing it closes the editor.
 The first time, with no CV yet, a welcome screen lets you create your CV, import a `.zip`
 file or try the example.
 
@@ -265,6 +275,8 @@ PDF/<name>/<language>/   the PDFs built from the terminal (not in git)
 examples/                an example CV to import
 docs/                    the project's web page (GitHub Pages) and the screenshots
 tests/                   the tests (see Tests below)
+Start CV Editor - …      the files to double-click on Windows (.bat) and macOS (.command): they find Python
+                         3.11+ and run src/editor.py (.gitattributes keeps the .bat with Windows line endings)
 src/
 ├── editor.py            the command that opens the editor (the code is in cv_editor/)
 ├── editor.html          the editor's page: its structure (the server puts in the secret token)
@@ -394,8 +406,15 @@ GitHub runs the tests at every push (`.github/workflows/tests.yml`).
 
 ## Install
 
-- Requirements: Python 3.11+ and Chrome or Chromium. Recommended: `pip install pillow` to shrink large photos.
-- Add "CV Editor" to the applications menu (Linux): `python3 src/editor.py --install`
+- Requirements: Python 3.11+ and Chrome, Chromium or Edge. Recommended: `pip install pillow` to shrink large photos.
+- A shortcut to the editor:
+  - **Windows**: right-click **Start CV Editor - Windows**, **Show more options** (Windows 11), **Send to →
+    Desktop (create shortcut)**.
+  - **Mac**: drag **Start CV Editor - Mac.command** to the right end of the Dock, next to the Trash.
+  - **Linux**: `python3 src/editor.py --install` adds "CV Editor" to the applications menu.
+- On a Mac with Python from python.org, Microsoft Translator (see *Automatic translation*) needs the
+  certificates that Python uses for secure connections: double-click **Install Certificates.command** in
+  **Applications → Python 3.x**, once.
 - Keep the CVs and PDFs in another folder: `python3 src/editor.py --data /path/to/folder`
 - The bundled fonts cover Western European alphabets: in languages such as Polish, Czech, Romanian, Greek or
   Russian some letters fall back to a different font.

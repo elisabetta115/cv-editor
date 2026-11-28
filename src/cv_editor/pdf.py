@@ -18,13 +18,15 @@ def find_chrome():
                  "microsoft-edge", "brave-browser", "chrome"):
         if shutil.which(name):
             return shutil.which(name)
-    candidates = [
-        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-        "/Applications/Chromium.app/Contents/MacOS/Chromium",
-        r"C:\Program Files\Google\Chrome\Application\chrome.exe",
-        r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
-        r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
-    ]
+    candidates = [  # macOS: in Applications, or in the Applications folder of the user
+        f"{apps}/{app}.app/Contents/MacOS/{app}" for apps in ("/Applications", os.path.expanduser("~/Applications"))
+        for app in ("Google Chrome", "Chromium", "Microsoft Edge", "Brave Browser")]
+    folders = [os.environ[f] for f in ("PROGRAMFILES", "PROGRAMFILES(X86)", "LOCALAPPDATA") if os.environ.get(f)]
+    candidates += [  # Windows: Chrome first, for everyone or for the user only; Edge is always there
+        os.path.join(folder, *path) for path in (("Google", "Chrome", "Application", "chrome.exe"),
+                                                 ("Microsoft", "Edge", "Application", "msedge.exe"),
+                                                 ("BraveSoftware", "Brave-Browser", "Application", "brave.exe"))
+        for folder in folders]
     candidates += sorted(glob.glob(os.path.expanduser(
         "~/.cache/ms-playwright/chromium_headless_shell-*/chrome-*/chrome-headless-shell")), reverse=True)
     candidates += sorted(glob.glob(os.path.expanduser("~/.cache/ms-playwright/chromium-*/chrome-*/chrome")), reverse=True)
@@ -36,7 +38,8 @@ def find_chrome():
 
 
 def print_pdf(chrome, source, target):
-    with tempfile.TemporaryDirectory() as profile:
+    # ignore_cleanup_errors: on Windows, Chrome may still hold a file of its profile for a moment after it ends
+    with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as profile:
         subprocess.run([
             chrome, "--headless", "--no-sandbox", "--disable-gpu", "--no-first-run", "--no-default-browser-check",
             f"--user-data-dir={profile}", "--allow-file-access-from-files",

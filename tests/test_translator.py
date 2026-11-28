@@ -93,7 +93,7 @@ class KeyTest(DataDirTestCase):
 
     def test_key_in_a_file(self):
         translator.CONFIG_FILE.parent.mkdir()
-        translator.CONFIG_FILE.write_text('{"key": "' + "k" * 32 + '", "region": "westeurope"}')
+        translator.CONFIG_FILE.write_text('{"key": "' + "k" * 32 + '", "region": "westeurope"}', encoding="utf-8")
         self.assertEqual(translator.credentials(), ("k" * 32, "westeurope"))
         translator.set_key({"key": ""})                       # an empty key removes it
         self.assertFalse(translator.CONFIG_FILE.exists())

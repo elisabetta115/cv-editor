@@ -26,7 +26,7 @@ class EditorPageTest(DataDirTestCase):
     def open_editor(self):
         """(the page as the browser shows it once its scripts have run, the errors in the browser's console)"""
         url = f"http://127.0.0.1:{self.server.server_address[1]}/"
-        with tempfile.TemporaryDirectory() as profile:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as profile:
             r = subprocess.run([CHROME, "--headless", "--no-sandbox", "--disable-gpu", "--no-first-run",
                                 "--no-default-browser-check", f"--user-data-dir={profile}", "--enable-logging=stderr",
                                 "--v=0", "--virtual-time-budget=15000", "--dump-dom", url],

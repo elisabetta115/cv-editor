@@ -231,7 +231,7 @@ def pdf_to_png(content):
     if not found:
         raise RuntimeError("To use a PDF the editor needs Poppler (on Linux: sudo apt install poppler-utils). "
                            "Or save the signature as PNG or JPG: a photo or a scan of it works.")
-    with tempfile.TemporaryDirectory() as folder:
+    with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as folder:
         src, out = str(Path(folder) / "signature.pdf"), str(Path(folder) / "page.png")
         Path(src).write_bytes(content)
         for exe, args in found:

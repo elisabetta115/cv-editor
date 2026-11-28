@@ -1,0 +1,4 @@
+# Line endings: LF everywhere (also on Windows, so that every computer reads the same files),
+# except the Windows launcher, which Windows needs with CRLF.
+* text=auto eol=lf
+*.bat text eol=crlf

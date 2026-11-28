@@ -83,7 +83,7 @@ class SavedTest(DataDirTestCase):
         styles = load_settings(profile)["styles"]
         self.assertEqual(styles["swiss"], {"color": "teal", "adjust": {"text": 90, "split": True}})
         self.assertNotIn("adjust", styles["modern"])   # 100 % is the style as designed: nothing is kept
-        text = profile.settings_file.read_text()
+        text = profile.settings_file.read_text(encoding="utf-8")
         self.assertIn('[styles.swiss]\ncolor = "teal"\ntext = 90\nsplit = true\n', text)
         self.assertIn("[styles.modern]\ncolor", text)
         self.assertEqual(read_data(profile)["settings"]["styles"]["swiss"]["adjust"], {"text": 90, "split": True})
@@ -102,7 +102,7 @@ class SavedTest(DataDirTestCase):
         self.assertIn("--adj-text:0.85;", page)
         save_settings(profile, {"styles": {"swiss": {"adjust": {"text": 90}}}})
         generate(profile, "en", ["swiss", "zen"], None, html_only=True, log=lambda *_: None)
-        pages = {f.name.split("_")[4]: f.read_text() for f in profile.html_dir.glob("CV_*.html")}
+        pages = {f.name.split("_")[4]: f.read_text(encoding="utf-8") for f in profile.html_dir.glob("CV_*.html")}
         self.assertIn("--adj-text:0.9;", pages["Swiss"])
         self.assertNotIn("--adj-", pages["Zen"].split("</style>")[0].split("<style>")[-1])
 

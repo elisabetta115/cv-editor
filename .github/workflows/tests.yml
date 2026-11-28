@@ -10,16 +10,24 @@ permissions:
 
 jobs:
   tests:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          - python: "3.11"   # the oldest version the editor supports, without the optional Pillow
+          - os: ubuntu-latest
+            python: "3.11"   # the oldest version the editor supports, without the optional Pillow
             pillow: false
-          - python: "3.x"    # the newest version, with Pillow
+          - os: ubuntu-latest
+            python: "3.x"    # the newest version, with Pillow
             pillow: true
-    name: Python ${{ matrix.python }}${{ matrix.pillow && ' with Pillow' || '' }}
+          - os: windows-latest
+            python: "3.x"
+            pillow: true
+          - os: macos-latest
+            python: "3.x"
+            pillow: true
+    name: ${{ matrix.os == 'windows-latest' && 'Windows' || matrix.os == 'macos-latest' && 'macOS' || 'Linux' }}, Python ${{ matrix.python }}${{ matrix.pillow && ' with Pillow' || '' }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
